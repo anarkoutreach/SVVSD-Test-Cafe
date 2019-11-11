@@ -1,11 +1,15 @@
 import LoginPage from "../PageObjects/login-page";
-import { adminUser } from "../Utilities/roles";
 import ConfigurationManager from "../Configuration/configuration";
+import { axelUser, lukeUser } from "../Utilities/roles";
 
 const configManager = new ConfigurationManager();
 
-fixture`Login Tests`.page(configManager.homePage).beforeEach(async t => {
-    t.ctx.user = adminUser;
+fixture`My first fixture`.page(configManager.homePage).beforeEach(async t => {
+    t.ctx.user = axelUser;
+
+    // await t
+    //     .setTestSpeed(1);
+    // 	.useRole(t.ctx.user.role);
 });
 
 const loginPage = new LoginPage();
@@ -42,12 +46,9 @@ test('cannot login with a non-existent user', async t => {
 });
 
 test('cannot login with an incorrect password', async t => {
-    //Act
     await loginPage.typeUsername(t.ctx.user.username);
     await loginPage.typePassword('wrong password');
     await loginPage.clickSubmit();
-
-    //Assert
     await t.expect(loginPage.checkUsernameValidity()).eql(true);
     await t.expect(loginPage.checkPasswordValidity()).eql(true);
     await t.expect(loginPage.checkSubmitValidity()).eql(false);

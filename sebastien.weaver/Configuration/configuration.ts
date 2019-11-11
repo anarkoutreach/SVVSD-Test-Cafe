@@ -3,7 +3,7 @@ export default class ConfigurationManager {
 	homePage: string;
 	
 	constructor() {
-		this.serverUrl = "https://qa.cloud-staging.anark.com";
+		this.serverUrl = "https://svvsd.cloud-staging.anark.com";
 		this.homePage = this.serverUrl + '/feed';
 	}
 }

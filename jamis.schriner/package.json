@@ -4,9 +4,7 @@
   "description": "End-to-End tests for the MBEWeb application",
   "main": "index.js",
   "dependencies": {
-    "moment": "^2.24.0",
-    "testcafe": "^1.6.0",
-    "uuid": "^3.3.3"
+    "testcafe": "^1.6.0"
   },
   "devDependencies": {},
   "scripts": {
@@ -15,9 +13,7 @@
     "test-ie": "testcafe ie Tests/ -e",
     "test-edge": "testcafe edge Tests/ -e",
     "test-firefox": "testcafe firefox Tests/ -e",
-    "test-safari": "testcafe safari Tests/ -e",
     "test-firefox-headless": "testcafe firefox:headless Tests/ -e",
-    "test-live": "testcafe chrome -e -L",
     "test": "yarn test-chrome && yarn test-ie && yarn test-edge && yarn test-firefox"
   },
   "author": "",
