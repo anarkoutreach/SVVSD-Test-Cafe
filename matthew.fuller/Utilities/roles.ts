@@ -6,27 +6,14 @@ const configManager = new ConfigurationManager();
 const loginPage = new LoginPage();
 const genericPassword = 'p@ssw0rd';
 
-export const axelUser = {
-	username: 'axel',
+export const mattUser = {
+	username: 'matthew',
 	password: genericPassword,
-	initials: "AL",
+	initials: "MF",
 	role: Role(
 		configManager.serverUrl,
 		async t => {
-			await loginPage.login('axel', genericPassword);
-		},
-		{ preserveUrl: true }
-	)
-};
-
-export const lukeUser = {
-	username: 'luke',
-	password: genericPassword,
-	initials: "LP",
-	role: Role(
-		configManager.serverUrl,
-		async t => {
-			await loginPage.login("luke", "p@ssw0rd");
+			await loginPage.login('matthew', genericPassword);
 		},
 		{ preserveUrl: true }
 	)

@@ -8,11 +8,11 @@ export default class Comment {
     replyCommentPostBtn: Selector;
 
     constructor(selector: Selector, parentConversationSelector: Selector) {
-        this.self = selector;
+        
         this.parentConversation = parentConversationSelector;
-        this.replyButton = this.self.find('.reply');
-        this.replyCommentInput = this.self.find('.reply-comment');
-        this.replyCommentPostBtn = this.self.find('button.update');
+        this.replyButton = Selector ('.reply');
+        this.replyCommentInput = Selector ('.reply-comment');
+        this.replyCommentPostBtn = Selector ('button.update');
     }
 
     async addReply(text: string) {
@@ -25,7 +25,7 @@ export default class Comment {
     }
 
     async validatePostedTextReply(text: string) {
-        const comment = this.self.find('div.commentText').withText(text);
+        const comment = Selector ('div.commentText').withText(text);
         await t
             .expect(comment.exists).eql(true);
     }
