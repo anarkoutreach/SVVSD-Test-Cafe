@@ -4,7 +4,7 @@ import WIStepVerificationInfo from "./WIStepVerificationInfo"
 import util from "../../Utilities/util";
 import {status} from "./releasestatus"
 var fs = require('fs');
-var images = fs.readdirSync("C:/Users/mmful/OneDrive/MBEWeb - Testing/matthew.fuller/Tests/images");
+var images = fs.readdirSync("H:/Onedrive/MBEWeb-Testing/Anark/SVVSD-Test-Cafe/matthew.fuller/Tests/images");
 const Status = status;
 const Util = new util;
 const types = VerificationTypes;

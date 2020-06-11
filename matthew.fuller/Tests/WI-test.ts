@@ -9,6 +9,7 @@ import randchar from "../Utilities/util";
 import WI from "../PageObjects/WI";
 import util from "../Utilities/util";
 import WISteps from "../PageObjects/PageComponents/WISteps";
+import { UPLOAD } from "../PageObjects/PageComponents/Upload"
 
 const types = VerificationTypes;
 const alerts = new Alerts();
@@ -67,6 +68,33 @@ fixture`WI test initalisation`.page(configManager.homePage).beforeEach(async t =
 });
 
 //tests that create a WI before and delete after
+test('can edit title of WI', async t => {
+    const Util = new util;
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
+    var editedWI = await DefaultWorkItem.EditWITitle(DefaultWorkItem, "Edited Title " + Util.randchar(50));
+
+});
+test('can edit WI description', async t =>{
+    const Util = new util;
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
+    await DefaultWorkItem.EditWIDescription(DefaultWorkItem, "edited description" +DefaultWorkItem.description + Util.randchar(50));
+})
+test('can edit description and title', async t => {
+    const Util = new util;
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
+    await DefaultWorkItem.EditWITitle(DefaultWorkItem, "Edited Title " + Util.randchar(50));
+    await DefaultWorkItem.EditWIDescription(DefaultWorkItem, "edited description" +DefaultWorkItem.description + Util.randchar(50));
+})
+test('can upload context to step', async t => {
+    const Util = new util;
+    var upload = new UPLOAD("H:\\Onedrive\\MBEWeb-Testing\\Anark\\SVVSD-Test-Cafe\\matthew.fuller\\Tests\\images\\IMG-0211.JPG");
+    var step = new WISteps()
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
+    await DefaultWorkItem.UplaodContext(upload);
+    await DefaultWorkItem.AddStep(false, step, false);
+    await DefaultWorkItem.addContext(upload);
+
+}).only
 test('can create WI then delete', async t => { 
     const Util = new util;
     if(Util.Verbose)console.log("--test-\"can create WI then delete\" running blank test, only fixtures--");
@@ -86,7 +114,7 @@ test('Cannot add duplicate steps', async t => {
     WIstep.StepName = "Step w/S-Name"
     await DefaultWorkItem.AddStep(true, WIstep, false);
     await DefaultWorkItem.AddStep(true, WIstep, true);
-}).only;
+})
 
 fixture`tests that most likly will not fail`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;

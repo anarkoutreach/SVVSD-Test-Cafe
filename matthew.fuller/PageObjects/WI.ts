@@ -1,5 +1,6 @@
 import { Selector, t } from "testcafe";
 import util from "../Utilities/util";
+import { UPLOAD } from "../PageObjects/PageComponents/Upload"
 import WISteps from "./PageComponents/WISteps";
 const Util = new util();
 import Alerts from "./Alerts";
@@ -21,6 +22,8 @@ export default class WI {
     partnum: string;
     revision: string;
     version: string;
+    editWITitle: Selector;
+    editWIDescription: Selector;
     settingsGearBtn: Selector;
     settingsGearPanel: Selector;
     settingsGearPanelEdit: Selector;
@@ -30,13 +33,28 @@ export default class WI {
     appendProccessStep: Selector;
     activeStep: Selector;
     allsteps: Selector;
+    addContext: Selector;
     steps: WISteps[];
+    Uploads: UPLOAD[];
+    UploadTitle: Selector;
+    UploadDescription: Selector;
+    UploadFileBtn: Selector;
+    SubmitUploadFileBtn: Selector;
+    ContextFiles: Selector;
 
     releasestatus: status;
     constructor() {
+        this.ContextFiles = Selector("img.img-responsive");
+        this.SubmitUploadFileBtn = Selector('button#uploadFileButton');
+        this.UploadFileBtn = Selector('input#uploadFile');
+        this.UploadTitle = Selector('input#uploadTitle');
+        this.UploadDescription = Selector('textarea#uploadDescription');
+        this.addContext = Selector('div.addContextPlusContainer');
         this.releasestatus = status.DRAFT;
         this.Location = location.BOULDER;
         this.steps = [];
+        this.editWITitle = Selector('#dwiTitleInput');
+        this.editWIDescription = Selector('#dwiDescription');
         this.wiTitle = Selector('#dwiTitle');
     this.getDWItab = Selector('#DWIProcessStepListScrollParent');
     this.getSelectedStepInput = Selector('#DWIProcessStepListScrollParent .stepItem.selectedStep').child().filter('input');
@@ -60,6 +78,90 @@ export default class WI {
     this.ContentTab = Selector("#dwiTabs-tab-Content");
     this.UploadTab = Selector("#dwiTabs-tab-Upload");
     
+    }
+
+    async UploadFile(Upload: UPLOAD){
+        await this.SwitchWITAB(WORKITEMTAB.UPLOAD);
+        await t 
+        .expect(this.UploadFileBtn.exists).eql(true)
+        .setFilesToUpload(this.UploadFileBtn, [
+            Upload.Files
+        ])
+        .expect(this.UploadTitle.exists).eql(true)
+        .click(this.UploadTitle)
+        .typeText(this.UploadTitle, Upload.Title)
+        .expect(this.UploadDescription.exists).eql(true)
+        .click(this.UploadDescription)
+        .typeText(this.UploadDescription, Upload.Description)
+        .expect(this.SubmitUploadFileBtn.exists).eql(true)
+        .click(this.SubmitUploadFileBtn);
+        if(this.Uploads.length > 0){
+        this.Uploads.forEach(up => {
+            Upload.Index = this.Uploads.length + 1;
+            if(Upload.Index > up.Index){
+                return;
+            }
+        });
+    }else{
+        Upload.Index = 0;
+    }
+        this.Uploads.push(Upload);
+    }
+    async UplaodContext(upload){
+        await this.SwitchWITAB(WORKITEMTAB.UPLOAD);
+        await this.UploadFile(upload);
+    }
+    async AddContextToStep(step: WISteps, uplaod: UPLOAD){
+        var num = uplaod.Index
+        this.CatalogSteps();
+        var step2 = await this.GetStep(step.StepNum);
+        await t
+        .expect(step2.exists).eql(true)
+        .click(step2)
+        .expect(this.addContext.exists).eql(true)
+        .click(this.addContext)
+        .expect(this.ContextFiles.nth(num)).ok()
+        .click(this.ContextFiles.nth(num))
+        .expect(Selector('#selectButton').exists).eql(true)
+        .click(Selector('#selectButton'));
+    }
+    async EditWIDescription(WorkItem: WI, text: string){
+        
+        await t
+        .expect(this.editWIDescription.exists).eql(true)
+        .click(this.editWIDescription);
+        await Util.CtlADelete(this.editWIDescription);
+        await t
+            .click(this.editWIDescription)
+            .typeText(this.editWIDescription, text)
+            .expect((await this.editWIDescription.innerText).includes(text)).ok;
+        WorkItem.description = text;
+        return WorkItem;
+    }
+    async EditWITitle(WorkItem: WI, text: string){
+        
+        await t
+        .expect(this.editWITitle.exists).eql(true)
+        .click(this.editWITitle);
+        await Util.CtlADelete(this.editWITitle);
+        await t
+            .click(this.editWITitle)
+            .typeText(this.editWITitle, text)
+            .expect((await this.editWITitle.innerText).includes(text)).ok;
+        WorkItem.title = text;
+        return WorkItem;
+    }
+    async VerifyWiTitle(WorkItem: WI){
+        var text = WorkItem.title;
+        await t
+        .expect(this.editWITitle.exists).eql(true)
+        .expect(this.editWITitle.withText(text)).ok;
+        if((await this.editWITitle.innerText).includes(text)){
+            return true
+        }else{
+            return false;
+        }
+        
     }
     async getStatusDropDown(num: status){
         var split = num.split(" ")
@@ -218,7 +320,7 @@ export default class WI {
             await this.SwitchWITAB(WORKITEMTAB.USERS);
             await this.SwitchWITAB(WORKITEMTAB.WORKITEM);
             await this.CatalogSteps();
-            var step2 = await this.stepchecker(step);
+            var step2 = await this.GetStepByName(step);
             
             
             await t
@@ -228,7 +330,7 @@ export default class WI {
         }
 
         }
-        async stepchecker(step): Promise<Selector> {
+        async GetStepByName(step): Promise<Selector> {
             var num: number;
             
             this.steps.forEach(async (step3) => {
