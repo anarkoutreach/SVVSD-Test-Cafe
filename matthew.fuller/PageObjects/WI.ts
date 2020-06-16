@@ -44,6 +44,7 @@ export default class WI {
 
     releasestatus: status;
     constructor() {
+        this.Uploads = [];
         this.ContextFiles = Selector("img.img-responsive");
         this.SubmitUploadFileBtn = Selector('button#uploadFileButton');
         this.UploadFileBtn = Selector('input#uploadFile');
@@ -71,7 +72,7 @@ export default class WI {
     this.processStepsPanel = Selector('#DWIProcessStepListScrollParent');
     this.appendProccessStep = this.processStepsPanel.child(".appendProcessStep");
     this.activeStep = this.processStepsPanel.child(".stepItem.selectedStep");
-    this.allsteps = Selector("#DWIProcessStepListScrollParent.WIProcessStepTreeRoot").child(".stepItem");
+    this.allsteps = Selector("li.stepItem");
     this.title = this.title + Util.randchar(40);
     this.WorkitemTab = Selector("#dwiTabs-tab-WorkItem");
     this.UserTab = Selector("#dwiTabs-tab-User");
@@ -107,13 +108,21 @@ export default class WI {
     }
         this.Uploads.push(Upload);
     }
-    async UplaodContext(upload){
+    async UploadContext(upload){
         await this.SwitchWITAB(WORKITEMTAB.UPLOAD);
         await this.UploadFile(upload);
+        await this.SwitchWITAB(WORKITEMTAB.WORKITEM);
     }
     async AddContextToStep(step: WISteps, uplaod: UPLOAD){
         var num = uplaod.Index
-        this.CatalogSteps();
+        var stepshavebeencataloged = false;
+        await this.CatalogSteps().then(value =>{
+            if(value = true){
+                stepshavebeencataloged = true;
+            } else{
+                stepshavebeencataloged = false;
+            }
+        });
         var step2 = await this.GetStep(step.StepNum);
         await t
         .expect(step2.exists).eql(true)
@@ -122,8 +131,8 @@ export default class WI {
         .click(this.addContext)
         .expect(this.ContextFiles.nth(num)).ok()
         .click(this.ContextFiles.nth(num))
-        .expect(Selector('#selectButton').exists).eql(true)
-        .click(Selector('#selectButton'));
+        .expect(Selector('button[data-id="selectButton"]').exists).eql(true)
+        .click(Selector('button[data-id="selectButton"]'));
     }
     async EditWIDescription(WorkItem: WI, text: string){
         
@@ -181,8 +190,9 @@ export default class WI {
         return await this.allsteps.count;
     }
     async CatalogSteps (){
+        let finished = false;
         var NumOfSteps = await this.CountSteps();
-        var i;
+        var i =0;
         for(i; i < NumOfSteps; i++){
         await t
         .click(this.allsteps.nth(i));
@@ -191,7 +201,7 @@ export default class WI {
         let stepExists = false;
         let existingStep : WISteps;
         this.steps.forEach(async step9 => {
-            if(step9.StepName === await this.allsteps.nth(i).innerText){
+            if(step9.StepName.includes(step.StepName)){
                 stepExists = true;
                 existingStep = step9;
             }
@@ -210,6 +220,26 @@ export default class WI {
             if(!existingStep.StepDescription) existingStep.StepDescription = await step.editStepDescription.innerText;
             if(!existingStep.StepSafteyAndComplience) existingStep.StepSafteyAndComplience = await step.editStepSafetyAndComplience.innerText;
         }
+        }
+
+        while(finished == false){
+            if(i >= NumOfSteps){
+                finished = true;
+            }
+        }
+        if(finished == true){
+        return finished;
+        }
+        
+    }
+    async fixerthingythingthingy(finished, i, NumOfSteps){
+        while(finished == false){
+            if(i >= NumOfSteps){
+                finished = true;
+            }
+        }
+        if(finished == true){
+        return finished;
         }
     }
     async FillallStepFields (step: WISteps){

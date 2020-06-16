@@ -87,12 +87,12 @@ test('can edit description and title', async t => {
 })
 test('can upload context to step', async t => {
     const Util = new util;
-    var upload = new UPLOAD("H:\\Onedrive\\MBEWeb-Testing\\Anark\\SVVSD-Test-Cafe\\matthew.fuller\\Tests\\images\\IMG-0211.JPG");
-    var step = new WISteps()
+    var upload = new UPLOAD("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\Tests\\images\\IMG-0211.JPG");
+    var step = new WISteps();
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
-    await DefaultWorkItem.UplaodContext(upload);
+    await DefaultWorkItem.UploadContext(upload);
     await DefaultWorkItem.AddStep(false, step, false);
-    await DefaultWorkItem.addContext(upload);
+    await DefaultWorkItem.AddContextToStep(step, upload);
 
 }).only
 test('can create WI then delete', async t => { 
