@@ -69,8 +69,11 @@ fixture`WI test initalisation`.page(configManager.homePage).beforeEach(async t =
 
 test('can add child step to wistep', async t => {
     var step = new WISteps();
-    DefaultWorkItem.AddStep(true, step, false)
-})
+    step.StepShouldNotHaveInformationFilled = true;
+    var step2 = new WISteps();
+    DefaultWorkItem.AddStep(true, step, false);
+    DefaultWorkItem.addChildStep(step2);
+}).only
 //tests that create a WI before and delete after
 test('can edit title of WI', async t => {
     const Util = new util;
@@ -98,7 +101,7 @@ test('can upload context to step', async t => {
     await DefaultWorkItem.AddStep(false, step, false);
     await DefaultWorkItem.AddContextToStep(step, upload);
 
-}).only
+})
 test('can create WI then delete', async t => { 
     const Util = new util;
     if(Util.Verbose)console.log("--test-\"can create WI then delete\" running blank test, only fixtures--");
