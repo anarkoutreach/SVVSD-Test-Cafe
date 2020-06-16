@@ -67,6 +67,10 @@ fixture`WI test initalisation`.page(configManager.homePage).beforeEach(async t =
     await feedPage.deleteWI(tabs.WORKITEMS, DefaultWorkItem);
 });
 
+test('can add child step to wistep', async t => {
+    var step = new WISteps();
+    DefaultWorkItem.AddStep(true, step, false)
+})
 //tests that create a WI before and delete after
 test('can edit title of WI', async t => {
     const Util = new util;

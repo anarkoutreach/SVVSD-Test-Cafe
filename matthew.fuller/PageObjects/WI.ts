@@ -82,6 +82,15 @@ export default class WI {
     this.UploadTab = Selector("#dwiTabs-tab-Upload");
     
     }
+
+    async addChildStep(step: WISteps){
+        let selectedstep = await this.GetStep(step.StepNum)
+        await t
+        .expect(selectedstep.exists).eql(true)
+        .expect(selectedstep.child(".stepItemRightButtons").exists).eql(true)
+        .click(selectedstep.child(".stepItemRightButtons"));
+    
+    }
     async VerifyContentIsShown(ContextName){
         const UTIL = new util();
         var finished = false;
@@ -339,6 +348,7 @@ export default class WI {
             this.steps.push(step);
             if(!this.steps)
             this.steps.push(step);
+            if(!step.StepShouldNotHaveInformationFilled)
             await this.FillallStepFields(step);
             if(!workaroundbug)return;
         }else if(letDuplicate){
@@ -363,6 +373,7 @@ export default class WI {
             this.steps.push(step);
             if(!this.steps)
             this.steps.push(step);
+            if(!step.StepShouldNotHaveInformationFilled)
             await this.FillallStepFields(step);
             if(!workaroundbug)return;
             }

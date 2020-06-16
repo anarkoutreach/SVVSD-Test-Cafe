@@ -10,7 +10,7 @@ const Util = new util;
 const types = VerificationTypes;
 const genericstep = new WIStepVerificationInfo(types.TEXT);
 export default class WISteps {
-    
+    StepShouldNotHaveInformationFilled = false;
     StepInfoSideBar: Selector;
     StepNum: number;
     editStepDescription: Selector;
@@ -31,8 +31,10 @@ export default class WISteps {
     constructor() {
         this.StepNum = null;
         this.verificationsubmitBtn = Selector("button.create.btn.btn-sm.btn-success");
+        if(!this.StepShouldNotHaveInformationFilled){
         this.StepSafteyAndComplience = "this is generic saftey" + Util.randchar(25);
         this.StepDescription = "this is a generic step description" + Util.randchar(25);
+        }
         this.StepName = "this is a generic step name" + Util.randchar(10);
         this.StepInfoSideBar = Selector("#DWIPlayerSideBar");
         this.editStepDescription = Selector('div.ql-editor').nth(0);
