@@ -8,6 +8,7 @@ import {location} from "./PageComponents/location";
 import {status} from "./PageComponents/releasestatus";
 import {WORKITEMTAB} from "./PageComponents/WITAB";
 export default class WI {
+    AddedContextsHoverText: Selector;
     WorkitemTab: Selector;
     UserTab: Selector;
     ContentTab: Selector;
@@ -45,6 +46,7 @@ export default class WI {
     releasestatus: status;
     constructor() {
         this.Uploads = [];
+        this.AddedContextsHoverText = Selector("div.contextItemHoverInfo");
         this.ContextFiles = Selector("img.img-responsive");
         this.SubmitUploadFileBtn = Selector('button#uploadFileButton');
         this.UploadFileBtn = Selector('input#uploadFile');
@@ -80,7 +82,28 @@ export default class WI {
     this.UploadTab = Selector("#dwiTabs-tab-Upload");
     
     }
-
+    async VerifyContentIsShown(ContextName){
+        const UTIL = new util();
+        var finished = false;
+        var num = await this.AddedContextsHoverText.count;
+        let i =0;
+        let title = await this.AddedContextsHoverText.nth(i).innerText;
+        var ContextIsPresnet = false;
+        for(i; i < num; i++){
+            if(await title.toLocaleUpperCase().includes(await ContextName.toLocaleUpperCase())){
+                ContextIsPresnet = true;
+                if(UTIL.Verbose) console.log("--VerifyContentIsShown, context is present")
+            }
+        }
+        while(finished == false){
+            if(i >= num){
+                finished = true;
+            }
+        }
+        if(finished == true){
+        return ContextIsPresnet;
+        }
+    }
     async UploadFile(Upload: UPLOAD){
         await this.SwitchWITAB(WORKITEMTAB.UPLOAD);
         await t 
@@ -133,6 +156,7 @@ export default class WI {
         .click(this.ContextFiles.nth(num))
         .expect(Selector('button[data-id="selectButton"]').exists).eql(true)
         .click(Selector('button[data-id="selectButton"]'));
+        await t.expect(await this.VerifyContentIsShown(uplaod.Title)).eql(true);
     }
     async EditWIDescription(WorkItem: WI, text: string){
         
