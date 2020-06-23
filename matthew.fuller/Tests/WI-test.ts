@@ -74,7 +74,7 @@ test('can add child step to wistep', async t => {
     var step2 = new WISteps();
     await DefaultWorkItem.AddStep(true, step, false, false);
     await DefaultWorkItem.addChildStepToStep(step, step2);
-}).only
+});
 //tests that create a WI before and delete after
 test('can edit title of WI', async t => {
     const Util = new util;
