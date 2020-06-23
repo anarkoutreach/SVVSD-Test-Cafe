@@ -87,6 +87,7 @@ export default class WI {
         let selectedstep = await this.GetStep(SelectedStep.StepNum)
         await t
         .expect(selectedstep.exists).eql(true)
+        .hover(selectedstep)
         .expect(selectedstep.child(".stepItemRightButtons").exists).eql(true)
         .click(selectedstep.child(".stepItemRightButtons"));
 

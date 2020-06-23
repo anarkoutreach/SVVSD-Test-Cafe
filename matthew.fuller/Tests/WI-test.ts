@@ -75,6 +75,34 @@ test('can add child step to wistep', async t => {
     await DefaultWorkItem.AddStep(true, step, false, false);
     await DefaultWorkItem.addChildStepToStep(step, step2);
 });
+test('can add child step to child step', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    var step = new WISteps();
+    step.StepShouldNotHaveInformationFilled = true;
+    var step2 = new WISteps();
+    step2.StepShouldNotHaveInformationFilled = true;
+    var step3 = new WISteps();
+    //var step4 = new WISteps();
+    await DefaultWorkItem.AddStep(true, step, false, false);
+    await DefaultWorkItem.addChildStepToStep(step, step2);
+    await DefaultWorkItem.addChildStepToStep(step2, step3);
+})
+test('can add (a lot of) child step to child step', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    var step = new WISteps();
+    step.StepShouldNotHaveInformationFilled = true;
+    //var step4 = new WISteps();
+    let i = 0;
+    await DefaultWorkItem.AddStep(true, step, false, false);
+    for(i; i < 100; i++){
+    let step2 =new WISteps();
+    step2.StepShouldNotHaveInformationFilled = true;
+    await DefaultWorkItem.addChildStepToStep(step, step2);
+    console.log(i);
+    step = step2;
+    }
+
+}).only
 //tests that create a WI before and delete after
 test('can edit title of WI', async t => {
     const Util = new util;
