@@ -94,7 +94,7 @@ test('can add (a lot of) child step to child step', async t => {
     //var step4 = new WISteps();
     let i = 0;
     await DefaultWorkItem.AddStep(true, step, false, false);
-    for(i; i < 100; i++){
+    for(i; i < 5; i++){
     let step2 =new WISteps();
     step2.StepShouldNotHaveInformationFilled = true;
     await DefaultWorkItem.addChildStepToStep(step, step2);
@@ -102,7 +102,34 @@ test('can add (a lot of) child step to child step', async t => {
     step = step2;
     }
 
-}).only
+});
+test('add a lot of steps and child steps', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    for(let g = 0; g < 100; g++){
+    var step = new WISteps();
+    step.StepShouldNotHaveInformationFilled = true;
+    //var step4 = new WISteps();
+    let i = 0;
+    await DefaultWorkItem.AddStep(true, step, false, false);
+        var step3 = step;
+    //loop to add five nested children
+    for(i; i < 5; i++){
+    let step2 =new WISteps();
+    step2.StepShouldNotHaveInformationFilled = true;
+    await DefaultWorkItem.addChildStepToStep(step3, step2);
+    console.log(i);
+     step3 = step2;
+    }
+    //add ten children
+    for(let y = 0; y <10; y++){
+        let step2 =new WISteps();
+        step2.StepShouldNotHaveInformationFilled = false;
+        await DefaultWorkItem.addChildStepToStep(step, step2);
+    }
+
+}
+}).only;
+
 //tests that create a WI before and delete after
 test('can edit title of WI', async t => {
     const Util = new util;
