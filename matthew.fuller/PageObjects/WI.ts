@@ -83,13 +83,15 @@ export default class WI {
     
     }
 
-    async addChildStep(step: WISteps){
-        let selectedstep = await this.GetStep(step.StepNum)
+    async addChildStepToStep(SelectedStep: WISteps, step: WISteps){
+        let selectedstep = await this.GetStep(SelectedStep.StepNum)
         await t
         .expect(selectedstep.exists).eql(true)
         .expect(selectedstep.child(".stepItemRightButtons").exists).eql(true)
         .click(selectedstep.child(".stepItemRightButtons"));
-    
+
+        await this.AddStep(true, step, false, true);
+        await this.CatalogSteps();
     }
     async VerifyContentIsShown(ContextName){
         const UTIL = new util();
@@ -317,7 +319,7 @@ export default class WI {
         await t
         .expect(alerts.errorPopUp.withText("empty"))
     }
-    async AddStep (BugWorkaround: boolean, step: WISteps, letDuplicate: boolean) {
+    async AddStep (BugWorkaround: boolean, step: WISteps, letDuplicate: boolean, StepIsAlreadyCreated: boolean) {
        let workaroundbug = BugWorkaround;
         let StepExists: boolean;
         const Util = new util;
@@ -338,6 +340,7 @@ export default class WI {
     
          
         if(!StepExists && !letDuplicate){
+            if(!StepIsAlreadyCreated){
         await t
             .click(this.appendProccessStep)
             .typeText(this.getSelectedStepInput, step.StepName)
@@ -351,6 +354,19 @@ export default class WI {
             if(!step.StepShouldNotHaveInformationFilled)
             await this.FillallStepFields(step);
             if(!workaroundbug)return;
+            } else if (StepIsAlreadyCreated){
+                await t
+                .typeText(this.getSelectedStepInput, step.StepName)
+                .pressKey('enter');
+                this.validateText(step);
+                //WiStep.StepNum = catalog Steps
+                if(this.steps)
+                this.steps.push(step);
+                if(!this.steps)
+                this.steps.push(step);
+                if(!step.StepShouldNotHaveInformationFilled)
+                await this.FillallStepFields(step);
+            }
         }else if(letDuplicate){
             var dupicateError: boolean;
             var alerts = new Alerts();

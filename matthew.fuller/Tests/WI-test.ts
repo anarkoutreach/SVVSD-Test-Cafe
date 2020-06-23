@@ -68,11 +68,12 @@ fixture`WI test initalisation`.page(configManager.homePage).beforeEach(async t =
 });
 
 test('can add child step to wistep', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     var step = new WISteps();
     step.StepShouldNotHaveInformationFilled = true;
     var step2 = new WISteps();
-    DefaultWorkItem.AddStep(true, step, false);
-    DefaultWorkItem.addChildStep(step2);
+    await DefaultWorkItem.AddStep(true, step, false, false);
+    await DefaultWorkItem.addChildStepToStep(step, step2);
 }).only
 //tests that create a WI before and delete after
 test('can edit title of WI', async t => {
@@ -98,7 +99,7 @@ test('can upload context to step', async t => {
     var step = new WISteps();
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     await DefaultWorkItem.UploadContext(upload);
-    await DefaultWorkItem.AddStep(false, step, false);
+    await DefaultWorkItem.AddStep(false, step, false, false);
     await DefaultWorkItem.AddContextToStep(step, upload);
 
 })
@@ -109,7 +110,7 @@ test('can create WI then delete', async t => {
 test('Add one verification step', async t => { 
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     let WIstep = new WISteps();
-    await DefaultWorkItem.AddStep(true, WIstep, false);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
     var VerificationStep = new WIStepVerificationInfo(types.TEXT);
     await WIstep.addVerificationStep(VerificationStep);
     await feedPage.returnToHome();
@@ -119,8 +120,8 @@ test('Cannot add duplicate steps', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     let WIstep = new WISteps();
     WIstep.StepName = "Step w/S-Name"
-    await DefaultWorkItem.AddStep(true, WIstep, false);
-    await DefaultWorkItem.AddStep(true, WIstep, true);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
+    await DefaultWorkItem.AddStep(true, WIstep, true, false);
 })
 
 fixture`tests that most likly will not fail`.page(configManager.homePage).beforeEach(async t => {
@@ -142,7 +143,7 @@ test('add a text verification steps', async t => {
     var i;
 
     let WIstep = new WISteps();
-    await DefaultWorkItem.AddStep(true, WIstep, false);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
     var VerificationStep = new WIStepVerificationInfo(types.TEXT);
     await WIstep.addVerificationStep(VerificationStep);
     
@@ -153,7 +154,7 @@ test('add a checkbox verification steps', async t => {
     var i;
 
     let WIstep = new WISteps();
-    await DefaultWorkItem.AddStep(true, WIstep, false);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
     var VerificationStep = new WIStepVerificationInfo(types.CHECKBOX);
     await WIstep.addVerificationStep(VerificationStep);
     
@@ -164,7 +165,7 @@ test('add a date verification steps', async t => {
     var i;
 
     let WIstep = new WISteps();
-    await DefaultWorkItem.AddStep(true, WIstep, false);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
     var VerificationStep = new WIStepVerificationInfo(types.DATE);
     await WIstep.addVerificationStep(VerificationStep);
     
@@ -176,7 +177,7 @@ test('add a file verification steps', async t => {
     var i;
 
     let WIstep = new WISteps();
-    await DefaultWorkItem.AddStep(true, WIstep, false);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
     var VerificationStep = new WIStepVerificationInfo(types.FILE);
     await WIstep.addVerificationStep(VerificationStep);
     
@@ -188,7 +189,7 @@ test('add a decimal verification steps', async t => {
     var i;
 
     let WIstep = new WISteps();
-    await DefaultWorkItem.AddStep(true, WIstep, false);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
     var VerificationStep = new WIStepVerificationInfo(types.DECIMAL);
     await WIstep.addVerificationStep(VerificationStep);
     
@@ -200,7 +201,7 @@ test('add a dropdown verification steps', async t => {
     var i;
 
     let WIstep = new WISteps();
-    await DefaultWorkItem.AddStep(true, WIstep, false);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
     var VerificationStep = new WIStepVerificationInfo(types.DROPDOWN);
     await WIstep.addVerificationStep(VerificationStep);
     
@@ -211,7 +212,7 @@ test('add a intager verification steps', async t => {
     var i;
 
     let WIstep = new WISteps();
-    await DefaultWorkItem.AddStep(true, WIstep, false);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
     var VerificationStep = new WIStepVerificationInfo(types.INTEGER);
     await WIstep.addVerificationStep(VerificationStep);
     
@@ -222,7 +223,7 @@ test('add a multiselect verification steps', async t => {
     var i;
 
     let WIstep = new WISteps();
-    await DefaultWorkItem.AddStep(true, WIstep, false);
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
     var VerificationStep = new WIStepVerificationInfo(types.MULTISELECT);
     await WIstep.addVerificationStep(VerificationStep);
     
