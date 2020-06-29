@@ -60,7 +60,6 @@ await feedPage.returnToHome();
     await feedPage.deleteWI(tabs.WORKITEMS, DefaultWorkItem);
 }).only;
 test("can open WI menu fill in all feilds then cancel", async t => {
-    const feedPage = new FeedPage;
     const DefaultWorkItem = new WI
     DefaultWorkItem.title =   feedPage.combineStringWithRandID(DefaultWorkItem.title, 40);
     await feedPage.openAWICreateMenu();
@@ -69,14 +68,12 @@ test("can open WI menu fill in all feilds then cancel", async t => {
 });
 
 test("can open WI menu and close", async t => {
-    const feedPage = new FeedPage;
     const DefaultWorkItem = new WI
     
     await feedPage.openAWICreateMenu();
     await feedPage.closeAWIMenu();
 });
 test("can open WI menu and close", async t => {
-    const feedPage = new FeedPage;
     const DefaultWorkItem = new WI
     const Util = new util;
     await feedPage.openAWICreateMenu();

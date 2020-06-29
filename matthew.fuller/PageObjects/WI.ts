@@ -7,7 +7,10 @@ import Alerts from "./Alerts";
 import {location} from "./PageComponents/location";
 import {status} from "./PageComponents/releasestatus";
 import {WORKITEMTAB} from "./PageComponents/WITAB";
+import * as fs from 'fs';
+
 export default class WI {
+
     AddedContextsHoverText: Selector;
     WorkitemTab: Selector;
     UserTab: Selector;
@@ -42,6 +45,7 @@ export default class WI {
     UploadFileBtn: Selector;
     SubmitUploadFileBtn: Selector;
     ContextFiles: Selector;
+    FeedPageEventEmitter;
 
     releasestatus: status;
     constructor() {
@@ -93,6 +97,7 @@ export default class WI {
 
         await this.AddStep(true, step, false, true);
         await this.CatalogSteps();
+        await this.FeedPageEventEmitter.emit("update");
     }
     async VerifyContentIsShown(ContextName){
         const UTIL = new util();
@@ -142,6 +147,7 @@ export default class WI {
         Upload.Index = 0;
     }
         this.Uploads.push(Upload);
+        await this.FeedPageEventEmitter.emit("update");
     }
     async UploadContext(upload){
         await this.SwitchWITAB(WORKITEMTAB.UPLOAD);
@@ -152,7 +158,7 @@ export default class WI {
         var num = uplaod.Index
         var stepshavebeencataloged = false;
         await this.CatalogSteps().then(value =>{
-            if(value = true){
+            if(value === true){
                 stepshavebeencataloged = true;
             } else{
                 stepshavebeencataloged = false;
@@ -169,6 +175,7 @@ export default class WI {
         .expect(Selector('button[data-id="selectButton"]').exists).eql(true)
         .click(Selector('button[data-id="selectButton"]'));
         await t.expect(await this.VerifyContentIsShown(uplaod.Title)).eql(true);
+        await this.FeedPageEventEmitter.emit("update");
     }
     async EditWIDescription(WorkItem: WI, text: string){
         
@@ -181,6 +188,7 @@ export default class WI {
             .typeText(this.editWIDescription, text)
             .expect((await this.editWIDescription.innerText).includes(text)).ok;
         WorkItem.description = text;
+        await this.FeedPageEventEmitter.emit("update");
         return WorkItem;
     }
     async EditWITitle(WorkItem: WI, text: string){
@@ -194,6 +202,7 @@ export default class WI {
             .typeText(this.editWITitle, text)
             .expect((await this.editWITitle.innerText).includes(text)).ok;
         WorkItem.title = text;
+        await this.FeedPageEventEmitter.emit("update");
         return WorkItem;
     }
     async VerifyWiTitle(WorkItem: WI){
@@ -226,51 +235,67 @@ export default class WI {
         return await this.allsteps.count;
     }
     async CatalogSteps (){
-        let finished = false;
-        var NumOfSteps = await this.CountSteps();
-        var i =0;
-        if(this.allsteps.length < NumOfSteps){
-        for(i; i < NumOfSteps; i++){
-        await t
-        .click(this.allsteps.nth(i));
-        var step = new WISteps();
-        step.StepName = await this.allsteps.nth(i).innerText;
-        let stepExists = false;
-        let existingStep : WISteps;
-        this.steps.forEach(async step9 => {
-            if(step9.StepName.includes(step.StepName)){
-                stepExists = true;
-                existingStep = step9;
-            }
-        })
-        if(!stepExists){
-        step.StepNum = i;
-        step.StepDescription = await step.editStepDescription.innerText;
-        step.StepSafteyAndComplience = await step.editStepSafetyAndComplience.innerText;
-        if(this.steps)
-        this.steps.push(step);
-        if(!this.steps)
-        this.steps.push(step);
-        }else{
-            if(!existingStep.StepName) existingStep.StepName = await this.allsteps.nth(i).innerText
-            existingStep.StepNum = i;
-            if(!existingStep.StepDescription) existingStep.StepDescription = await step.editStepDescription.innerText;
-            if(!existingStep.StepSafteyAndComplience) existingStep.StepSafteyAndComplience = await step.editStepSafetyAndComplience.innerText;
-        }
-        }
+        return new Promise(async resolve => {
+            let test1 = false;
+            var tempdata;
+            fs.readFile("C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (err, data) => {
+            if (err) throw err;
+            tempdata = JSON.parse(data.toString());
 
-        while(finished == false){
-            if(i >= NumOfSteps){
-                finished = true;
+        });
+        if(test1){
+        await tempdata.FeedPageEventEmitter.Update();
+        this.allsteps = tempdata.allsteps;
+            let finished = false;
+            var NumOfSteps = await this.CountSteps();
+            var i =0;
+            if(this.allsteps.length < NumOfSteps){
+            for(i; i < NumOfSteps; i++){
+            await t
+            .click(this.allsteps.nth(i));
+            var step = new WISteps();
+            step.StepName = await this.allsteps.nth(i).innerText;
+            let stepExists = false;
+            let existingStep : WISteps;
+            this.steps.forEach(async step9 => {
+                if(step9.StepName.includes(step.StepName)){
+                    stepExists = true;
+                    existingStep = step9;
+                }
+            })
+            if(!stepExists){
+            step.StepNum = i;
+            step.StepDescription = await step.editStepDescription.innerText;
+            step.StepSafteyAndComplience = await step.editStepSafetyAndComplience.innerText;
+            if(this.steps)
+            this.steps.push(step);
+            if(!this.steps)
+            this.steps.push(step);
+            }else{
+                if(!existingStep.StepName) existingStep.StepName = await this.allsteps.nth(i).innerText
+                existingStep.StepNum = i;
+                if(!existingStep.StepDescription) existingStep.StepDescription = await step.editStepDescription.innerText;
+                if(!existingStep.StepSafteyAndComplience) existingStep.StepSafteyAndComplience = await step.editStepSafetyAndComplience.innerText;
             }
+            }
+    
+            if(finished == false){
+                if(i >= NumOfSteps){
+                    finished = true;
+                }
+            }
+            
+            if(finished === true){
+                await this.FeedPageEventEmitter.emit("update");
+            resolve(finished);
+            }
+        }else{
+            await this.FeedPageEventEmitter.emit("update");
+            resolve(finished);
         }
-        
-        if(finished == true){
-        return finished;
-        }
-    }else{
-        return;
     }
+        })
+        
         
     }
     async fixerthingythingthingy(finished, i, NumOfSteps){
@@ -289,6 +314,7 @@ export default class WI {
         .typeText(step.editStepDescription, step.StepDescription)
         .expect(step.editStepSafetyAndComplience.exists).eql(true)
         .typeText(step.editStepSafetyAndComplience, step.StepSafteyAndComplience);
+        await this.FeedPageEventEmitter.emit("update");
 
        
     }
@@ -372,6 +398,7 @@ export default class WI {
                 this.steps.push(step);
                 if(!step.StepShouldNotHaveInformationFilled)
                 await this.FillallStepFields(step);
+                await this.FeedPageEventEmitter.emit("update");
             }
         }else if(letDuplicate){
             var dupicateError: boolean;
@@ -397,6 +424,7 @@ export default class WI {
             this.steps.push(step);
             if(!step.StepShouldNotHaveInformationFilled)
             await this.FillallStepFields(step);
+            await this.FeedPageEventEmitter.emit("update");
             if(!workaroundbug)return;
             }
         }

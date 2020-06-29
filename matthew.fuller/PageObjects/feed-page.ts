@@ -5,6 +5,27 @@ import WI from "./WI";
 import {tabs} from "./PageComponents/tabs";
 import SearchPage from "./search-page"
 import util from "../Utilities/util";
+import * as fs from 'fs';
+import * as events from "events";
+
+const tick = () => 
+  new Promise(resolve => {
+    setTimeout(() => {
+      console.log('tick')
+      resolve()
+    }, 1000)
+  })
+  class MyClass extends events.EventEmitter {
+	// ...
+	Update() {
+		return new Promise( resolve =>{
+			this.emit("update");
+			setTimeout(function(){resolve(true)}, 3000);
+		})
+	  
+		
+	}
+  }
 export default class FeedPage {
 	userInitialsIcon: Selector;
 	firstConversation: Selector;
@@ -18,6 +39,7 @@ export default class FeedPage {
 	createOptionsDwi: Selector;
 	getSearchBar: Selector;
 	getSearchSubmitBtn: Selector;
+	eventEmitter = new MyClass();
 	
 
 	constructor() {
@@ -97,7 +119,19 @@ export default class FeedPage {
 		let searchResult = await this.findSearchResult(workitem.title, tabs.WORKITEMS);
 		await t
 		.click(searchResult)
-		.expect(generinworkitem.wiTitle.visible).eql(true);
+		.expect(generinworkitem.wiTitle.visible).eql(true);	
+		generinworkitem.FeedPageEventEmitter = this.eventEmitter;
+		this.eventEmitter.on("close", async () =>{
+			this.onCloseWI;
+		});
+		this.eventEmitter.on("update", async () =>{
+			fs.writeFileSync('C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json', JSON.stringify(generinworkitem))
+		})
+		this.eventEmitter.emit("update");
+	}
+	
+	async onCloseWI(){
+		fs.writeFileSync('C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json', "{\"CLOSED\":\"TRUE\"}")
 	}
 
 	async FillallWIFields(workitem: WI) {
@@ -253,6 +287,7 @@ export default class FeedPage {
 		.expect(searchResult.exists).eql(false);
 		if(Util.Verbose)console.log("-- deleteWI: finished deleating WI --");
 		await t.click(alerts.getGenericConfirmBtn);
+		this.eventEmitter.emit("close");
 	}
 
 	async openAWICreateMenuThenClose() {
