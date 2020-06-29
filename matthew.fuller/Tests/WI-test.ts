@@ -9,7 +9,8 @@ import randchar from "../Utilities/util";
 import WI from "../PageObjects/WI";
 import util from "../Utilities/util";
 import WISteps from "../PageObjects/PageComponents/WISteps";
-import { UPLOAD } from "../PageObjects/PageComponents/Upload"
+import { UPLOAD } from "../PageObjects/PageComponents/Upload";
+
 
 const types = VerificationTypes;
 const alerts = new Alerts();
@@ -23,6 +24,41 @@ fixture`Login`.page(configManager.homePage).beforeEach(async t => {
         .useRole(t.ctx.user.role);
 });
 //tests that only use log in fixture
+test('add a lot of steps and child steps', async t => {
+    
+    const UTIL = new util();
+    
+
+    DefaultWorkItem.title = "this is a generic stress test id: " + UTIL.randchar(50);
+    await feedPage.createWI(DefaultWorkItem, 20);
+    await feedPage.returnToHome();
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    for(let g = 0; g < 100; g++){
+    var step = new WISteps();
+    step.StepShouldNotHaveInformationFilled = true;
+    //var step4 = new WISteps();
+    let i = 0;
+    await DefaultWorkItem.AddStep(true, step, false, false);
+        var step3 = step;
+    //loop to add five nested children
+    for(i; i < 3; i++){
+    let step2 =new WISteps();
+    step2.StepShouldNotHaveInformationFilled = true;
+    await DefaultWorkItem.addChildStepToStep(step3, step2);
+    console.log(i);
+     step3 = step2;
+    }
+    //add ten children
+    for(let y = 0; y <10; y++){
+        let step2 =new WISteps();
+        step2.StepShouldNotHaveInformationFilled = false;
+        await DefaultWorkItem.addChildStepToStep(step, step2);
+    }
+
+}
+await feedPage.returnToHome();
+    await feedPage.deleteWI(tabs.WORKITEMS, DefaultWorkItem);
+}).only;
 test("can open WI menu fill in all feilds then cancel", async t => {
     const feedPage = new FeedPage;
     const DefaultWorkItem = new WI
@@ -103,32 +139,7 @@ test('can add (a lot of) child step to child step', async t => {
     }
 
 });
-test('add a lot of steps and child steps', async t => {
-    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
-    for(let g = 0; g < 100; g++){
-    var step = new WISteps();
-    step.StepShouldNotHaveInformationFilled = true;
-    //var step4 = new WISteps();
-    let i = 0;
-    await DefaultWorkItem.AddStep(true, step, false, false);
-        var step3 = step;
-    //loop to add five nested children
-    for(i; i < 5; i++){
-    let step2 =new WISteps();
-    step2.StepShouldNotHaveInformationFilled = true;
-    await DefaultWorkItem.addChildStepToStep(step3, step2);
-    console.log(i);
-     step3 = step2;
-    }
-    //add ten children
-    for(let y = 0; y <10; y++){
-        let step2 =new WISteps();
-        step2.StepShouldNotHaveInformationFilled = false;
-        await DefaultWorkItem.addChildStepToStep(step, step2);
-    }
 
-}
-}).only;
 
 //tests that create a WI before and delete after
 test('can edit title of WI', async t => {
