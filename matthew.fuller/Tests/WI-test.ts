@@ -111,6 +111,16 @@ test('can add child step to wistep', async t => {
     await DefaultWorkItem.AddStep(true, step, false, false);
     await DefaultWorkItem.addChildStepToStep(step, step2);
 });
+test('cannot add child wi step to a wi step with information filled', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    var step = new WISteps();
+    step.StepShouldNotHaveInformationFilled = false;
+    var step2 = new WISteps();
+    let selectedstep = await this.GetStep(step.StepNum)
+    await DefaultWorkItem.AddStep(true, step, false, false);
+    await t.expect(selectedstep.child(".stepItemRightButtons").exists).eql(false);
+    //await DefaultWorkItem.addChildStepToStep(step, step2);
+});
 test('can add child step to child step', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     var step = new WISteps();
