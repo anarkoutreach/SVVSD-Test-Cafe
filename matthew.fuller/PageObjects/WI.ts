@@ -241,7 +241,7 @@ export default class WI {
             fs.readFile("C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (err, data) => {
             if (err) throw err;
             tempdata = JSON.parse(data.toString());
-
+                test1 = true;
         });
         if(test1){
         await tempdata.FeedPageEventEmitter.Update();
