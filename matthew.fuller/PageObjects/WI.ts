@@ -229,6 +229,7 @@ export default class WI {
         let finished = false;
         var NumOfSteps = await this.CountSteps();
         var i =0;
+        if(this.allsteps.length < NumOfSteps){
         for(i; i < NumOfSteps; i++){
         await t
         .click(this.allsteps.nth(i));
@@ -263,9 +264,13 @@ export default class WI {
                 finished = true;
             }
         }
+        
         if(finished == true){
         return finished;
         }
+    }else{
+        return;
+    }
         
     }
     async fixerthingythingthingy(finished, i, NumOfSteps){
