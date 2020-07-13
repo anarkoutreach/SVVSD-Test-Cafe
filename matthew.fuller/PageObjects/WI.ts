@@ -237,13 +237,20 @@ export default class WI {
     async CatalogSteps (){
         let test1 = false;
         return new Promise(async resolve => {
-            
-            var tempdata;
-            fs.readFile("C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (err, data) => {
-            if (err) throw err;
-            tempdata = JSON.parse(data.toString());
-                test1 = true;
-        });
+            var gettempdata = new Promise(async resolve =>{
+                var tempdata;
+                fs.readFile("C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (err, data) => {
+                if (err) throw err;
+                tempdata = JSON.parse(data.toString());
+                    resolve(tempdata);
+            });
+            });
+            let tempdata
+            await gettempdata.then(value =>{
+                 tempdata = value;
+                 test1 = true;
+            })
+
         if(test1){
         await tempdata.FeedPageEventEmitter.Update();
         this.allsteps = tempdata.allsteps;
