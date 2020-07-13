@@ -97,7 +97,7 @@ export default class WI {
 
         await this.AddStep(true, step, false, true);
         await this.CatalogSteps();
-        await this.FeedPageEventEmitter.emit("update");
+        await this.FeedPageEventEmitter.Update();
     }
     async VerifyContentIsShown(ContextName){
         const UTIL = new util();
@@ -147,7 +147,7 @@ export default class WI {
         Upload.Index = 0;
     }
         this.Uploads.push(Upload);
-        await this.FeedPageEventEmitter.emit("update");
+        await this.FeedPageEventEmitter.Update();
     }
     async UploadContext(upload){
         await this.SwitchWITAB(WORKITEMTAB.UPLOAD);
@@ -175,7 +175,7 @@ export default class WI {
         .expect(Selector('button[data-id="selectButton"]').exists).eql(true)
         .click(Selector('button[data-id="selectButton"]'));
         await t.expect(await this.VerifyContentIsShown(uplaod.Title)).eql(true);
-        await this.FeedPageEventEmitter.emit("update");
+        await this.FeedPageEventEmitter.Update();
     }
     async EditWIDescription(WorkItem: WI, text: string){
         
@@ -188,7 +188,7 @@ export default class WI {
             .typeText(this.editWIDescription, text)
             .expect((await this.editWIDescription.innerText).includes(text)).ok;
         WorkItem.description = text;
-        await this.FeedPageEventEmitter.emit("update");
+        await this.FeedPageEventEmitter.Update();
         return WorkItem;
     }
     async EditWITitle(WorkItem: WI, text: string){
@@ -202,7 +202,7 @@ export default class WI {
             .typeText(this.editWITitle, text)
             .expect((await this.editWITitle.innerText).includes(text)).ok;
         WorkItem.title = text;
-        await this.FeedPageEventEmitter.emit("update");
+        await this.FeedPageEventEmitter.Update();
         return WorkItem;
     }
     async VerifyWiTitle(WorkItem: WI){
@@ -235,8 +235,9 @@ export default class WI {
         return await this.allsteps.count;
     }
     async CatalogSteps (){
+        let test1 = false;
         return new Promise(async resolve => {
-            let test1 = false;
+            
             var tempdata;
             fs.readFile("C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (err, data) => {
             if (err) throw err;
@@ -286,11 +287,11 @@ export default class WI {
             }
             
             if(finished === true){
-                await this.FeedPageEventEmitter.emit("update");
+                await this.FeedPageEventEmitter.Update();
             resolve(finished);
             }
         }else{
-            await this.FeedPageEventEmitter.emit("update");
+            await this.FeedPageEventEmitter.Update();
             resolve(finished);
         }
     }
@@ -314,7 +315,7 @@ export default class WI {
         .typeText(step.editStepDescription, step.StepDescription)
         .expect(step.editStepSafetyAndComplience.exists).eql(true)
         .typeText(step.editStepSafetyAndComplience, step.StepSafteyAndComplience);
-        await this.FeedPageEventEmitter.emit("update");
+        await this.FeedPageEventEmitter.Update();
 
        
     }
@@ -398,7 +399,7 @@ export default class WI {
                 this.steps.push(step);
                 if(!step.StepShouldNotHaveInformationFilled)
                 await this.FillallStepFields(step);
-                await this.FeedPageEventEmitter.emit("update");
+                await this.FeedPageEventEmitter.Update();
             }
         }else if(letDuplicate){
             var dupicateError: boolean;
@@ -424,7 +425,7 @@ export default class WI {
             this.steps.push(step);
             if(!step.StepShouldNotHaveInformationFilled)
             await this.FillallStepFields(step);
-            await this.FeedPageEventEmitter.emit("update");
+            await this.FeedPageEventEmitter.Update();
             if(!workaroundbug)return;
             }
         }

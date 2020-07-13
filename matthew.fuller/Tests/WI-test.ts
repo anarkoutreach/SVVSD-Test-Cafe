@@ -58,7 +58,7 @@ test('add a lot of steps and child steps', async t => {
 }
 await feedPage.returnToHome();
     await feedPage.deleteWI(tabs.WORKITEMS, DefaultWorkItem);
-}).only;
+});
 test("can open WI menu fill in all feilds then cancel", async t => {
     const DefaultWorkItem = new WI
     DefaultWorkItem.title =   feedPage.combineStringWithRandID(DefaultWorkItem.title, 40);

@@ -19,8 +19,20 @@ const tick = () =>
 	// ...
 	Update() {
 		return new Promise( resolve =>{
+			let fsWait;
+			const watcher = fs.watch('C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json', (event, filename) => {
+				if (filename) {
+				  if (fsWait) return;
+				  fsWait = setTimeout(() => {
+					fsWait = false;
+				  }, 100);
+				  if(event === "change"){
+					  resolve(true)
+					  watcher.close();
+				  }
+				}
+			  });
 			this.emit("update");
-			setTimeout(function(){resolve(true)}, 3000);
 		})
 	  
 		
@@ -127,7 +139,7 @@ export default class FeedPage {
 		this.eventEmitter.on("update", async () =>{
 			fs.writeFileSync('C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json', JSON.stringify(generinworkitem))
 		})
-		this.eventEmitter.emit("update");
+		this.eventEmitter.Update();
 	}
 	
 	async onCloseWI(){
