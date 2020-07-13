@@ -20,7 +20,7 @@ const tick = () =>
 	Update() {
 		return new Promise( resolve =>{
 			let fsWait;
-			const watcher = fs.watch('C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json', (event, filename) => {
+			const watcher = fs.watch("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (event, filename) => {
 				if (filename) {
 				  if (fsWait) return;
 				  fsWait = setTimeout(() => {
@@ -132,14 +132,16 @@ export default class FeedPage {
 		await t
 		.click(searchResult)
 		.expect(generinworkitem.wiTitle.visible).eql(true);	
-		generinworkitem.FeedPageEventEmitter = this.eventEmitter;
+		
 		this.eventEmitter.on("close", async () =>{
 			this.onCloseWI;
 		});
 		this.eventEmitter.on("update", async () =>{
-			fs.writeFileSync('C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json', JSON.stringify(generinworkitem))
-		})
-		this.eventEmitter.Update();
+			fs.writeFileSync("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", JSON.stringify(generinworkitem))
+		});
+		
+		generinworkitem.FeedPageEventEmitter = this.eventEmitter;
+		await this.eventEmitter.Update();
 	}
 	
 	async onCloseWI(){

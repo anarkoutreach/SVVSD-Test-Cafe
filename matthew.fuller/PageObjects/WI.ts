@@ -239,7 +239,7 @@ export default class WI {
         return new Promise(async resolve => {
             var gettempdata = new Promise(async resolve =>{
                 var tempdata;
-                fs.readFile("C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (err, data) => {
+                fs.readFile("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (err, data) => {
                 if (err) throw err;
                 tempdata = JSON.parse(data.toString());
                     resolve(tempdata);
@@ -252,12 +252,13 @@ export default class WI {
             })
 
         if(test1){
-        await tempdata.FeedPageEventEmitter.Update();
-        this.allsteps = tempdata.allsteps;
+        
+        //this.allsteps = tempdata.allsteps;
             let finished = false;
             var NumOfSteps = await this.CountSteps();
             var i =0;
-            if(this.allsteps.length < NumOfSteps){
+            this.steps = tempdata.steps;
+            if(this.steps.length < NumOfSteps){
             for(i; i < NumOfSteps; i++){
             await t
             .click(this.allsteps.nth(i));
