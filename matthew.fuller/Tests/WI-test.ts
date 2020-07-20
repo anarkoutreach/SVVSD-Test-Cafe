@@ -10,7 +10,7 @@ import WI from "../PageObjects/WI";
 import util from "../Utilities/util";
 import WISteps from "../PageObjects/PageComponents/WISteps";
 import { UPLOAD } from "../PageObjects/PageComponents/Upload";
-
+import { WORKITEMTAB } from"../PageObjects/PageComponents/WITAB";
 
 const types = VerificationTypes;
 const alerts = new Alerts();
@@ -107,6 +107,62 @@ test('can add child step to wistep', async t => {
     var step2 = new WISteps();
     await DefaultWorkItem.AddStep(true, step, false, false);
     await DefaultWorkItem.addChildStepToStep(step, step2);
+});
+test('can switch between all WI tabs', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.UPLOAD);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.WORKITEM);
+});
+test('can remove content to WI', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
+    await DefaultWorkItem.AddContentByIndex(1);
+    await DefaultWorkItem.RemoveContentByIndex(0);
+});
+test('can add user to WI', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    await DefaultWorkItem.AddUserByIndex(1);
+});
+test('can add multiple users to WI', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    await DefaultWorkItem.AddUserByIndex(1);
+    await DefaultWorkItem.AddUserByIndex(2);
+    await DefaultWorkItem.AddUserByIndex(3);
+});
+test('can add first page of users to WI', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    //all from first page
+    await DefaultWorkItem.AddAllAvalibleUsers();
+    await DefaultWorkItem.RemoveUserByIndex(1);
+});
+test('can remove user from WI', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    await DefaultWorkItem.AddUserByIndex(1);
+    //zero base index, but don't remove self
+    await DefaultWorkItem.RemoveUserByIndex(1);
+});
+test('can add content to WI', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
+    await DefaultWorkItem.AddContentByIndex(1);
+});
+test('can add multiple content to WI', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
+    await DefaultWorkItem.AddContentByIndex(1);
+    await DefaultWorkItem.AddContentByIndex(2);
+    await DefaultWorkItem.AddContentByIndex(3);
+});
+test('can add all avalible content to WI', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
+    await DefaultWorkItem.AddAllAvalibleContent();
 });
 test('cannot add child wi step to a wi step with information filled', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)

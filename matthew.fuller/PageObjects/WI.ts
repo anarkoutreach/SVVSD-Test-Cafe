@@ -121,6 +121,57 @@ export default class WI {
         return ContextIsPresnet;
         }
     }
+    async AddContentByIndex(num: number){
+        const allbuttons = Selector("button.addButton.btn.btn-primary");
+        await t
+        .expect(allbuttons.nth(num).exists).eql(true)
+        .click(allbuttons.nth(num))
+        .expect(allbuttons.nth(num).exists).eql(true)
+        .click(allbuttons.nth(num))
+        .expect(Selector("span.error.active").exists).eql(true);
+        
+    }
+    async AddUserByIndex (num){
+        await this.AddContentByIndex(num);
+    }
+    async AddAllAvalibleUsers(){
+        //only the first page
+        await this.AddAllAvalibleContent();
+    }
+    async RemoveUserByIndex(num){
+        const allbuttons = Selector("div.deleteClone.glyphicon.glyphicon-remove");
+        await t
+        .expect(allbuttons.nth(num).exists).eql(true)
+        .click(allbuttons.nth(num))
+        .expect(Selector("button#okayConfirm").exists).eql(true)
+        .click(Selector("button#okayConfirm"))
+        .expect(allbuttons.nth(num).exists).eql(false);  
+
+        
+    }
+    async AddAllAvalibleContent(){
+        //only the first page
+        const allbuttons = Selector("button.addButton.btn.btn-primary");
+        let count = await allbuttons.count
+        for (let i = 0; i < count; i++) {
+        await t
+        .expect(allbuttons.nth(i).exists).eql(true)
+        .click(allbuttons.nth(i))
+        .expect(allbuttons.nth(i).exists).eql(true)
+        .click(allbuttons.nth(i))
+        .expect(Selector("span.error.active").exists).eql(true);   
+        }
+    }
+    async RemoveContentByIndex(num: number){
+        const allbuttons = Selector("div.deleteClone.deleteAsset.glyphicon.glyphicon-remove");
+        await t
+        .expect(allbuttons.nth(num).exists).eql(true)
+        .click(allbuttons.nth(num))
+        .expect(Selector("button#okayConfirm").exists).eql(true)
+        .click(Selector("button#okayConfirm"))
+        .expect(allbuttons.nth(num).exists).eql(false);        
+    }
+    
     async UploadFile(Upload: UPLOAD){
         await this.SwitchWITAB(WORKITEMTAB.UPLOAD);
         await t 

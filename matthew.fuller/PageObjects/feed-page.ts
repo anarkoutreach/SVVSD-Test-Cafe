@@ -15,6 +15,9 @@ const tick = () =>
       resolve()
     }, 1000)
   })
+  //using this event system, creating massive stress tests on WI items is speed up by a ton, as this ensures data for the WI persists even through new WI objects being created if it needs to,
+  // due to a few places creating new WI objects when still inside the same WI, this fixes that problem
+  //
   class MyClass extends events.EventEmitter {
 	// ...
 	Update() {
