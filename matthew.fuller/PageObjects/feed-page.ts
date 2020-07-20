@@ -114,7 +114,8 @@ export default class FeedPage {
 	const alerts = new Alerts();
 	const Util = new util;
 	const searchpage = new SearchPage;
-		let generinworkitem = new WI
+	//???????? why
+		let generinworkitem = workitem;
 	
 		await this.openAWICreateMenu();
 		
@@ -140,7 +141,7 @@ export default class FeedPage {
 			fs.writeFileSync("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", JSON.stringify(generinworkitem))
 		});
 		
-		generinworkitem.FeedPageEventEmitter = this.eventEmitter;
+		workitem.FeedPageEventEmitter = this.eventEmitter;
 		await this.eventEmitter.Update();
 	}
 	

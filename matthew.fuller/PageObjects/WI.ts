@@ -94,7 +94,7 @@ export default class WI {
         .hover(selectedstep)
         .expect(selectedstep.child(".stepItemRightButtons").exists).eql(true)
         .click(selectedstep.child(".stepItemRightButtons"));
-
+        
         await this.AddStep(true, step, false, true);
         await this.CatalogSteps();
         await this.FeedPageEventEmitter.Update();
@@ -257,7 +257,12 @@ export default class WI {
             let finished = false;
             var NumOfSteps = await this.CountSteps();
             var i =0;
-            this.steps = tempdata.steps;
+            if(this.steps.length >= tempdata.steps.length){
+
+            }else{
+                this.steps = tempdata.steps;
+            }
+            
             if(this.steps.length < NumOfSteps){
             for(i; i < NumOfSteps; i++){
             await t
@@ -438,7 +443,8 @@ export default class WI {
             }
         }
         if(workaroundbug){
-            if(NumOfSteps > 0) step.StepNum = NumOfSteps +1;
+            NumOfSteps = await this.CountSteps();
+            if(NumOfSteps > 0) step.StepNum = NumOfSteps -1;
             if(NumOfSteps == 0) step.StepNum = NumOfSteps;
             // selects a different tab and then goes back to main tab to allow new steps to be created easily
             await this.SwitchWITAB(WORKITEMTAB.USERS);
