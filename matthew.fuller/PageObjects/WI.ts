@@ -136,17 +136,21 @@ export default class WI {
     }
     async AddAllAvalibleUsers(){
         //only the first page
+       
         await this.AddAllAvalibleContent();
     }
     async RemoveUserByIndex(num){
         const allbuttons = Selector("div.deleteClone.glyphicon.glyphicon-remove");
+        const userdata = allbuttons.nth(num).sibling(".searchItemInfo");
+        const username = await userdata.child("span").innerText;
+       
         await t
         .expect(allbuttons.nth(num).exists).eql(true)
         .click(allbuttons.nth(num))
         .expect(Selector("button#okayConfirm").exists).eql(true)
         .click(Selector("button#okayConfirm"))
-        .expect(allbuttons.nth(num).exists).eql(false);  
-
+        .expect(username === await allbuttons.nth(num).sibling(".searchItemInfo").child("span").innerText).eql(true);  
+        console.log(`expected: ${username} to not equal ${await allbuttons.nth(num).sibling(".searchItemInfo").child("span").innerText}`)
         
     }
     async AddAllAvalibleContent(){
