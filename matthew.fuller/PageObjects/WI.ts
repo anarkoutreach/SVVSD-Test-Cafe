@@ -41,6 +41,7 @@ export default class WI {
     steps: WISteps[];
     Uploads: UPLOAD[];
     UploadTitle: Selector;
+    UserPagePrevBtn: Selector;
     UploadDescription: Selector;
     UploadFileBtn: Selector;
     SubmitUploadFileBtn: Selector;
@@ -86,6 +87,7 @@ export default class WI {
     this.ContentTab = Selector("#dwiTabs-tab-Content");
     this.UploadTab = Selector("#dwiTabs-tab-Upload");
     this.UserPageNextBtn = Selector("button#next");
+    this.UserPagePrevBtn = Selector("button#prev");
     
     }
 
@@ -142,6 +144,18 @@ export default class WI {
         .expect(this.UserPageNextBtn.exists).eql(true)
         .click(this.UserPageNextBtn);
         if(Util.Verbose)console.log(` -- clickNextUserPageBtn: original page first username: ${FirstUserName}  second page name:  ${await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText}`)
+        await t
+        .expect(FirstUserName === await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText).eql(false);
+    }
+    async ClickPrevUserPageBtn(){
+        
+        const allbuttons = Selector("button.addButton.btn.btn-primary");
+        const FirstUserData = allbuttons.nth(0).parent("div").sibling("article.search-result.row");
+        const FirstUserName = await FirstUserData.child("div.searchItemInfo").child("span").innerText;
+        await t
+        .expect(this.UserPagePrevBtn.exists).eql(true)
+        .click(this.UserPagePrevBtn);
+        if(Util.Verbose)console.log(` -- clickPrevUserPageBtn: original page first username: ${FirstUserName}  second page name:  ${await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText}`)
         await t
         .expect(FirstUserName === await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText).eql(false);
     }

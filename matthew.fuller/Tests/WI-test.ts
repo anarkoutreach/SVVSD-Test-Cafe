@@ -139,6 +139,18 @@ test('can add all avalible users to WI', async t => {
     //all from first page
     await DefaultWorkItem.AddAllAvalibleUsers();
 });
+test('can go to the next page of users through the \" next button \"', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    await DefaultWorkItem.ClickNextUserPageBtn();
+});
+test('can go to the previous page of users through the \" previous button \"', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    await DefaultWorkItem.ClickNextUserPageBtn();
+    await DefaultWorkItem.ClickPrevUserPageBtn();
+}).only;
+
 test('can add first page of users to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
