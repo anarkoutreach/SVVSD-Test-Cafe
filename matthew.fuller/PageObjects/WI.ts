@@ -46,6 +46,7 @@ export default class WI {
     SubmitUploadFileBtn: Selector;
     ContextFiles: Selector;
     FeedPageEventEmitter;
+    UserPageNextBtn: Selector;
 
     releasestatus: status;
     constructor() {
@@ -84,6 +85,7 @@ export default class WI {
     this.UserTab = Selector("#dwiTabs-tab-User");
     this.ContentTab = Selector("#dwiTabs-tab-Content");
     this.UploadTab = Selector("#dwiTabs-tab-Upload");
+    this.UserPageNextBtn = Selector("button#next");
     
     }
 
@@ -131,15 +133,35 @@ export default class WI {
         .expect(Selector("span.error.active").exists).eql(true);
         
     }
-    async AddUserByIndex (num){
+    async ClickNextUserPageBtn(){
+        
+        const allbuttons = Selector("button.addButton.btn.btn-primary");
+        const FirstUserData = allbuttons.nth(0).parent("div").sibling("article.search-result.row");
+        const FirstUserName = await FirstUserData.child("div.searchItemInfo").child("span").innerText;
+        await t
+        .expect(this.UserPageNextBtn.exists).eql(true)
+        .click(this.UserPageNextBtn);
+        if(Util.Verbose)console.log(` -- clickNextUserPageBtn: original page first username: ${FirstUserName}  second page name:  ${await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText}`)
+        await t
+        .expect(FirstUserName === await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText).eql(false);
+    }
+    async AddUserByIndex (num: number){
         await this.AddContentByIndex(num);
     }
     async AddAllAvalibleUsers(){
         //only the first page
-       
+        while(this.UserPageNextBtn.exists){
+            await this.AddAllAvalibleContent();
+            await this.ClickNextUserPageBtn();
+        }
+        
+
+    }
+    async AddFirstPageOfUsers(){
+        //only the first page
         await this.AddAllAvalibleContent();
     }
-    async RemoveUserByIndex(num){
+    async RemoveUserByIndex(num: number){
         const allbuttons = Selector("div.deleteClone.glyphicon.glyphicon-remove");
         const userdata = allbuttons.nth(num).sibling(".searchItemInfo");
         const username = await userdata.child("span").innerText;

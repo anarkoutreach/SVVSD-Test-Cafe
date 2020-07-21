@@ -133,12 +133,17 @@ test('can add multiple users to WI', async t => {
     await DefaultWorkItem.AddUserByIndex(2);
     await DefaultWorkItem.AddUserByIndex(3);
 });
-test('can add first page of users to WI', async t => {
+test('can add all avalible users to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     //all from first page
     await DefaultWorkItem.AddAllAvalibleUsers();
-    await DefaultWorkItem.RemoveUserByIndex(1);
+});
+test('can add first page of users to WI', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    //all from first page
+    await DefaultWorkItem.AddFirstPageOfUsers();
 });
 test('can remove user from WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
