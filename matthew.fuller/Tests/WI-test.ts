@@ -115,6 +115,22 @@ test('can switch between all WI tabs', async t => {
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.WORKITEM);
 });
+test('can rapidly switch between tabs', async t => {
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
+    for(let i = 0; i < 10; i++){
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.UPLOAD);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.WORKITEM);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.UPLOAD);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.WORKITEM);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.WORKITEM);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
+    await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.UPLOAD);
+    }
+});
 test('can remove content to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);

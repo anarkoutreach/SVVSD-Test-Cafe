@@ -138,14 +138,14 @@ export default class WI {
     async ClickNextUserPageBtn(){
         
         const allbuttons = Selector("button.addButton.btn.btn-primary");
-        const FirstUserData = allbuttons.nth(0).parent("div").sibling("article.search-result.row");
-        const FirstUserName = await FirstUserData.child("div.searchItemInfo").child("span").innerText;
+        const FirstUserData = allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("ul").child("li").nth(0).child("span.small.text-muted").innerText
+        const FirstUserName = await FirstUserData;
         await t
         .expect(this.UserPageNextBtn.exists).eql(true)
         .click(this.UserPageNextBtn);
-        if(Util.Verbose)console.log(` -- clickNextUserPageBtn: original page first username: ${FirstUserName}  second page name:  ${await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText}`)
+        if(Util.Verbose)console.log(` -- clickNextUserPageBtn: original page first username: ${FirstUserName}  second page name:  ${await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("ul").child("li").nth(0).child("span.small.text-muted").innerText}`)
         await t
-        .expect(FirstUserName === await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText).eql(false);
+        .expect(FirstUserName === await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("ul").innerText).eql(false);
     }
     async ClickPrevUserPageBtn(){
         
@@ -155,9 +155,9 @@ export default class WI {
         await t
         .expect(this.UserPagePrevBtn.exists).eql(true)
         .click(this.UserPagePrevBtn);
-        if(Util.Verbose)console.log(` -- clickPrevUserPageBtn: original page first username: ${FirstUserName}  second page name:  ${await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText}`)
+        if(Util.Verbose)console.log(` -- clickPrevUserPageBtn: original page first username: ${FirstUserName}  second page name:  ${await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("ul").child("li").nth(0).child("span.small.text-muted").innerText}`)
         await t
-        .expect(FirstUserName === await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("span").innerText).eql(false);
+        .expect(FirstUserName === await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("ul").child("li").nth(0).child("span.small.text-muted").innerText).eql(false);
     }
     async AddUserByIndex (num: number){
         await this.AddContentByIndex(num);
@@ -474,7 +474,7 @@ export default class WI {
                 StepExists = false;
             }
         };
-    
+        
          
         if(!StepExists && !letDuplicate){
             if(!StepIsAlreadyCreated){
@@ -543,7 +543,7 @@ export default class WI {
             await this.CatalogSteps();
             var step2 = await this.GetStepByName(step);
             
-            
+
             await t
             .expect(step2.exists).eql(true)
             .click(step2);
@@ -568,7 +568,7 @@ export default class WI {
             let NumOfSteps = await this.CountSteps();
             let i;
             var DuplicateErrorBool: boolean = (await alerts.WIDuplicateError.innerText).includes("Step titles must be unique");
-
+            
             for(i = 0; i > NumOfSteps; i++)
             {
                 this.CatalogSteps();
