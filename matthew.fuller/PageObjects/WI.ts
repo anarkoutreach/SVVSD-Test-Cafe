@@ -8,55 +8,102 @@ import {location} from "./PageComponents/location";
 import {status} from "./PageComponents/releasestatus";
 import {WORKITEMTAB} from "./PageComponents/WITAB";
 import * as fs from 'fs';
-
+//everything is documented in JSDOCs YAY!!!!
+/**
+ * @description A class representing a WorkItem on MBEWeb
+ */
 export default class WI {
     //selectors
+    /**@description total added Context?*/
     AddedContextsHoverText: Selector;
+    /**@description the workitem tab of the WI*/
     WorkitemTab: Selector;
+    /**@description the user tab button of the WI*/
     UserTab: Selector;
+    /**@description the content tab button of the WI*/
     ContentTab: Selector;
+    /**@description the Upload tab button of the WI*/
     UploadTab: Selector;
+    /**@description probably the active tab of the WI?*/
     getDWItab: Selector;
+    /**@description the location of the WI*/
     Location: location;
+    /**@description The selected step's editable input*/
     getSelectedStepInput: Selector;
+    /**@description a blank selector*/
     self: Selector;
+    /**@description A DOM element that conatins a non-editable title of the current WI*/
     wiTitle: Selector;
+    /**@description The Editable field that represents the WI's Title*/
     editWITitle: Selector;
+    /**@description  the editable field that contains to WIDescription*/
     editWIDescription: Selector;
+    /**@description The settings gear, that allows the edit, revise, delete options to be seen on a WI*/
     settingsGearBtn: Selector;
+    /**@description The DOM element that contains the settings gear panel options*/
     settingsGearPanel: Selector;
+    /**@description Once the setting gear has been clicked, this represents the edit button within it*/
     settingsGearPanelEdit: Selector;
+    /**@description Once the setting gear has been clicked, this represents the revise button within it*/
     settingsGearPanelRevise: Selector;
+    /**@description Once the setting gear has been clicked, this represents the delete button within it*/
     settingsGearPanelDelete: Selector;
+    /**@description the DOM element that contains all the steps of a WI*/
     processStepsPanel: Selector;
+    /**@description the "plus" button next at the bottom of the step list of a WI, allowing the user to add a step */
     appendProccessStep: Selector;
+    /**@description The currently active step within a wi*/
     activeStep: Selector;
+    /**@description A selector representing all steps within a WI, selecting all li.stepitem objects */
     allsteps: Selector;
+    /**@description The button to upon the menu for adding context to a step within a WI */
     addContext: Selector;
+    /**@description the input field for an upload title within the "upload tab" of a wi */
     UploadTitle: Selector;
+    /**@description the "Previous" button a the bottom of the "User/Owner" tab of a WI */
     UserPagePrevBtn: Selector;
+    /**@description the description TextArea field of a Upload within the Upload tab of a WI */
     UploadDescription: Selector;
+    /**@description the  "Choose" button, the button used to select what files to upload within the "upload" tab of a WI */
     UploadFileBtn: Selector;
+    /**@description the "submit" button at the buttom of the "upload" tab of a WI */
     SubmitUploadFileBtn: Selector;
+    /**@description Inside of the menu to add context, this selector refers to all context items */
     ContextFiles: Selector;
+    /**@description the "next" btn at the buttom of the user tab of a WI */
     UserPageNextBtn: Selector;
     //attributes
+    /**@description the title of a WI */
     title: string;
+    /**@description the description of a WI */
     description: string;
+    /**@description the partnumber of a WI */
     partnum: string;
+    /**@description the revision of a WI */
     revision: string;
+    /**@description the version of a WI */
     version: string;
+    /**@description the release status of a WI */
     releasestatus: status;
     //emmiter
+    /**
+     * @description a event emitter sent to every WI allowing WIs to write to a file when the function of Update is fired, by doing so, even if a user creates a new WI object they may retain the properties of the last if needed
+     *
+     *be careful using this.
+     */
     FeedPageEventEmitter;
 
     //-arrays
     
     //"STEPS" --an array containg all steps on this WI.
+     /** @description an array containing all steps within a WI */
     steps: WISteps[];
+    /** @description An array containing all Uploads within a WI */
     Uploads: UPLOAD[];
     
-    
+    /**
+     * @description the constructor for the WI object, representing a Workitem on MBEWeb
+     */
     constructor() {
         this.Uploads = [];
         this.AddedContextsHoverText = Selector("div.contextItemHoverInfo");

@@ -4,7 +4,12 @@ export default class util {
   Verbose = true;
   Errors = true
   Warnings = true;
- randchar(length) {
+  /**
+   * @description creates a string of random charectors of a specifiyed length
+   * @param {number} length a number representing the length of the string
+   * @returns string
+   */
+ randchar(length: number) {
     var result           = '';
     var charlist       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charlength = charlist.length;
@@ -13,8 +18,12 @@ export default class util {
     }
     return result;
  }
-
- async randnum(length){
+  /**
+   * @description creates a string of random numbers of a specifiyed length
+   * @param {number} length a number representing the length of the string
+   * @returns string
+   */
+ async randnum(length: number){
     var result: string;
     result = await (Math.random() * length).toString();
     return result
