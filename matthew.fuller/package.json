@@ -4,7 +4,7 @@
   "description": "End-to-End tests for the MBEWeb application",
   "main": "index.js",
   "dependencies": {
-    "testcafe": "^1.8.6"
+    "testcafe": "^1.8.8"
   },
   "devDependencies": {},
   "scripts": {

@@ -5,9 +5,11 @@ import {tabs} from "./PageComponents/tabs";
 import SearchPage from "./search-page"
 import {status} from "./PageComponents/releasestatus"
 import { doesNotThrow } from "assert";
-
+/**@description the class used to represent alerts accross MBE web */
 export default class Alerts {
+    /**@description the generic, and most common Comfirm Btn accross MBE web */
     getGenericConfirmBtn: Selector;
+    /**@description the generic, and most common Cancel Btn accross MBE web */
     getGenericCancelBtn: Selector;
 
     // AWI/DWI

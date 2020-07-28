@@ -1,5 +1,8 @@
 import { Selector, t } from "testcafe";
+/** @description a Utility class, used for various random functions, and logging variables*/
 export default class util {
+   /** @description the empty constructor a Utility class, used for various random functions, and logging variables*/
+   constructor(){}
   //logging vars
   /**@description Wethor or not verbose logs should be loged */
   Verbose = true;
