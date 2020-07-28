@@ -4,7 +4,6 @@
   "description": "End-to-End tests for the MBEWeb application",
   "main": "index.js",
   "dependencies": {
-    "await-event-emitter": "^1.2.0",
     "testcafe": "^1.8.6"
   },
   "devDependencies": {},

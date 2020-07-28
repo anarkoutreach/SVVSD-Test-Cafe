@@ -3,6 +3,7 @@ export default class util {
   //logging vars
   Verbose = true;
   Errors = true
+  Warnings = true;
  randchar(length) {
     var result           = '';
     var charlist       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

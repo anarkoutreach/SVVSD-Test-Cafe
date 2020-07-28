@@ -10,7 +10,7 @@ import {WORKITEMTAB} from "./PageComponents/WITAB";
 import * as fs from 'fs';
 
 export default class WI {
-
+    //selectors
     AddedContextsHoverText: Selector;
     WorkitemTab: Selector;
     UserTab: Selector;
@@ -21,11 +21,6 @@ export default class WI {
     getSelectedStepInput: Selector;
     self: Selector;
     wiTitle: Selector;
-    title: string;
-    description: string;
-    partnum: string;
-    revision: string;
-    version: string;
     editWITitle: Selector;
     editWIDescription: Selector;
     settingsGearBtn: Selector;
@@ -38,18 +33,30 @@ export default class WI {
     activeStep: Selector;
     allsteps: Selector;
     addContext: Selector;
-    steps: WISteps[];
-    Uploads: UPLOAD[];
     UploadTitle: Selector;
     UserPagePrevBtn: Selector;
     UploadDescription: Selector;
     UploadFileBtn: Selector;
     SubmitUploadFileBtn: Selector;
     ContextFiles: Selector;
-    FeedPageEventEmitter;
     UserPageNextBtn: Selector;
-
+    //attributes
+    title: string;
+    description: string;
+    partnum: string;
+    revision: string;
+    version: string;
     releasestatus: status;
+    //emmiter
+    FeedPageEventEmitter;
+
+    //-arrays
+    
+    //"STEPS" --an array containg all steps on this WI.
+    steps: WISteps[];
+    Uploads: UPLOAD[];
+    
+    
     constructor() {
         this.Uploads = [];
         this.AddedContextsHoverText = Selector("div.contextItemHoverInfo");
@@ -90,7 +97,10 @@ export default class WI {
     this.UserPagePrevBtn = Selector("button#prev");
     
     }
-
+/** @description Clicks the "append child step" btn, on an existing step. 
+ * @param {WISteps} SelectedStep The step, that the child step should be added to
+ * @return null
+ */
     async addChildStepToStep(SelectedStep: WISteps, step: WISteps){
         let selectedstep = await this.GetStep(SelectedStep.StepNum)
         await t
@@ -103,28 +113,40 @@ export default class WI {
         await this.CatalogSteps();
         await this.FeedPageEventEmitter.Update();
     }
-    async VerifyContentIsShown(ContextName){
-        const UTIL = new util();
-        var finished = false;
-        var num = await this.AddedContextsHoverText.count;
-        let i =0;
-        let title = await this.AddedContextsHoverText.nth(i).innerText;
-        var ContextIsPresnet = false;
-        for(i; i < num; i++){
-            if(await title.toLocaleUpperCase().includes(await ContextName.toLocaleUpperCase())){
-                ContextIsPresnet = true;
-                if(UTIL.Verbose) console.log("--VerifyContentIsShown, context is present")
+    /** @description Verifies if a Context item is shown
+    * @param {string} ContextName A string, representing the name of the context item to be verified
+    * @return promise<Bool>
+    */
+    async VerifyContextIsShown(ContextName: string){
+        return new Promise(async resolve => {
+            const UTIL = new util();
+            var finished = false;
+            var num = await this.AddedContextsHoverText.count;
+            let i =0;
+            let title = await this.AddedContextsHoverText.nth(i).innerText;
+            var ContextIsPresnet = false;
+            for(i; i < num; i++){
+                if(await title.toLocaleUpperCase().includes(await ContextName.toLocaleUpperCase())){
+                    ContextIsPresnet = true;
+                    if(UTIL.Verbose) console.log("--VerifyContextIsShown, context is present")
+                }
             }
-        }
-        while(finished == false){
-            if(i >= num){
-                finished = true;
-            }
-        }
-        if(finished == true){
-        return ContextIsPresnet;
-        }
+            
+                if(i >= num){
+                    finished = true;
+                    resolve(ContextIsPresnet)
+                }
+        })
+        
     }
+    /** @description presses the button to add a content item to a workitem, from the CONTENT TAB.
+     * 
+     * * !MUST BE USED FROM CONTENT TAB
+     * 
+     * Note: The "Content" and "User" tabs are almost identical, the Content scripts are reused in the User scripts.
+    * @param {number} num the number representing the spot in a zero based index to add to the workitem.
+    * @return null
+    */
     async AddContentByIndex(num: number){
         const allbuttons = Selector("button.addButton.btn.btn-primary");
         await t
@@ -133,8 +155,10 @@ export default class WI {
         .expect(allbuttons.nth(num).exists).eql(true)
         .click(allbuttons.nth(num))
         .expect(Selector("span.error.active").exists).eql(true);
-        
     }
+     /** @description Clicks the "Next" Btn at the bottom of the User tab of a WI.
+    * @return null
+    */
     async ClickNextUserPageBtn(){
         
         const allbuttons = Selector("button.addButton.btn.btn-primary");
@@ -147,6 +171,9 @@ export default class WI {
         await t
         .expect(FirstUserName === await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("ul").innerText).eql(false);
     }
+     /** @description Clicks the "Prev" Btn at the bottom of the User tab of a WI.
+    * @return null
+    */
     async ClickPrevUserPageBtn(){
         
         const allbuttons = Selector("button.addButton.btn.btn-primary");
@@ -159,9 +186,29 @@ export default class WI {
         await t
         .expect(FirstUserName === await allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("ul").child("li").nth(0).child("span.small.text-muted").innerText).eql(false);
     }
+    /** @description presses the button to add a user to a workitem, from the USER TAB.
+     * 
+     * !MUST BE USED FROM USER TAB
+     * 
+     * Note: This script just runns the Identical "AddContentByIndex" script
+     * 
+    * @param {number} num the number representing the spot in a zero based index to add to the workitem.
+    * @return null
+    */
     async AddUserByIndex (num: number){
         await this.AddContentByIndex(num);
     }
+    /** 
+     * @description Adds all active users to a WorkItem, from all pages.
+     * 
+     * !MUST BE USED FROM USER TAB
+     * 
+     * Note: each page of users take 10 sec to add, 100+ will realy start to slow stuff down.
+     * 
+     * @returns null
+     * 
+    */
+    
     async AddAllAvalibleUsers(){
         //only the first page
         while(this.UserPageNextBtn.exists){
@@ -171,10 +218,28 @@ export default class WI {
         
 
     }
+    /**
+     * @description Adds the first page (10) users to a Workitem.
+     * 
+     * !MUST BE USED FROM USER TAB
+     * 
+     * @returns null
+     */
     async AddFirstPageOfUsers(){
         //only the first page
         await this.AddAllAvalibleContent();
     }
+    /**
+     * @description Removes a user from a WI by a specified index
+     * 
+     * !MUST BE USED FROM USER TAB
+     * 
+     * Note: The index for removing a user is the list of added users -IE: if you add a user with index of 3
+     * its idex will not stay the same to remove, as it is in a different list
+     * 
+     * @param {number} num the possition in a zero based index that corrilates to the user to remove. 
+     * @returns null
+     */
     async RemoveUserByIndex(num: number){
         const allbuttons = Selector("div.deleteClone.glyphicon.glyphicon-remove");
         const userdata = allbuttons.nth(num).sibling(".searchItemInfo");
@@ -189,6 +254,13 @@ export default class WI {
         console.log(`expected: ${username} to not equal ${await allbuttons.nth(num).sibling(".searchItemInfo").child("span").innerText}`)
         
     }
+    /**
+     * @description adds the first page of content items to a WI item
+     * 
+     * !MUST BE USED FROM WORKITEM TAB
+     * 
+     * @returns null
+     */
     async AddAllAvalibleContent(){
         //only the first page
         const allbuttons = Selector("button.addButton.btn.btn-primary");
@@ -202,6 +274,13 @@ export default class WI {
         .expect(Selector("span.error.active").exists).eql(true);   
         }
     }
+    /**
+     * @description Removes a content item from a WI based on a zero based index
+     * 
+     * !MUST BE USED FROM CONTENT TAB
+     * @param {number} num the possition in a zero based index to remove
+     * @returns null
+     */
     async RemoveContentByIndex(num: number){
         const allbuttons = Selector("div.deleteClone.deleteAsset.glyphicon.glyphicon-remove");
         await t
@@ -211,7 +290,13 @@ export default class WI {
         .click(Selector("button#okayConfirm"))
         .expect(allbuttons.nth(num).exists).eql(false);        
     }
-    
+    /**
+     * @description Uploads a file to a WI based upon an UPLOAD object
+     * 
+     * Note: can be used from any tab, it will switch to the proper tab
+     * @param {UPLOAD}Upload an "UPLOAD" object that represents the upload, containing title, file, etc....
+     * @returns null
+     */
     async UploadFile(Upload: UPLOAD){
         await this.SwitchWITAB(WORKITEMTAB.UPLOAD);
         await t 
@@ -265,9 +350,18 @@ export default class WI {
         .click(this.ContextFiles.nth(num))
         .expect(Selector('button[data-id="selectButton"]').exists).eql(true)
         .click(Selector('button[data-id="selectButton"]'));
-        await t.expect(await this.VerifyContentIsShown(uplaod.Title)).eql(true);
+        await t.expect(await this.VerifyContextIsShown(uplaod.Title)).eql(true);
         await this.FeedPageEventEmitter.Update();
     }
+    /**
+     * @description changes a Workitem's description from the "edit mode" of a WI
+     * 
+     * !MUST BE RUN INSIDE A WI THAT IS EDITABLE
+     * 
+     * @param {WI} WorkItem a workitem object, representing the workitem to edit
+     * @param {string} text a string of text represeting the new description of the work item. 
+     * @returns Promise<WI> 
+     */
     async EditWIDescription(WorkItem: WI, text: string){
         
         await t
@@ -282,6 +376,14 @@ export default class WI {
         await this.FeedPageEventEmitter.Update();
         return WorkItem;
     }
+    /**
+     *  @description changes a Workitem's title from the "edit mode" of a WI
+     * 
+     * !MUST BE RUN INSIDE A WI THAT IS EDITABLE
+     * @param {WI} WorkItem a workitem object, representing the workitem to edit
+     * @param {string} text a string of text represeting the new title of the work item.
+     * @returns Promise<WI> 
+     */
     async EditWITitle(WorkItem: WI, text: string){
         
         await t
@@ -296,6 +398,11 @@ export default class WI {
         await this.FeedPageEventEmitter.Update();
         return WorkItem;
     }
+    /**
+     * @description Verifies the title of a Workitem based upon the "title" attribute of a WI
+     * @param {WI} WorkItem 
+     * @returns Promise<bool>
+     */
     async VerifyWiTitle(WorkItem: WI){
         var text = WorkItem.title;
         await t
@@ -308,6 +415,12 @@ export default class WI {
         }
         
     }
+    /**
+     * @description Gets the dropdown button to click from the Release status dropdown.
+     * 
+     * @param {status} num An object from an Enum representing the status of the work item to return 
+     * @returns Promise<Selector> -the selector representing the status to click
+     */
     async getStatusDropDown(num: status){
         var split = num.split(" ")
         var num2 = parseInt(split[0]);
@@ -315,16 +428,33 @@ export default class WI {
         var alerts = new Alerts
         return alerts.realeasestatusdropdown.child(num2)
     }
+    /**
+     * @description returns a li.stepitem based upon a zero based index.
+     * @param {number} num the possition in a zero based index to retrive
+     * @returns Promise<Selector> -the wanted li.stepitem
+     */
     async GetStep(num: number){
         const Util = new util;
         if(Util.Verbose)console.log("-- GetStep: Returning step (from processStepsPanel) with a index of: " + num);
         //return Selector("#DWIProcessStepListScrollParent.WIProcessStepTreeRoot").child(".stepItem").nth(num);
         return Selector("li.stepItem").nth(num);
     }
-
+    /**
+     * @description Counts all steps on the current page
+     * 
+     * @returns promise<Number> -total number of steps
+     */
     async CountSteps (){
         return await this.allsteps.count;
     }
+    /**
+     * @description CatalogSteps() will add steps that are not in the "step array" into the step array, thus keeping everything nice.
+     * 
+     * Note: should be safe to run pretty much anywhere, it is designed to run a as a safe gaurd to ensure the step array is up to date, by using this,
+     * if any functions do not add a step to its array, this will fix it
+     * 
+     * @returns Promise<Bool>
+     */
     async CatalogSteps (){
         let test1 = false;
         return new Promise(async resolve => {
@@ -403,6 +533,12 @@ export default class WI {
         
         
     }
+    /**
+     * @deprecated Just don't touch this 
+     * @param finished 
+     * @param i 
+     * @param NumOfSteps 
+     */
     async fixerthingythingthingy(finished, i, NumOfSteps){
         while(finished == false){
             if(i >= NumOfSteps){
@@ -413,6 +549,11 @@ export default class WI {
         return finished;
         }
     }
+    /**
+     * @description Fills in the Description and Saftey and compliance fields of a WorkitemStep based upon a WIsteps object
+     * @param {WISteps} step the step object that will be used to provide text for description and saftey and compliance. 
+     * @returns null
+     */
     async FillallStepFields (step: WISteps){
         await t
         .expect(step.editStepDescription.exists).eql(true)
@@ -423,6 +564,17 @@ export default class WI {
 
        
     }
+    /**
+     * @description Clicks a tab at the top of a workitem based upon a number 0-3
+     * @param {WORKITEMTAB} WItab a number 0-3 representing the workitem tab to switch to.
+     * 
+    WORKITEM = "0",
+    USERS = "1",
+    CONTENT = "2",
+    UPLOAD = "3"
+
+    @returns null
+     */
     async SwitchWITAB(WItab: WORKITEMTAB){
         switch(WItab){
             case "0":
@@ -451,11 +603,27 @@ export default class WI {
         }
 
     }
+    /**
+     * @deprecated
+     * @param WiField Not sure what this was
+     */
     async CheckError(WiField){
         const alerts = new Alerts;
         await t
         .expect(alerts.errorPopUp.withText("empty"))
     }
+
+    /**
+     * @description Adds a new step to a WI (AppendStep Btn) then fills the information and initalises the step into storage
+     * 
+     *
+     * @param {Boolean} BugWorkaround When a step is added, the user cannot add another step, until they have switched to a different wi tab and back. If true, this will switch to a differnt tab and back, working around the bug.
+     * @param {WISteps} step The step object that should be created then stored into the array of all steps
+     * @param {Boolean} letDuplicate Weathor or not the script will allow a duplicate step to be created. If false, the script will add a -x to the end of a duplicate name and contuine, logging a console warning.
+     * @param {Boolean} StepIsAlreadyCreated Used in the case of adding a child step to a step (skips creation the step, instead only adding data, and adding it to the array of steps)
+    
+     * @returns null
+     */
     async AddStep (BugWorkaround: boolean, step: WISteps, letDuplicate: boolean, StepIsAlreadyCreated: boolean) {
        let workaroundbug = BugWorkaround;
         let StepExists: boolean;
@@ -468,7 +636,7 @@ export default class WI {
         for(i = 0; i > NumOfSteps; i++)
         {
             while(this.steps[i].StepName == step.StepName && letDuplicate == false){
-                if(Util.Errors)console.log("(errors) WI.ts-- AddStep: A step already exists with the text given -changing name with: \"-i\"");
+                if(Util.Warnings)console.log("(Warnings) WI.ts-- AddStep: A step already exists with the text given -changing name with: \"-i\"");
                 StepExists = true;
                 step.StepName = step.StepName + "-"+ i;
                 StepExists = false;
@@ -551,7 +719,12 @@ export default class WI {
         }
 
         }
-        async GetStepByName(step): Promise<Selector> {
+        /**
+         * @description gets the selector of a step based upon its name attribute
+         * @param {WISteps} step the step object to get information from
+         * @returns Promise<Selector>
+         */
+        async GetStepByName(step: WISteps): Promise<Selector> {
             var num: number;
             
             this.steps.forEach(async (step3) => {
@@ -560,7 +733,12 @@ export default class WI {
             });
             return await this.GetStep(0);
         }
-        async TestDuplicteError(step, alerts: Alerts){
+        /**
+         * @description test if duplicate step error appears?
+         * @param {WISteps} step a wistep item
+         * @param {Alerts} alerts 
+         */
+        async TestDuplicteError(step: WISteps, alerts: Alerts){
             var Util = new util();
             await t
             .click(this.appendProccessStep);
@@ -586,6 +764,11 @@ export default class WI {
             
             return DuplicateErrorBool;
         }
+        /**
+         * @description checks if the name of a idiviual step object is the same as a setp in the array
+         * @param {WISteps} step the step that needs to be validated
+         * @returns promise <bool>
+         */
     private async validateText(step: WISteps) {
         var valid: boolean;
         if(this.steps)var NumOfSteps = this.steps.length;
