@@ -8,7 +8,7 @@ import {location} from "./PageComponents/location";
 import {status} from "./PageComponents/releasestatus";
 import {WORKITEMTAB} from "./PageComponents/WITAB";
 import * as fs from 'fs';
-//everything is documented in JSDOCs YAY!!!!
+//everything (in this file) is documented in JSDOCs YAY!!!!
 /**
  * @description A class representing a WorkItem on MBEWeb
  */
@@ -207,8 +207,9 @@ export default class WI {
     * @return null
     */
     async ClickNextUserPageBtn(){
-        
+        /*** @description This Selector represents all the "add" buttons on a page*/
         const allbuttons = Selector("button.addButton.btn.btn-primary");
+        /*** @description This Selector represents the first "userdata" object, on a page, found based upon the "allbuttons" selector */
         const FirstUserData = allbuttons.nth(0).parent("div").sibling("article.search-result.row").child("div.searchItemInfo").child("ul").child("li").nth(0).child("span.small.text-muted").innerText
         const FirstUserName = await FirstUserData;
         await t

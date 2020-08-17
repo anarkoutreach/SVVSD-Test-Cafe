@@ -11,13 +11,20 @@ import util from "../Utilities/util";
 import WISteps from "../PageObjects/PageComponents/WISteps";
 import { UPLOAD } from "../PageObjects/PageComponents/Upload";
 import { WORKITEMTAB } from"../PageObjects/PageComponents/WITAB";
-
+ /*** @description  An enum representing all possible types for a verification step*/
 const types = VerificationTypes;
+/**@description the class used to represent alerts accross MBE web */
 const alerts = new Alerts();
+/**@description A class represnting the controller that handles configs */
 const configManager = new ConfigurationManager();
+/**@description A class represnting the "feedpage" on MBE-web */
 const feedPage = new FeedPage();
+/**@description A generic workitem object that will be used for all generic tests */
 const DefaultWorkItem = new WI
-
+/*
+ * @description A fixture that will login to MBE web, and nothing more, any WI's created under this fixture need to be removed at the end of their test.
+ * --Note: cannot use an after each fixture here to delete WI's as some of the tests under this fixture do not create a WI
+ */
 fixture`Login`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
 
@@ -86,7 +93,10 @@ test("can open WI menu and close", async t => {
 });
 
 
-
+/*
+*@description this is a fixture that will login to MBE web, then create a WI based upon the "defaultWI" object
+*
+*/
 fixture`WI test initalisation`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
 
@@ -101,7 +111,13 @@ fixture`WI test initalisation`.page(configManager.homePage).beforeEach(async t =
     await feedPage.returnToHome();
     await feedPage.deleteWI(tabs.WORKITEMS, DefaultWorkItem);
 });
-
+/*
+This is a test that will navigate to a WI, then add a step to the WI, then a child step to the aforementioned step.
+Reason: This is a simple UI test, it ensures that a user can add a child step to a existing step
+BreakDown:
+Fixture -- creates WI -> NaviagateToEditWi -- opens the provided WI in edit mode -> AddStep --adds a step to the current WI -> 
+addChildStepToStep --adds a child-step to the step created in the last action
+*/
 test('can add child step to wistep', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     var step = new WISteps();
@@ -110,6 +126,12 @@ test('can add child step to wistep', async t => {
     await DefaultWorkItem.AddStep(true, step, false, false);
     await DefaultWorkItem.addChildStepToStep(step, step2);
 });
+/*
+This is a test that will attempt to switch between all tabs located at the top of a WI, (USERS, CONTENT, UPLOAD, WORKITEM)
+Reason: Simple UI test, this test ensures the menus function properly
+BreakDown:
+Fixture -- creates WI -> NaviagateToEditWi -- opens the provided WI in edit mode -> SwitchWITab --switchs to specified tab -> repeat last step a 3 times with sperate options
+*/
 test('can switch between all WI tabs', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
@@ -117,6 +139,12 @@ test('can switch between all WI tabs', async t => {
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.WORKITEM);
 });
+/*
+This is a test that will attempt to switch between all tabs located at the top of a WI rapidly, (USERS, CONTENT, UPLOAD, WORKITEM)
+Reason: this was a bug in the search page of the website, if a user switched beween tabs fast enough they would be taken to an unloaded page. Thus as this is a similar inerface the test has been implemneted here
+BreakDown:
+Fixture -- creates WI -> NaviagateToEditWi -- opens the provided WI in edit mode -> SwitchWITab --switchs to specified tab -> repeat last step alot in a random(ish) order then loop 10 times
+*/
 test('can rapidly switch between tabs', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     for(let i = 0; i < 10; i++){
@@ -133,17 +161,31 @@ test('can rapidly switch between tabs', async t => {
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.UPLOAD);
     }
 });
-test('can remove content to WI', async t => {
+/*
+This is a test that will attempt to remove content from a workitem
+Reason: UI test, ensures user can remove content from WI
+BreakDown:
+Fixture -- creates WI -> NaviagateToEditWi -- opens the provided WI in edit mode -> SwitchWITab --switches to content tab -> AddContentByIndex -- adds a specifyied content item -> RemoveContentByIndex --removes a specified content item
+*/
+test('can remove content from WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
     await DefaultWorkItem.AddContentByIndex(1);
     await DefaultWorkItem.RemoveContentByIndex(0);
 });
+/*
+This is a test that will ensure that the user can add a owner to a work item
+Reason: UI test, ensures user can add additional owners to a work item
+*/
 test('can add user to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     await DefaultWorkItem.AddUserByIndex(1);
 });
+/*
+This is a test that will ensure that the user can add multiple owners to a work item
+Reason: UI test, ensures user can add multiple owners to a work item
+*/
 test('can add multiple users to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
@@ -151,30 +193,49 @@ test('can add multiple users to WI', async t => {
     await DefaultWorkItem.AddUserByIndex(2);
     await DefaultWorkItem.AddUserByIndex(3);
 });
+/*
+This is a test that will ensure that the user can add all users (that the current user can accsess) to a workitem as owners
+Reason: UI/Stress Test: ensures that MBE web can handle mass amounts of users being added to the same workitem
+*/
 test('can add all avalible users to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     //all from first page
     await DefaultWorkItem.AddAllAvalibleUsers();
 });
+/*
+This is a test that will ensure that the user can go to the next page of users on the "owners" tab of a workitem (this would function the same for a content tab, but there is not enough content for the button to exist(+10))
+Reason: UI test, ensures buttons function properly
+*/
 test('can go to the next page of users through the \" next button \"', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     await DefaultWorkItem.ClickNextUserPageBtn();
 });
+/*
+This is a test that will ensure that the user can go to the next page of users on the "owners" tab of a workitem, and then come back to the first page (this would function the same for a content tab, but there is not enough content for the button to exist(+10))
+Reason: UI test, ensures buttons function properly
+*/
 test('can go to the previous page of users through the \" previous button \"', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     await DefaultWorkItem.ClickNextUserPageBtn();
     await DefaultWorkItem.ClickPrevUserPageBtn();
 }).only;
-
+/*
+This is a test that will ensure that the user can add all users on the first page of the "owners" tab of a workitem to the current work item
+Reason: UI/(minor)Stress Test: ensures there is no problem adding multiple users to a workitem
+*/
 test('can add first page of users to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     //all from first page
     await DefaultWorkItem.AddFirstPageOfUsers();
 });
+/*
+This is a test that will ensure that the user can remove owners from the work item
+Reason: UI Test, ensures that owners can be removed from a work item
+*/
 test('can remove user from WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
@@ -182,11 +243,19 @@ test('can remove user from WI', async t => {
     //zero base index, but don't remove self
     await DefaultWorkItem.RemoveUserByIndex(1);
 });
+/*
+This is a test that will ensure that the user can add a content item to a work item
+Reason: UI Test, ensures adding content functions properly
+*/
 test('can add content to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
     await DefaultWorkItem.AddContentByIndex(1);
 });
+/*
+This is a test that will ensure that the user can add multiple content items to a work item
+Reason: UI Test, ensures adding content works functions properly when adding multiple contents
+*/
 test('can add multiple content to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
@@ -194,11 +263,19 @@ test('can add multiple content to WI', async t => {
     await DefaultWorkItem.AddContentByIndex(2);
     await DefaultWorkItem.AddContentByIndex(3);
 });
+/*
+This is a test that will ensure that the user can add all content items that are avalible to the user to a workitem
+Reason: UI/(minor)Stress Test, ensures adding content works functions properly when all avalible content items
+*/
 test('can add all avalible content to WI', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.CONTENT);
     await DefaultWorkItem.AddAllAvalibleContent();
 });
+/*
+This is a test that will ensure that the user cannot add a child WI step to a existing WI step that has any informtion other that a title filled in. 
+Reason: UI Test, the child step system is ment to function somewhat like folders, once a step has a description it is not intended to be a folder anymore.
+*/
 test('cannot add child wi step to a wi step with information filled', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     var step = new WISteps();
@@ -210,6 +287,10 @@ test('cannot add child wi step to a wi step with information filled', async t =>
     await t.hover(selectedstep).expect(selectedstep.child(".stepItemRightButtons").exists).eql(false);
     //await DefaultWorkItem.addChildStepToStep(step, step2);
 });
+/*
+This is a test that will ensure that the user cannot add a child WI step to a existing WI child step that has any informtion other that a title filled in. 
+Reason: UI Test, to ensure MBE web's child step system functions properly.
+*/
 test('cannot add child wi step to a child wi step (with information filled) of a wi step', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     var step = new WISteps();
@@ -221,6 +302,10 @@ test('cannot add child wi step to a child wi step (with information filled) of a
     let selectedstep = await this.GetStep(step2.StepNum);
     await t.hover(selectedstep).expect(selectedstep.child(".stepItemRightButtons").exists).eql(false);
 });
+/*
+This is a test that will ensure that the user can add a child step to a child step within a workitem
+Reason: UI Test
+*/
 test('can add child step to child step', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     var step = new WISteps();
@@ -233,6 +318,10 @@ test('can add child step to child step', async t => {
     await DefaultWorkItem.addChildStepToStep(step, step2);
     await DefaultWorkItem.addChildStepToStep(step2, step3);
 })
+/*
+This is a test that will ensure that the user can add a lot of child steps
+Reason: Stress test, ensuring MBE web's WI child step system functions properly when pushed to the extreme
+*/
 test('can add (a lot of) child step to child step', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem)
     var step = new WISteps();
@@ -249,26 +338,39 @@ test('can add (a lot of) child step to child step', async t => {
     }
 
 });
-
-
-//tests that create a WI before and delete after
+/*
+This is a test that will ensure that the user can edit the title of a work item after it is created
+Reason: UI Test
+*/
 test('can edit title of WI', async t => {
     const Util = new util;
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     var editedWI = await DefaultWorkItem.EditWITitle(DefaultWorkItem, "Edited Title " + Util.randchar(50));
 
 });
+/*
+This is a test that will ensure that the user can edit the description of a work item after it is created
+Reason: UI Test
+*/
 test('can edit WI description', async t =>{
     const Util = new util;
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     await DefaultWorkItem.EditWIDescription(DefaultWorkItem, "edited description" +DefaultWorkItem.description + Util.randchar(50));
 })
+/*
+This is a test that will ensure that the user can edit the title and description of a work item after it is created
+Reason: UI Test
+*/
 test('can edit description and title', async t => {
     const Util = new util;
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     await DefaultWorkItem.EditWITitle(DefaultWorkItem, "Edited Title " + Util.randchar(50));
     await DefaultWorkItem.EditWIDescription(DefaultWorkItem, "edited description" +DefaultWorkItem.description + Util.randchar(50));
 })
+/*
+This is a test that will ensure that the user can upload context to a workitem
+Reason: UI Test
+*/
 test('can upload context to step', async t => {
     const Util = new util;
     var upload = new UPLOAD("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\Tests\\images\\IMG-0211.JPG");
@@ -277,12 +379,19 @@ test('can upload context to step', async t => {
     await DefaultWorkItem.UploadContext(upload);
     await DefaultWorkItem.AddStep(false, step, false, false);
     await DefaultWorkItem.AddContextToStep(step, upload);
-
 })
+/*
+This is a test that will ensure that the user can delete a workitem after its creation
+Reason: UI Test
+*/
 test('can create WI then delete', async t => { 
     const Util = new util;
     if(Util.Verbose)console.log("--test-\"can create WI then delete\" running blank test, only fixtures--");
 });
+/*
+This is a test that will ensure that the user can add a single verification step to a existing work item
+Reason: UI Test
+*/
 test('Add one verification step', async t => { 
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     let WIstep = new WISteps();
@@ -291,7 +400,10 @@ test('Add one verification step', async t => {
     await WIstep.addVerificationStep(VerificationStep);
     await feedPage.returnToHome();
 });
-
+/*
+This is a test that will ensure that the user cannot add a step with the same name as another step
+Reason: UI Test
+*/
 test('Cannot add duplicate steps', async t => { 
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     let WIstep = new WISteps();
@@ -299,7 +411,11 @@ test('Cannot add duplicate steps', async t => {
     await DefaultWorkItem.AddStep(true, WIstep, false, false);
     await DefaultWorkItem.AddStep(true, WIstep, true, false);
 })
-
+/*
+This is a fixture that will create a WI based upon the default WI object then delete it after each test
+this fixture is being used a second folder to represnt tests that should not fail, but should be tested none the less, thus allowing me to skip running them if wanted
+Due to these tests being smaller and more self explanitory they will not be documented
+*/
 fixture`tests that most likly will not fail`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
 

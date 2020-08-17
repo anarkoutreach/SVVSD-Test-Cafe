@@ -29,7 +29,7 @@ export default class Alerts {
     getAnarkLogo: Selector;
     WIDuplicateError: Selector;
     getAWIIsLatestVersionInput: Selector;
-
+/**@description the consturctor class used to represent alerts accross MBE web */
     constructor() {
         this.WIDuplicateError = Selector('span.error.processStepTitleInlineError.active');
         this.errorPopUp = Selector("span.error.createButtons");

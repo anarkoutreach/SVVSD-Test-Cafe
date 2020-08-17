@@ -1,3 +1,4 @@
+/**@description A class represnting the controller that handles configs */
 export default class ConfigurationManager {
 	serverUrl: string;
 	homePage: string;

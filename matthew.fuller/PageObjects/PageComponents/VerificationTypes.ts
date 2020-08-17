@@ -1,4 +1,5 @@
- 
+ /*** @enum  An enum representing all possible types for a verification step
+ */
  export enum VerificationTypes {
     TEXT = "text",
     DECIMAL = "decimal",
