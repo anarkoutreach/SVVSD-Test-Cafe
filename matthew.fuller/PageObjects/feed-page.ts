@@ -101,11 +101,23 @@ export default class FeedPage {
 	const alerts = new Alerts();
 	const Util = new util;
 	const feedpage = new FeedPage();
+	const workitem = new WI();
+	if(!alerts.getAnarkLogo.exists){
 		await t
-			.setNativeDialogHandler(() => true)
-			.click(alerts.getAnarkLogo)
-			.expect(this.getSearchBar.visible).eql(true);
-			if(Util.Verbose)console.log("-- returnToHome: returned to home page --")
+		.setNativeDialogHandler(() => true)
+		.expect(workitem.smallAnarkLogo.exists).eql(true)
+		.click(workitem.smallAnarkLogo)
+		.expect(alerts.getAnarkLogo.exists).eql(true)
+		.click(alerts.getAnarkLogo)
+		.expect(this.getSearchBar.visible).eql(true);
+	}else {
+		await t
+		.setNativeDialogHandler(() => true)
+		.expect(alerts.getAnarkLogo.exists).eql(true)
+		.click(alerts.getAnarkLogo)
+		.expect(this.getSearchBar.visible).eql(true);
+	}
+		if(Util.Verbose)console.log("-- returnToHome: returned to home page --")
 		}
 
 		combineStringWithRandID(title: string, length: number){
@@ -114,15 +126,17 @@ export default class FeedPage {
 			if(Util.Verbose)console.log("-- combineStringWithRandID: Returning string(Title) combined with random id --")
 			return result;
 		}
-	async createWI(workitem: WI, length) {
-		
-	const alerts = new Alerts();
+		/**
+		 * @description this function will create a wi then return to the home page
+		 * @param workitem the workitem that should be created
+		 */
+		async CreateWIthenReturnHome(workitem: WI) {
+			const alerts = new Alerts();
 	const Util = new util;
 	const searchpage = new SearchPage;
 	//???????? why
 		let generinworkitem = workitem;
-	
-		await this.openAWICreateMenu();
+			await this.openAWICreateMenu();
 		
 		await this.FillallWIFields(workitem);
 		await t
@@ -130,13 +144,26 @@ export default class FeedPage {
 			.setNativeDialogHandler(() => true)
 			.click(alerts.getAWICreateBtn)
 			.expect(generinworkitem.getDWItab.visible).eql(true) ;
-			 console.log('-- createWi: work instruction created --');
+			 if(Util.Verbose)console.log('-- createWi: work instruction created --');
 		await this.returnToHome();
+		}
+	async createWI(workitem: WI, length) {
+		
+	const alerts = new Alerts();
+	const Util = new util;
+	const searchpage = new SearchPage;
+	//???????? why
+		let generinworkitem = workitem;
+		
+		await this.CreateWIthenReturnHome(workitem);
 		if(Util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
 		await this.SearchFor(workitem.title, tabs.WORKITEMS);
 		let searchResult = await this.findSearchResult(workitem.title, tabs.WORKITEMS);
 		await t
 		.click(searchResult)
+		.click(generinworkitem.settingsGearBtn)
+		//due to work items no longer having titles displayed on the view page you must change to the edit page first
+		.click(generinworkitem.settingsGearPanelEdit)
 		.expect(generinworkitem.wiTitle.visible).eql(true);	
 		
 		this.eventEmitter.on("close", async () =>{
@@ -148,6 +175,24 @@ export default class FeedPage {
 		
 		workitem.FeedPageEventEmitter = this.eventEmitter;
 		await this.eventEmitter.Update();
+	}
+	/**
+	 * @description this will create a workitem and then test if there is a title in the "view" mode of the work item
+	 * @param workitem the workitem that should be created
+	 */
+	async createWI_CheckIfTitle(workitem: WI){
+		const alerts = new Alerts();
+	const Util = new util;
+	const searchpage = new SearchPage;
+	//???????? why
+		let generinworkitem = workitem;
+		await this.CreateWIthenReturnHome(workitem);
+		if(Util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
+		await this.SearchFor(workitem.title, tabs.WORKITEMS);
+		let searchResult = await this.findSearchResult(workitem.title, tabs.WORKITEMS);
+		await t
+		.click(searchResult)
+		.expect(generinworkitem.wiTitle.visible).eql(false);	
 	}
 	
 	async onCloseWI(){
@@ -194,7 +239,7 @@ export default class FeedPage {
 		   .expect(await lowerCaseResult.includes(expectedText)).eql(true);
 		   
 		  if(lowerCaseResult.includes(expectedText)){
-			console.log("findSearchResult: expected text exists");
+			if(Util.Verbose)console.log("findSearchResult: expected text exists");
 			if(Util.Verbose)console.log(" -- findSearchResult: findSearchResult has functioned properly and returns Selector of search -- ");
 		   return Selector('#searchResults').child().sibling().child().child(i).child(".searchItemInfo").child();
 		   
@@ -282,12 +327,10 @@ export default class FeedPage {
 		let searchResult = await this.navigateToWi(tab, workitem);
 		await t
 		.click(searchResult)
-		.expect(workitem.wiTitle.visible).eql(true)
-		.expect(workitem.settingsGearBtn.exists).eql(true)
 		.click(workitem.settingsGearBtn)
-		.expect(workitem.settingsGearPanel.exists).eql(true)
-		.expect(workitem.settingsGearPanelEdit.exists).eql(true)
-		.click(workitem.settingsGearPanelEdit);
+		//due to work items no longer having titles displayed on the view page you must change to the edit page first
+		.click(workitem.settingsGearPanelEdit)
+		.expect(workitem.wiTitle.visible).eql(true)
 		if(Util.Verbose)console.log("Navigated to Edit workitem");
 	}
 	async deleteWI(tab: tabs, workitem: WI){
@@ -298,12 +341,15 @@ export default class FeedPage {
 		await t
 		.expect(searchResult.exists).eql(true)
 		.click(searchResult)
-		.expect(workitem.wiTitle.visible).eql(true)
-		.expect(workitem.settingsGearBtn.exists).eql(true)
 		.click(workitem.settingsGearBtn)
-		.expect(workitem.settingsGearPanel.exists).eql(true)
-		.expect(workitem.settingsGearPanelDelete.exists).eql(true)
-		.click(workitem.settingsGearPanelDelete)
+		//due to work items no longer having titles displayed on the view page you must change to the edit page first
+		.click(workitem.settingsGearPanelEdit)
+		.expect(workitem.wiTitle.visible).eql(true)
+		.expect(workitem.settingsGearBtn_edit.exists).eql(true)
+		.click(workitem.settingsGearBtn_edit)
+		.expect(workitem.settingsGearPanel_edit.exists).eql(true)
+		.expect(workitem.settingsGearPanelDelete_edit.exists).eql(true)
+		.click(workitem.settingsGearPanelDelete_edit)
 		.expect(searchResult.exists).eql(false);
 		if(Util.Verbose)console.log("-- deleteWI: finished deleating WI --");
 		await t.click(alerts.getGenericConfirmBtn);

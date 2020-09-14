@@ -31,7 +31,10 @@ fixture`Login`.page(configManager.homePage).beforeEach(async t => {
     await t
         .useRole(t.ctx.user.role);
 });
-
+//test is the title is present in the view mode of the workitem
+test('check if there is a title in the "view" mode of a workitem', async t => {
+    await feedPage.createWI_CheckIfTitle(DefaultWorkItem);
+})
 //tests that only use log in fixture
 test('add a lot of steps and child steps', async t => {
     
@@ -67,7 +70,7 @@ test('add a lot of steps and child steps', async t => {
 }
 await feedPage.returnToHome();
     await feedPage.deleteWI(tabs.WORKITEMS, DefaultWorkItem);
-});
+}).skip;
 test("can open WI menu fill in all feilds then cancel", async t => {
     const DefaultWorkItem = new WI
     DefaultWorkItem.title =   feedPage.combineStringWithRandID(DefaultWorkItem.title, 40);
@@ -221,7 +224,7 @@ test('can go to the previous page of users through the \" previous button \"', a
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     await DefaultWorkItem.ClickNextUserPageBtn();
     await DefaultWorkItem.ClickPrevUserPageBtn();
-}).only;
+});
 /*
 This is a test that will ensure that the user can add all users on the first page of the "owners" tab of a workitem to the current work item
 Reason: UI/(minor)Stress Test: ensures there is no problem adding multiple users to a workitem
@@ -283,7 +286,7 @@ test('cannot add child wi step to a wi step with information filled', async t =>
     var step2 = new WISteps();
    
     await DefaultWorkItem.AddStep(true, step, false, false);
-    let selectedstep = await this.GetStep(step.StepNum);
+    let selectedstep = await DefaultWorkItem.GetStep(step.StepNum);
     await t.hover(selectedstep).expect(selectedstep.child(".stepItemRightButtons").exists).eql(false);
     //await DefaultWorkItem.addChildStepToStep(step, step2);
 });
@@ -299,7 +302,7 @@ test('cannot add child wi step to a child wi step (with information filled) of a
     
     await DefaultWorkItem.AddStep(true, step, false, false);
     await DefaultWorkItem.addChildStepToStep(step, step2);
-    let selectedstep = await this.GetStep(step2.StepNum);
+    let selectedstep = await DefaultWorkItem.GetStep(step2.StepNum);
     await t.hover(selectedstep).expect(selectedstep.child(".stepItemRightButtons").exists).eql(false);
 });
 /*

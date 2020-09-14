@@ -38,16 +38,25 @@ export default class WI {
     editWITitle: Selector;
     /**@description  the editable field that contains to WIDescription*/
     editWIDescription: Selector;
-    /**@description The settings gear, that allows the edit, revise, delete options to be seen on a WI*/
+    /**@description The settings gear, that allows the edit, revise, delete options to be seen on a WI !!Apears in view*/
     settingsGearBtn: Selector;
+     /**@description The settings gear, that allows the view, revise, delete options to be seen on a WI the button when in the "view" mode is different from the "edit" mode this one appears in edit*/
+    settingsGearBtn_edit: Selector;
     /**@description The DOM element that contains the settings gear panel options*/
     settingsGearPanel: Selector;
+    /**@description The DOM element that contains the settings gear panel options !In the Edit Mode*/   
+    settingsGearPanel_edit: Selector;
     /**@description Once the setting gear has been clicked, this represents the edit button within it*/
     settingsGearPanelEdit: Selector;
     /**@description Once the setting gear has been clicked, this represents the revise button within it*/
     settingsGearPanelRevise: Selector;
+    settingsGearPanelRevise_edit: Selector;
     /**@description Once the setting gear has been clicked, this represents the delete button within it*/
     settingsGearPanelDelete: Selector;
+    settingsGearPanelDelete_edit: Selector;
+    /**@description Once the setting gear has been clicked, this represents the view button within it*/
+    settingsGearPanelView: Selector;
+    settingsGearPanelView_edit: Selector;
     /**@description the DOM element that contains all the steps of a WI*/
     processStepsPanel: Selector;
     /**@description the "plus" button next at the bottom of the step list of a WI, allowing the user to add a step */
@@ -72,6 +81,8 @@ export default class WI {
     ContextFiles: Selector;
     /**@description the "next" btn at the buttom of the user tab of a WI */
     UserPageNextBtn: Selector;
+    /**@description the btn that will show the top drop down within WI*/
+    smallAnarkLogo: Selector;
     //attributes
     /**@description the title of a WI */
     title: string;
@@ -105,6 +116,8 @@ export default class WI {
      * @description the constructor for the WI object, representing a Workitem on MBEWeb
      */
     constructor() {
+       
+        this.smallAnarkLogo = Selector("#WIPlayerMetadataDrawerButton");
         this.Uploads = [];
         this.AddedContextsHoverText = Selector("div.contextItemHoverInfo");
         this.ContextFiles = Selector("img.img-responsive");
@@ -123,14 +136,20 @@ export default class WI {
     this.getSelectedStepInput = Selector('#DWIProcessStepListScrollParent .stepItem.selectedStep').child().filter('input');
     this.description = "i am a generic description";
     this.title = "this is a generic title";
-    this.settingsGearBtn = Selector("#dwiSettings");
+    this.settingsGearBtn = Selector(".glyphicon.glyphicon-cog.WIPlayerTopToolbarIcon");
+    this.settingsGearBtn_edit = Selector("button#dwiSettings");
     this.partnum = "123456789";
     this.revision = '123456789';
     this.version = "123456789";
-    this.settingsGearPanel = this.settingsGearBtn.sibling("ul");
-    this.settingsGearPanelEdit = this.settingsGearPanel.child(0).child();
-    this.settingsGearPanelRevise = this.settingsGearPanel.child(1).child();
+    this.settingsGearPanel = Selector("#WIPlayerCogMenu").sibling("ul");
+    this.settingsGearPanel_edit = Selector("#dwiSettings").sibling("ul");
+    this.settingsGearPanelEdit = this.settingsGearPanel.child().withText("Edit Work Item").child();
+    this.settingsGearPanelRevise = this.settingsGearPanel.child().withText("Delete Work Item").child();
     this.settingsGearPanelDelete = this.settingsGearPanel.child().withText("Delete Work Item").child();
+    this.settingsGearPanelView = this.settingsGearPanel.child().withText("View Work Item").child();
+    this.settingsGearPanelRevise_edit = this.settingsGearPanel_edit.child().withText("Delete Work Item").child();
+    this.settingsGearPanelDelete_edit = this.settingsGearPanel_edit.child().withText("Delete Work Item").child();
+    this.settingsGearPanelView_edit = this.settingsGearPanel_edit.child().withText("View Work Item").child();
     this.processStepsPanel = Selector('#DWIProcessStepListScrollParent');
     this.appendProccessStep = this.processStepsPanel.child(".appendProcessStep");
     this.activeStep = this.processStepsPanel.child(".stepItem.selectedStep");

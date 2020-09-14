@@ -5,7 +5,7 @@ export default class util {
    constructor(){}
   //logging vars
   /**@description Wethor or not verbose logs should be loged */
-  Verbose = true;
+  Verbose = false;
   /**@description Weathor or not Error logs should be loged
    * 
    * Note: this refers to errors that will not terminate the program and that i have marked "if(errors)log" 
