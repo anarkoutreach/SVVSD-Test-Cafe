@@ -56,7 +56,9 @@ async openVerificationMenu(){
     .click(this.verificationapendBtn);
 }
     async addVerificationStep(step: WIStepVerificationInfo){
-       
+        await t
+        .expect(Selector("#WIPlayerTabArea-tab-execution").exists).eql(true)
+        .click(Selector("#WIPlayerTabArea-tab-execution"));
         await this.openVerificationMenu()
        switch(step.type){
            case types.TEXT:

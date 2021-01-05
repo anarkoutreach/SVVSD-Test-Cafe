@@ -291,7 +291,7 @@ test('cannot add child wi step to a wi step with information filled', async t =>
     .hover(selectedstep)
     .expect(await selectedstep.child(".stepItemRightButtons").innerText == "").eql(true);
     //await DefaultWorkItem.addChildStepToStep(step, step2);
-}).only;
+});
 /*
 This is a test that will ensure that the user cannot add a child WI step to a existing WI child step that has any informtion other that a title filled in. 
 Reason: UI Test, to ensure MBE web's child step system functions properly.
