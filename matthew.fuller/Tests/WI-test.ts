@@ -287,9 +287,11 @@ test('cannot add child wi step to a wi step with information filled', async t =>
    
     await DefaultWorkItem.AddStep(true, step, false, false);
     let selectedstep = await DefaultWorkItem.GetStep(step.StepNum);
-    await t.hover(selectedstep).expect(selectedstep.child(".stepItemRightButtons").exists).eql(false);
+    await t
+    .hover(selectedstep)
+    .expect(await selectedstep.child(".stepItemRightButtons").innerText == "").eql(true);
     //await DefaultWorkItem.addChildStepToStep(step, step2);
-});
+}).only;
 /*
 This is a test that will ensure that the user cannot add a child WI step to a existing WI child step that has any informtion other that a title filled in. 
 Reason: UI Test, to ensure MBE web's child step system functions properly.
@@ -340,7 +342,7 @@ test('can add (a lot of) child step to child step', async t => {
     step = step2;
     }
 
-});
+}).skip;
 /*
 This is a test that will ensure that the user can edit the title of a work item after it is created
 Reason: UI Test
@@ -376,7 +378,7 @@ Reason: UI Test
 */
 test('can upload context to step', async t => {
     const Util = new util;
-    var upload = new UPLOAD("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\Tests\\images\\IMG-0211.JPG");
+    var upload = new UPLOAD(".//images//tucker.JPG");
     var step = new WISteps();
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     await DefaultWorkItem.UploadContext(upload);

@@ -136,14 +136,14 @@ export default class WI {
     this.getSelectedStepInput = Selector('#DWIProcessStepListScrollParent .stepItem.selectedStep').child().filter('input');
     this.description = "i am a generic description";
     this.title = "this is a generic title";
-    this.settingsGearBtn = Selector(".glyphicon.glyphicon-cog.WIPlayerTopToolbarIcon");
+    this.settingsGearBtn = Selector("#dwiSettings")
     this.settingsGearBtn_edit = Selector("button#dwiSettings");
     this.partnum = "123456789";
     this.revision = '123456789';
     this.version = "123456789";
-    this.settingsGearPanel = Selector("#WIPlayerCogMenu").sibling("ul");
-    this.settingsGearPanel_edit = Selector("#dwiSettings").sibling("ul");
-    this.settingsGearPanelEdit = this.settingsGearPanel.child().withText("Edit Work Item").child();
+    this.settingsGearPanel = Selector(".dropdown-menu.dropdown-menu-right")
+    this.settingsGearPanel_edit = Selector(".dropdown-menu.dropdown-menu-right");
+    this.settingsGearPanelEdit = this.settingsGearPanel.child("li").withText("Edit Work Item").child();
     this.settingsGearPanelRevise = this.settingsGearPanel.child().withText("Delete Work Item").child();
     this.settingsGearPanelDelete = this.settingsGearPanel.child().withText("Delete Work Item").child();
     this.settingsGearPanelView = this.settingsGearPanel.child().withText("View Work Item").child();
@@ -280,7 +280,7 @@ export default class WI {
         //only the first page
         while(this.UserPageNextBtn.exists){
             await this.AddAllAvalibleContent();
-            await this.ClickNextUserPageBtn();
+            if (this.UserPageNextBtn.exists) await this.ClickNextUserPageBtn();
         }
         
 
@@ -318,7 +318,7 @@ export default class WI {
         .expect(Selector("button#okayConfirm").exists).eql(true)
         .click(Selector("button#okayConfirm"))
         .expect(username === await allbuttons.nth(num).sibling(".searchItemInfo").child("span").innerText).eql(true);  
-        console.log(`expected: ${username} to not equal ${await allbuttons.nth(num).sibling(".searchItemInfo").child("span").innerText}`)
+        
         
     }
     /**
@@ -329,6 +329,7 @@ export default class WI {
      * @returns null
      */
     async AddAllAvalibleContent(){
+        let allNames = Selector("#results").child(".search-result row")
         //only the first page
         const allbuttons = Selector("button.addButton.btn.btn-primary");
         let count = await allbuttons.count
@@ -337,10 +338,14 @@ export default class WI {
         .expect(allbuttons.nth(i).exists).eql(true)
         .click(allbuttons.nth(i))
         .expect(allbuttons.nth(i).exists).eql(true)
-        .click(allbuttons.nth(i))
-        .expect(Selector("span.error.active").exists).eql(true);   
+        .click(allbuttons.nth(i));
+        let alertAppears = Selector("span.error.active").exists;
+        let contentAdded = (await alertAppears == true)
+        await t
+        .expect(contentAdded).eql(true)
         }
     }
+
     /**
      * @description Removes a content item from a WI based on a zero based index
      * 
@@ -436,6 +441,8 @@ export default class WI {
         .click(this.editWIDescription);
         await Util.CtlADelete(this.editWIDescription);
         await t
+        .expect(Selector("#WIPlayerTabArea-tab-referenceinfo").exists).eql(true)
+        .click(Selector("#WIPlayerTabArea-tab-referenceinfo"))
             .click(this.editWIDescription)
             .typeText(this.editWIDescription, text)
             .expect((await this.editWIDescription.innerText).includes(text)).ok;
@@ -527,7 +534,7 @@ export default class WI {
         return new Promise(async resolve => {
             var gettempdata = new Promise(async resolve =>{
                 var tempdata;
-                fs.readFile("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (err, data) => {
+                fs.readFile("./saved_data/ActiveWI.json", (err, data) => {
                 if (err) throw err;
                 tempdata = JSON.parse(data.toString());
                     resolve(tempdata);
@@ -623,11 +630,15 @@ export default class WI {
      */
     async FillallStepFields (step: WISteps){
         await t
+        .expect(Selector("#WIPlayerTabArea-tab-referenceinfo").exists).eql(true)
+        .click(Selector("#WIPlayerTabArea-tab-referenceinfo"));
+        await t
         .expect(step.editStepDescription.exists).eql(true)
         .typeText(step.editStepDescription, step.StepDescription)
         .expect(step.editStepSafetyAndComplience.exists).eql(true)
         .typeText(step.editStepSafetyAndComplience, step.StepSafteyAndComplience);
         await this.FeedPageEventEmitter.Update();
+    
 
        
     }

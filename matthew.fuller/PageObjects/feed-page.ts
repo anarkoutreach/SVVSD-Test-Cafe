@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import * as events from "events";
 
 const tick = () => 
-  new Promise(resolve => {
+  new Promise<void>(resolve => {
     setTimeout(() => {
       console.log('tick')
       resolve()
@@ -25,16 +25,19 @@ const tick = () =>
 	Update() {
 		return new Promise( resolve =>{
 			let fsWait;
-			const watcher = fs.watch("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", (event, filename) => {
+			
+			const watcher = fs.watch("./saved_data/ActiveWI.json", (event, filename) => {
 				if (filename) {
-				  if (fsWait) return;
+				  if (fsWait) resolve("timeout");
 				  fsWait = setTimeout(() => {
-					fsWait = false;
+					fsWait = true;
 				  }, 100);
-				  if(event === "change"){
-					  resolve(true)
-					  watcher.close();
-				  }
+				  if (event =="change") 
+				{
+				watcher.close();
+				resolve("timeout");
+				}
+				 
 				}
 			  });
 			this.emit("update");
@@ -170,7 +173,7 @@ export default class FeedPage {
 			this.onCloseWI;
 		});
 		this.eventEmitter.on("update", async () =>{
-			fs.writeFileSync("C:\\Users\\mmful\\Desktop\\github\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json", JSON.stringify(generinworkitem))
+			fs.writeFileSync("./saved_data/ActiveWI.json", JSON.stringify(generinworkitem))
 		});
 		
 		workitem.FeedPageEventEmitter = this.eventEmitter;
@@ -192,11 +195,11 @@ export default class FeedPage {
 		let searchResult = await this.findSearchResult(workitem.title, tabs.WORKITEMS);
 		await t
 		.click(searchResult)
-		.expect(generinworkitem.wiTitle.visible).eql(false);	
+		.expect(generinworkitem.wiTitle.visible).eql(true);	
 	}
 	
 	async onCloseWI(){
-		fs.writeFileSync('C:\\Users\\mmful\\OneDrive\\MBEWeb - Testing\\git\\SVVSD-Test-Cafe\\matthew.fuller\\saved_data\\ActiveWI.json', "{\"CLOSED\":\"TRUE\"}")
+		fs.writeFileSync('./saved_data/ActiveWI.json', "{\"CLOSED\":\"TRUE\"}")
 	}
 
 	async FillallWIFields(workitem: WI) {
