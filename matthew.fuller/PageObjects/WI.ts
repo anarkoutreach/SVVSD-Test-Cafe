@@ -638,9 +638,6 @@ export default class WI {
         .expect(step.editStepSafetyAndComplience.exists).eql(true)
         .typeText(step.editStepSafetyAndComplience, step.StepSafteyAndComplience);
         await this.FeedPageEventEmitter.Update();
-    
-
-       
     }
     /**
      * @description Clicks a tab at the top of a workitem based upon a number 0-3

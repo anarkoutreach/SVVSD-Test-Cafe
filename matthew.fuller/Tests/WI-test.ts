@@ -105,9 +105,6 @@ fixture`WI test initalisation`.page(configManager.homePage).beforeEach(async t =
 
     await t
         .useRole(t.ctx.user.role);
-   
-        
-    
     await feedPage.createWI(DefaultWorkItem, 20);
     await feedPage.returnToHome();
 }).afterEach(async t => {
@@ -394,6 +391,32 @@ test('can create WI then delete', async t => {
     if(Util.Verbose)console.log("--test-\"can create WI then delete\" running blank test, only fixtures--");
 });
 /*
+This is a test that will ensure that the user can open and close the verification menu
+Reason: UI Test
+*/
+test('can open and close verification menu', async t => { 
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
+    let WIstep = new WISteps();
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
+    await WIstep.switchToVerificationTab();
+    await WIstep.openVerificationMenu();
+    await WIstep.closeVerificationMenu();
+
+});
+/*
+This is a test that will ensure that the user can switch between the instructions and verifications tabs in a wi
+Reason: UI Test
+*/
+test('switch between instruction and verification tabs', async t => { 
+    await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
+    let WIstep = new WISteps();
+    await DefaultWorkItem.AddStep(true, WIstep, false, false);
+    await WIstep.switchToVerificationTab();
+    await WIstep.switchToInstructionsTab();
+    await WIstep.switchToVerificationTab();
+
+}).only;
+/*
 This is a test that will ensure that the user can add a single verification step to a existing work item
 Reason: UI Test
 */
@@ -405,6 +428,7 @@ test('Add one verification step', async t => {
     await WIstep.addVerificationStep(VerificationStep);
     await feedPage.returnToHome();
 });
+
 /*
 This is a test that will ensure that the user cannot add a step with the same name as another step
 Reason: UI Test

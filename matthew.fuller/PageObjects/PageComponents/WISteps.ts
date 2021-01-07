@@ -55,10 +55,25 @@ async openVerificationMenu(){
     .expect(this.verificationapendBtn.exists).eql(true)
     .click(this.verificationapendBtn);
 }
+async switchToVerificationTab(){
+    let verificationTab: Selector = Selector("#WIPlayerTabArea-tab-execution")
+    await t
+    .expect(verificationTab.exists).eql(true)
+    .click(verificationTab);
+    let str = await verificationTab.getAttribute("aria-selected")
+    await t.expect(str == "true").eql(true)
+}
+
+async switchToInstructionsTab(){
+    let instructionsTab: Selector =Selector("#WIPlayerTabArea-tab-referenceinfo")
+    await t
+    .expect(instructionsTab.exists).eql(true)
+    .click(instructionsTab);
+    let str = await instructionsTab.getAttribute("aria-selected");
+    await t.expect(str == "true").eql(true);
+}
     async addVerificationStep(step: WIStepVerificationInfo){
-        await t
-        .expect(Selector("#WIPlayerTabArea-tab-execution").exists).eql(true)
-        .click(Selector("#WIPlayerTabArea-tab-execution"));
+        await this.switchToVerificationTab()
         await this.openVerificationMenu()
        switch(step.type){
            case types.TEXT:
