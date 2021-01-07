@@ -72,6 +72,22 @@ async switchToInstructionsTab(){
     let str = await instructionsTab.getAttribute("aria-selected");
     await t.expect(str == "true").eql(true);
 }
+    async checkQPID(){
+        let QPIDBtn: Selector = Selector("span.processStepCharacteristicMoreInfoButton").withText("Show QPID")
+        await t
+        .expect(QPIDBtn.exists).eql(true)
+        .click(QPIDBtn);
+        let QPIDArea: Selector = Selector("div.processStepCharacteristicMoreInfo").child("p")
+        await t.expect(QPIDArea.visible).eql(true);
+    }
+    async closeQPID(){
+        let QPIDBtn: Selector = Selector("span.processStepCharacteristicMoreInfoButton").withText("Hide QPID")
+        await t
+        .expect(QPIDBtn.exists).eql(true)
+        .click(QPIDBtn);
+        let QPIDArea: Selector = Selector("div.processStepCharacteristicMoreInfo").child("p")
+        await t.expect(QPIDArea.visible).eql(false);
+    }
     async addVerificationStep(step: WIStepVerificationInfo){
         await this.switchToVerificationTab()
         await this.openVerificationMenu()
