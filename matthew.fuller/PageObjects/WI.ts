@@ -441,8 +441,6 @@ export default class WI {
         .click(this.editWIDescription);
         await Util.CtlADelete(this.editWIDescription);
         await t
-        .expect(Selector("#WIPlayerTabArea-tab-referenceinfo").exists).eql(true)
-        .click(Selector("#WIPlayerTabArea-tab-referenceinfo"))
             .click(this.editWIDescription)
             .typeText(this.editWIDescription, text)
             .expect((await this.editWIDescription.innerText).includes(text)).ok;
@@ -623,15 +621,19 @@ export default class WI {
         return finished;
         }
     }
+    /**@deprecated this would switch between verficiation to referance tab, but that tab was removed */
+    async switchToReferanceTab(){
+        await t
+        .expect(Selector("#WIPlayerTabArea-tab-referenceinfo").exists).eql(true)
+        .click(Selector("#WIPlayerTabArea-tab-referenceinfo"));
+    }
     /**
      * @description Fills in the Description and Saftey and compliance fields of a WorkitemStep based upon a WIsteps object
      * @param {WISteps} step the step object that will be used to provide text for description and saftey and compliance. 
      * @returns null
      */
     async FillallStepFields (step: WISteps){
-        await t
-        .expect(Selector("#WIPlayerTabArea-tab-referenceinfo").exists).eql(true)
-        .click(Selector("#WIPlayerTabArea-tab-referenceinfo"));
+        
         await t
         .expect(step.editStepDescription.exists).eql(true)
         .typeText(step.editStepDescription, step.StepDescription)

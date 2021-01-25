@@ -55,6 +55,7 @@ async openVerificationMenu(){
     .expect(this.verificationapendBtn.exists).eql(true)
     .click(this.verificationapendBtn);
 }
+/**@deprecated the tab in question no longer exists */
 async switchToVerificationTab(){
     let verificationTab: Selector = Selector("#WIPlayerTabArea-tab-execution")
     await t
@@ -63,7 +64,7 @@ async switchToVerificationTab(){
     let str = await verificationTab.getAttribute("aria-selected")
     await t.expect(str == "true").eql(true)
 }
-
+/**@deprecated the tab in question no longer exists */
 async switchToInstructionsTab(){
     let instructionsTab: Selector =Selector("#WIPlayerTabArea-tab-referenceinfo")
     await t
@@ -89,7 +90,6 @@ async switchToInstructionsTab(){
         await t.expect(QPIDArea.visible).eql(false);
     }
     async addVerificationStep(step: WIStepVerificationInfo){
-        await this.switchToVerificationTab()
         await this.openVerificationMenu()
        switch(step.type){
            case types.TEXT:
