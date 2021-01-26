@@ -454,7 +454,7 @@ test('view QPID button can close', async t => {
     await WIstep.checkQPID()
     await WIstep.closeQPID()
     await feedPage.returnToHome();
-}).only
+});
 /*
 This is a test that will ensure that the user cannot add a step with the same name as another step
 Reason: UI Test

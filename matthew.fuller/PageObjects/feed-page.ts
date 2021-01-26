@@ -5,6 +5,7 @@ import WI from "./WI";
 import {tabs} from "./PageComponents/tabs";
 import SearchPage from "./search-page"
 import util from "../Utilities/util";
+import UserPage from "./user-page"
 import * as fs from 'fs';
 import * as events from "events";
 
@@ -57,6 +58,7 @@ export default class FeedPage {
 	commentsTextArea: Selector;
 	createButton: Selector;
 	createOptionsDwi: Selector;
+	createOptionsUser: Selector;
 	getSearchBar: Selector;
 	getSearchSubmitBtn: Selector;
 	eventEmitter = new MyClass();
@@ -67,6 +69,7 @@ export default class FeedPage {
 		this.getSearchBar = Selector('#search');
 		this.createButton = Selector('div#navbarCreate.dropdown-toggle');
 		this.createOptionsDwi = Selector('p.createOptionText.dwi');
+		this.createOptionsUser = Selector('p.createOptionText.user');
 		this.userInitialsIcon = Selector("#navbarUserInfo .initials");
 		this.firstConversation = Selector('.newsItem[data-name]');
 		this.firstAddCommentBtn = this.firstConversation.find('.addCommentButton');
@@ -77,7 +80,15 @@ export default class FeedPage {
 		this.addCommentCapture = Selector('[data-name="ahsmzdfhn"] .fade.in #captureOption');
 		this.commentsTextArea = Selector("#comments");
 	}
-
+	/**@description opens the create new user page */
+	async navigateToCreateNewUser(){
+		let userPage = new UserPage();
+		await t
+		.expect(this.createButton.with({ visibilityCheck: true }).exists).ok('this should pass')
+		.click(this.createButton)
+		.click(this.createOptionsUser)
+		.expect(userPage.checkInUserPage()).eql(true);
+	}
 	async addCommentToFirstConversation(text) {
 		const Util = new util;
 		let firstConversation = new Conversation(this.firstConversation);

@@ -37,6 +37,9 @@ export default class util {
     result = await (Math.random() * length).toString();
     return result
  }
+ wait(ms) {
+	return new Promise(res => setTimeout(res, ms));
+}
  /** @description presses "Ctrl + A" then "delete" through testcafe @param {Selector} field the editable feild that should be cleared @returns null */
  async CtlADelete(field: Selector){
  await t
