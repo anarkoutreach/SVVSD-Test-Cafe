@@ -84,19 +84,22 @@ export default class UserPage {
 			await t
 			.expect(this.RolesField.exists).eql(true)
 			.click(this.RolesField)
-			.typeText(this.RolesField, role);
+			.typeText(this.RolesField, role)
+			.pressKey("enter");
 		});
 		userObj.acLists.forEach(async ac => {
 			await t
 			.expect(this.ACListsField.exists).eql(true)
 			.click(this.ACListsField)
-			.typeText(this.ACListsField, ac);
+			.typeText(this.ACListsField, ac)
+			.pressKey("enter");
 		});
 		if(userObj.site != null){
 			await t
 			.expect(this.SiteField.exists).eql(true)
 			.click(this.SiteField)
-			.typeText(this.SiteField, userObj.site);
+			.typeText(this.SiteField, userObj.site)
+			.pressKey("enter");
 		}
 		
 	}

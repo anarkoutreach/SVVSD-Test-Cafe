@@ -22,9 +22,7 @@ test('can navigate to user page', async t => {
 })
 //test if a user can be created
 test('can create new user', async t => {
-    let Util = new util();
    let user = new userObj();
     await userPage.fillAllFields(user);
-    await Util.wait(2000)
     await userPage.pressCreateBtn();
 })
