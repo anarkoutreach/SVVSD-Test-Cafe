@@ -49,22 +49,39 @@ const tick = () =>
 	}
   }
 export default class FeedPage {
+	/**@description the field in the userInfoBox containing the user Name */
 	userNameField: Selector;
+	/**@description the box containing all the user info on the main feed page */
 	userInfoBox: Selector;
+	/**@description the user initials icon in the upper right */
 	userInitialsIcon: Selector;
+	/**@description the button inside of the user options to sign out */
 	signOutBtn: Selector;
+	/**@description the user options settings (clicking on the initials icon) */
 	userInitialsBtn: Selector;
+	/**@description the first conversation */
 	firstConversation: Selector;
+	/**@description the first add comment btn on the page */
 	firstAddCommentBtn: any;
+	/**@description the first submit button on the first comment */
 	firstAddCommentSubmitBtn: any;
+	/**@description the first input for the first comment */
 	firstAddCommentInput: any;
+	/**@description the add picture button for comments */
 	addCommentCamera: Selector;
+	/**@description the capture button for comments */
 	addCommentCapture: Selector;
+	/**@description the comment text area */
 	commentsTextArea: Selector;
+	/**@description the button to create things in the upper right */
 	createButton: Selector;
+	/**@description in the options menu from the create button, the author WI buttton */
 	createOptionsDwi: Selector;
+	/**@description in the options menu from the create button, the button to create a user*/
 	createOptionsUser: Selector;
+	/**@description the search bar */
 	getSearchBar: Selector;
+	/**@description the sumbit button for the search bar */
 	getSearchSubmitBtn: Selector;
 	eventEmitter = new MyClass();
 

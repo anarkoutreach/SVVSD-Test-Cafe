@@ -37,7 +37,7 @@ user
  * @param acLists an array of strings containing the name of the acLists to add
  * @param site the site
  */
-constructor(num = 5, roles = ["Viewer","Activity Author"], acLists = [], site = null){
+constructor(roles = ["Viewer","Activity Author"], acLists = [], site = null, num = 5){
 this.name = "FakeUser:"+ Util.randchar(num);
 this.email = "FakeUser"+ Util.randchar(num) + "@"+ "FakeUser"+ Util.randchar(5) +".fake";
 this.title = "faker";
