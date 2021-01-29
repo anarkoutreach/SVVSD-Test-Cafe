@@ -76,4 +76,14 @@ test('can create and login to new user', async t => {
      await feedPage.verifyUser(user);
      await t.expect(feedPage.createButton.visible).eql(true)
  });
+  //test if a the create button displays for a user that only has the Work Item Author role
+  test('test if the create button displays for a user that only has the Work Item Author role', async t => {
+    let user = new userObj(["Work Item Author"]);
+     await userPage.fillAllFields(user);
+     await userPage.pressCreateBtn();
+     await feedPage.signOut();
+     await t.useRole(user.user.role);
+     await feedPage.verifyUser(user);
+     await t.expect(feedPage.createButton.visible).eql(true)
+ });
 
