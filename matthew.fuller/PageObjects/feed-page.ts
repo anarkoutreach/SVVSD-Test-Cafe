@@ -8,6 +8,7 @@ import util from "../Utilities/util";
 import UserPage from "./user-page"
 import * as fs from 'fs';
 import * as events from "events";
+import userObj from "./PageComponents/userObj";
 
 const tick = () => 
   new Promise<void>(resolve => {
@@ -48,7 +49,11 @@ const tick = () =>
 	}
   }
 export default class FeedPage {
+	userNameField: Selector;
+	userInfoBox: Selector;
 	userInitialsIcon: Selector;
+	signOutBtn: Selector;
+	userInitialsBtn: Selector;
 	firstConversation: Selector;
 	firstAddCommentBtn: any;
 	firstAddCommentSubmitBtn: any;
@@ -62,9 +67,12 @@ export default class FeedPage {
 	getSearchBar: Selector;
 	getSearchSubmitBtn: Selector;
 	eventEmitter = new MyClass();
-	
 
 	constructor() {
+		this.userInfoBox = Selector("#userBoxRoles")
+		this.userNameField = this.userInfoBox.child("p").nth(0)
+		this.signOutBtn = Selector("#signout")
+		this.userInitialsBtn = Selector("button#navbarUserInfo");
 		this.getSearchSubmitBtn = Selector('#feedSearchBar .btn-default');
 		this.getSearchBar = Selector('#search');
 		this.createButton = Selector('div#navbarCreate.dropdown-toggle');
@@ -80,12 +88,51 @@ export default class FeedPage {
 		this.addCommentCapture = Selector('[data-name="ahsmzdfhn"] .fade.in #captureOption');
 		this.commentsTextArea = Selector("#comments");
 	}
+	/**
+	 * @description check the UserInfo Box for name and roles of current user, then match them to a userObj 
+	 * @param user the userObj to compare*/
+	async verifyUser(user: userObj){
+		await t.expect(await (await this.getUsername()).toLowerCase()).eql(await user.name.toLowerCase());
+		user.roles.forEach(async role => {
+		   await t.expect((await this.getAllUserInfo()).includes(await role.toLowerCase()))
+		});
+	}
+	/**@returns an array containing all information contained in UserInfoBox */
+	async getAllUserInfo(){
+		let array = [];
+		for (let index = 0; index < await this.userInfoBox.child("p").count; index++) {
+			const element = await this.userInfoBox.child("p").nth(index).innerText
+			array.push(await element.toLowerCase());
+		}
+		return array;
+		
+	}
+	/**@returns the username field innertext */
+	async getUsername(){
+		return this.userNameField.innerText
+	}
+	/**@description clicks the icon in the upper right of the feed page containing the initials of the user */
+	async clickUserIcon(){
+		await t.
+		expect(this.userInitialsBtn.exists && this.userInitialsBtn.visible).eql(true)
+		.click(this.userInitialsBtn);
+	}
+	/**@description sign out of MBE web from the home page */
+	async signOut(){
+		await this.clickUserIcon()
+		await t
+		.setNativeDialogHandler(() => true)
+		.expect(this.signOutBtn.visible).eql(true)
+		.click(this.signOutBtn);
+	}
 	/**@description opens the create new user page */
 	async navigateToCreateNewUser(){
 		let userPage = new UserPage();
 		await t
-		.expect(this.createButton.with({ visibilityCheck: true }).exists).ok('this should pass')
+		.setNativeDialogHandler(() => true)
+		.expect(this.createButton.exists).eql(true)
 		.click(this.createButton)
+		.expect(this.createOptionsUser.exists).eql(true)
 		.click(this.createOptionsUser)
 		.expect(userPage.checkInUserPage()).eql(true);
 	}

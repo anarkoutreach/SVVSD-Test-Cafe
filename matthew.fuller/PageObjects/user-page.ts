@@ -47,11 +47,11 @@ export default class UserPage {
 	 * @returns Boolean indicating if in User Page
 	 */
  	checkInUserPage(){
-		if(this.nameField.visible && this.emailField.visible){
-			return true
-		} else{
-			return false
-		}
+			if(this.nameField.visible && this.emailField.visible){
+				return true;
+			} else{
+				return false ;
+			}
 	}
 	/**
 	 * @description fill all fields in the new user page based on a userObj
@@ -59,44 +59,44 @@ export default class UserPage {
 	 */
 	async fillAllFields(userObj: userObj){
 		await t
-		.expect(this.nameField.exists).eql(true)
+		.expect(this.nameField.visible).eql(true)
 		.click(this.nameField)
 		.typeText(this.nameField, userObj.name)
-		.expect(this.emailField.exists).eql(true)
+		.expect(this.emailField.visible).eql(true)
 		.click(this.emailField)
 		.typeText(this.emailField, userObj.email)
-		.expect(this.titleField.exists).eql(true)
+		.expect(this.titleField.visible).eql(true)
 		.click(this.titleField)
 		.typeText(this.titleField, userObj.title)
-		.expect(this.OrganizationField.exists).eql(true)
+		.expect(this.OrganizationField.visible).eql(true)
 		.click(this.OrganizationField)
 		.typeText(this.OrganizationField, userObj.organization)
-		.expect(this.DepartmentField.exists).eql(true)
+		.expect(this.DepartmentField.visible).eql(true)
 		.click(this.DepartmentField)
 		.typeText(this.DepartmentField, userObj.department)
-		.expect(this.LoginIdField.exists).eql(true)
+		.expect(this.LoginIdField.visible).eql(true)
 		.click(this.LoginIdField)
 		.typeText(this.LoginIdField, userObj.loginId)
-		.expect(this.PasswordField.exists).eql(true)
+		.expect(this.PasswordField.visible).eql(true)
 		.click(this.PasswordField)
 		.typeText(this.PasswordField, userObj.password);
 		userObj.roles.forEach(async role => {
 			await t
-			.expect(this.RolesField.exists).eql(true)
+			.expect(this.RolesField.visible).eql(true)
 			.click(this.RolesField)
 			.typeText(this.RolesField, role)
 			.pressKey("enter");
 		});
 		userObj.acLists.forEach(async ac => {
 			await t
-			.expect(this.ACListsField.exists).eql(true)
+			.expect(this.ACListsField.visible).eql(true)
 			.click(this.ACListsField)
 			.typeText(this.ACListsField, ac)
 			.pressKey("enter");
 		});
 		if(userObj.site != null){
 			await t
-			.expect(this.SiteField.exists).eql(true)
+			.expect(this.SiteField.visible).eql(true)
 			.click(this.SiteField)
 			.typeText(this.SiteField, userObj.site)
 			.pressKey("enter");
