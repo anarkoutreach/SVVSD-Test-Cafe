@@ -108,7 +108,7 @@ export default class FeedPage {
 	/**
 	 * @description check the UserInfo Box for name and roles of current user, then match them to a userObj 
 	 * @param user the userObj to compare*/
-	async verifyUser(user: userObj){
+	async verifyUserAndRoles(user: userObj){
 		await t.expect(await (await this.getUsername()).toLowerCase()).eql(await user.name.toLowerCase());
 		user.roles.forEach(async role => {
 		   await t.expect((await this.getAllUserInfo()).includes(await role.toLowerCase()))

@@ -51,7 +51,7 @@ this.acLists = acLists
 this.user = {
     username: this.loginId,
 	password: this.password,
-	initials: "MF",
+	initials: null,
 	role: Role(
 		configManager.serverUrl,
 		async t => {

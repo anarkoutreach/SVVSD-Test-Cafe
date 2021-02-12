@@ -120,9 +120,36 @@ export default class UserPage {
 			return true}else{return"notOnHomePage"}
 		}
 	}
+	/**
+	 * @description check if any errors are on the user page
+	 * @returns an array containing all errors on the page 
+	 * "loginIdExists" if the login id is taken
+	 * other will be added if needed
+	 * 
+	 */
 	async checkErrorsOnPage(){
+		let errors = [];
 		let allErrors = Selector("span.error");
 		let LoginIdPopUp = allErrors.withText("already taken").visible
-		if(LoginIdPopUp){return "loginIdExists"}else{return null}
+		if(LoginIdPopUp)errors.push("loginIdExists")
+		return errors
+	}
+	/**
+	 * @description create a user and with a role and test if the role was properly assigned
+	 * @param roles an array of strings with the roles to assign, CASE SENSITIVE 
+	 */
+	async testRoleAssignment(roles: string[]){
+		let userPage = new UserPage()
+		let feedPage = new FeedPage()
+		let user = new userObj(roles);
+		await userPage.fillAllFields(user);
+		await userPage.pressCreateBtn();
+		await t.useRole(user.user.role);
+		await feedPage.verifyUserAndRoles(user);
+		if(roles[0] == "Viewer" && roles.length == 1){
+			await t.expect(feedPage.createButton.visible).eql(false)
+		}else{
+			await t.expect(feedPage.createButton.visible).eql(true)
+		}
 	}
 }
