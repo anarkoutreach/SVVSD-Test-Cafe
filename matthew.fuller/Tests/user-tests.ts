@@ -46,4 +46,48 @@ test('users with the same loginId cannot be created', async t => {
     await userPage.pressCreateBtn();
     let errors = await userPage.checkErrorsOnPage();
     await t.expect(errors.includes("loginIdExists")).eql(true)
-}).only
+})
+//test if users with identical information except login Id can be created
+test('users with identical information except login id can be created', async t => {
+    let user = new userObj();
+    await userPage.fillAllFields(user);
+    await userPage.pressCreateBtn();
+    await feedPage.navigateToCreateNewUser()
+    let user2 = user;
+    user2.loginId = await Util.randchar(25)
+    await userPage.fillAllFields(user2);
+    await userPage.pressCreateBtn();
+    let errors = await userPage.checkErrorsOnPage();
+    //console.log(errors)
+    await t.expect(errors.includes("loginIdExists")).eql(false)
+});
+//users require proper emails, with an @ symbol, test if that works
+test('can a user with an email that does not have an @ symbol be created', async t => {
+    let user = new userObj();
+    user.email ="emailWithoutAtSymbol"
+    await userPage.fillAllFields(user);
+    await userPage.pressCreateBtn();
+    let errors = await userPage.checkErrorsOnPage();
+    await t.expect(errors.includes("invalidEmail")).eql(true)
+});
+//users require proper emails, check if script tags are allowed
+test('can a user with an email that has script tags be created @ symbol be created', async t => {
+    let user = new userObj();
+    user.email ="emailwith<script></script>tags@hacker.haking"
+    await userPage.fillAllFields(user);
+    await userPage.pressCreateBtn();
+    let errors = await userPage.checkErrorsOnPage();
+    await t.expect(errors.includes("invalidEmail")).eql(true)
+});
+//users require proper emails, check if parenthesis are allowed
+test('can a user with an email that has parenthesis be created @ symbol be created', async t => {
+    let user = new userObj();
+    user.email ="emailwith()@hacker.haking"
+    await userPage.fillAllFields(user);
+    await userPage.pressCreateBtn();
+    let errors = await userPage.checkErrorsOnPage();
+    await t.expect(errors.includes("invalidEmail")).eql(true)
+}).only;
+
+
+

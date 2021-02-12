@@ -61,7 +61,7 @@ export default class UserPage {
 		await t
 		.expect(this.nameField.visible).eql(true)
 		.click(this.nameField)
-		.typeText(this.nameField, userObj.name)
+		.typeText(this.nameField, userObj.name, {paste: true})
 		.expect(this.emailField.visible).eql(true)
 		.click(this.emailField)
 		.typeText(this.emailField, userObj.email)
@@ -130,8 +130,11 @@ export default class UserPage {
 	async checkErrorsOnPage(){
 		let errors = [];
 		let allErrors = Selector("span.error");
-		let LoginIdPopUp = allErrors.withText("already taken").visible
-		if(LoginIdPopUp)errors.push("loginIdExists")
+		let LoginIdPopUp = allErrors.withText("already taken").exists && allErrors.withText("already taken").visible
+		let invalidEmail = allErrors.withText("valid email").exists && allErrors.withText("valid email").visible
+		//console.log(await LoginIdPopUp)
+		if(await LoginIdPopUp)errors.push("loginIdExists")
+		if(await invalidEmail)errors.push("invalidEmail")
 		return errors
 	}
 	/**
