@@ -87,7 +87,7 @@ test('can a user with an email that has parenthesis be created @ symbol be creat
     await userPage.pressCreateBtn();
     let errors = await userPage.checkErrorsOnPage();
     await t.expect(errors.includes("invalidEmail")).eql(true)
-}).only;
+});
 
 
 

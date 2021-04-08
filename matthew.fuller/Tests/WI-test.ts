@@ -94,8 +94,39 @@ test("can open WI menu and close", async t => {
    
     
 });
-
-
+test("test if a work item can have a parenthisis in it", async t => {
+    const customWorkItem = new WI
+    customWorkItem.title = "TEST1234(testing)"
+    await feedPage.createWI(customWorkItem, 20);
+    await feedPage.returnToHome();
+    await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
+    await feedPage.findSearchResult(customWorkItem.title, tabs.WORKITEMS)
+});
+test("test if a work item can have a a pair of parenthisis at the end of it", async t => {
+    const customWorkItem = new WI
+    customWorkItem.title = "TEST1234()"
+    await feedPage.createWI(customWorkItem, 20);
+    await feedPage.returnToHome();
+    await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
+    await feedPage.findSearchResult(customWorkItem.title, tabs.WORKITEMS)
+});
+test("test if a work item can have a parenthisis at the end \"name(hello)\" and be found by searching \"name(\"", async t => {
+    const customWorkItem = new WI
+    customWorkItem.title = "TEST1234(testing)"
+    await feedPage.createWI(customWorkItem, 20);
+    await feedPage.returnToHome();
+    let searchFor = "TEST1234("
+    await feedPage.SearchFor(searchFor, tabs.WORKITEMS);
+    await feedPage.findSearchResult(customWorkItem.title, tabs.WORKITEMS)
+});
+test("test if a work item can have a parenthisis at the end of it", async t => {
+    const customWorkItem = new WI
+    customWorkItem.title = "TEST1234("
+    await feedPage.createWI(customWorkItem, 20);
+    await feedPage.returnToHome();
+    await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
+    await feedPage.findSearchResult(customWorkItem.title, tabs.WORKITEMS)
+});
 /*
 *@description this is a fixture that will login to MBE web, then create a WI based upon the "defaultWI" object
 *
@@ -390,19 +421,20 @@ test('can create WI then delete', async t => {
     const Util = new util;
     if(Util.Verbose)console.log("--test-\"can create WI then delete\" running blank test, only fixtures--");
 });
-/*
-This is a test that will ensure that the user can open and close the verification menu
-Reason: UI Test
-*/
+/**
+ * @deprecated the tab in question no longer exists
+ This is a test that will ensure that the user can open and close the verification menu'
+ Reason: UI Test
+ */
 test('can open and close verification menu', async t => { 
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     let WIstep = new WISteps();
     await DefaultWorkItem.AddStep(true, WIstep, false, false);
-    await WIstep.switchToVerificationTab();
+    //await WIstep.switchToVerificationTab();
     await WIstep.openVerificationMenu();
     await WIstep.closeVerificationMenu();
 
-});
+}).skip;
 /*
 This is a test that will ensure that the user can switch between the instructions and verifications tabs in a wi
 Reason: UI Test

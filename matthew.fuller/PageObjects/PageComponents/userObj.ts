@@ -38,13 +38,13 @@ user
  * @param site the site
  */
 constructor(roles = ["Viewer","Activity Author"], acLists = [], site = null, num = 5){
-this.name = "FakeUser:"+ Util.randchar(num);
-this.email = "FakeUser"+ Util.randchar(num) + "@"+ "FakeUser"+ Util.randchar(5) +".fake";
-this.title = "faker";
-this.organization = "RobotsInc"
-this.department ="Automation"
-this.loginId = "FakeLogin" +Util.randchar(num);
-this.password = "FakePass" +Util.randchar(num);
+this.name = configManager.config.defaultData.user.name + Util.randchar(num);
+this.email = configManager.config.defaultData.user.email+ Util.randchar(num) + "@"+ configManager.config.defaultData.user.email +Util.randchar(5) +".fake";
+this.title = configManager.config.defaultData.user.title;
+this.organization = configManager.config.defaultData.user.organization;
+this.department =configManager.config.defaultData.user.department;
+this.loginId = configManager.config.defaultData.user.loginID +Util.randchar(num);
+this.password = configManager.config.defaultData.user.password +Util.randchar(num);
 this.site = site
 this.roles = roles
 this.acLists = acLists
@@ -53,8 +53,10 @@ this.user = {
 	password: this.password,
 	initials: null,
 	role: Role(
+		//define the server to connect to.
 		configManager.serverUrl,
 		async t => {
+			// define the login function such that when passed to t.use role -> login to MBE web as user
 			await loginPage.login(this.loginId, this.password);
 		},
 		{ preserveUrl: true }

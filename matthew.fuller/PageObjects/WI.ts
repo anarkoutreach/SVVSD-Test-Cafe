@@ -34,6 +34,8 @@ export default class WI {
     self: Selector;
     /**@description A DOM element that conatins a non-editable title of the current WI*/
     wiTitle: Selector;
+    /**@description A dom element that contains the name of a work item while in view mode */
+    wiViewTitle: Selector;
     /**@description The Editable field that represents the WI's Title*/
     editWITitle: Selector;
     /**@description  the editable field that contains to WIDescription*/
@@ -116,7 +118,7 @@ export default class WI {
      * @description the constructor for the WI object, representing a Workitem on MBEWeb
      */
     constructor() {
-       
+        this.wiViewTitle = Selector("div.WIPlayerTopToolbarFirstRow")
         this.smallAnarkLogo = Selector("#WIPlayerMetadataDrawerButton");
         this.Uploads = [];
         this.AddedContextsHoverText = Selector("div.contextItemHoverInfo");
@@ -131,7 +133,7 @@ export default class WI {
         this.steps = [];
         this.editWITitle = Selector('#dwiTitleInput');
         this.editWIDescription = Selector('#dwiDescription');
-        this.wiTitle = Selector('#dwiTitle');
+        this.wiTitle = Selector('div#dwiTitle');
     this.getDWItab = Selector('#DWIProcessStepListScrollParent');
     this.getSelectedStepInput = Selector('#DWIProcessStepListScrollParent .stepItem.selectedStep').child().filter('input');
     this.description = "i am a generic description";

@@ -1,0 +1,13 @@
+{
+    "defaultData":{
+        "user":{
+           "name":"FakeUser-",
+           "email":"FakeUser-",
+           "title":"faker",
+           "organization": "RobotsINC",
+           "department": "Automation",
+           "loginID": "FakeLogin",
+           "password":"FakePass"
+        }
+    }
+}
