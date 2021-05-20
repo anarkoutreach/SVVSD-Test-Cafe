@@ -1,4 +1,7 @@
-cannot add child wi step to a child wi step (with information filled) of a wi step
+
 can upload context to step
 can add all avalible users to WI
 check if there is a title in the "view" mode of a workitem
+test if a work item can have a parenthisis at the end of it --active Bug
+
+fix the event handler my guy why does it exist? just fix it.

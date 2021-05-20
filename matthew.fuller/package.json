@@ -8,7 +8,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test-chrome": "testcafe chrome Tests/ -e",
+    "test-chrome": "testcafe chrome Tests/ -e > tests.log",
     "test-chrome-headless": "testcafe chrome:headless Tests/ -e",
     "test-ie": "testcafe ie Tests/ -e",
     "test-edge": "testcafe edge Tests/ -e",

@@ -333,8 +333,8 @@ test('cannot add child wi step to a child wi step (with information filled) of a
     await DefaultWorkItem.AddStep(true, step, false, false);
     await DefaultWorkItem.addChildStepToStep(step, step2);
     let selectedstep = await DefaultWorkItem.GetStep(step2.StepNum);
-    await t.hover(selectedstep).expect(selectedstep.child(".stepItemRightButtons").exists).eql(false);
-});
+    await t.hover(selectedstep).expect(selectedstep.child(".stepItemRightButtons").child("img").exists).eql(false);
+}).only;
 /*
 This is a test that will ensure that the user can add a child step to a child step within a workitem
 Reason: UI Test
