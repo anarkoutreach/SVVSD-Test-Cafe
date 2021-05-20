@@ -37,3 +37,53 @@ test('can create an activity', async t => {
     await activities.addGenericTitleAndDescription();
     await activities.pressCreateBtn();
 });
+test('can create an activity with multiple groups', async t => {
+    await feedPage.openCreateMenu();
+    await t
+    .setNativeDialogHandler(() => true)
+    .click(feedPage.createOptionsActivity)
+    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
+    await activities.addEndData();
+    await activities.addNthGroup(0);
+    await activities.addNthGroup(1);
+    await activities.addNthGroup(2);
+    await activities.addGenericTitleAndDescription();
+    await activities.pressCreateBtn();
+});
+test('cannot create an activity without groups', async t => {
+    await feedPage.openCreateMenu();
+    await t
+    .setNativeDialogHandler(() => true)
+    .click(feedPage.createOptionsActivity)
+    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
+    await activities.addEndData();
+    await activities.addGenericTitleAndDescription();
+    await t
+    .expect(activities.createBtn.exists).eql(true)
+    .click(activities.createBtn)
+    .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
+});
+test('cannot create an activity without a title or desc', async t => {
+    await feedPage.openCreateMenu();
+    await t
+    .setNativeDialogHandler(() => true)
+    .click(feedPage.createOptionsActivity)
+    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
+    await activities.addNthGroup(0);
+    await activities.addEndData();
+    await t
+    .expect(activities.createBtn.exists).eql(true)
+    .click(activities.createBtn)
+    .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
+});
+test('cannot create an activity without any info', async t => {
+    await feedPage.openCreateMenu();
+    await t
+    .setNativeDialogHandler(() => true)
+    .click(feedPage.createOptionsActivity)
+    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
+    await t
+    .expect(activities.createBtn.exists).eql(true)
+    .click(activities.createBtn)
+    .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
+});

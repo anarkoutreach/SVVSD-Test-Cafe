@@ -57,6 +57,5 @@ export default class ActivityPage {
 		.expect(this.description.exists).eql(true)
 		.click(this.description)
 		.typeText(this.description, desc);
-		
 	}
 }
