@@ -1,7 +1,2 @@
-
-can upload context to step
-can add all avalible users to WI
-check if there is a title in the "view" mode of a workitem
+can add all avalible users to WI --still fails, inconsistent errors in website make testing this difficult
 test if a work item can have a parenthisis at the end of it --active Bug
-
-fix the event handler my guy why does it exist? just fix it.

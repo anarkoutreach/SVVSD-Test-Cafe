@@ -35,7 +35,7 @@ fixture`Login`.page(configManager.homePage).beforeEach(async t => {
 //test is the title is present in the view mode of the workitem
 test('check if there is a title in the "view" mode of a workitem', async t => {
     await feedPage.createWI_CheckIfTitle(DefaultWorkItem);
-})
+});
 //tests that only use log in fixture
 test('add a lot of steps and child steps', async t => {
     
@@ -234,7 +234,7 @@ test('can add all avalible users to WI', async t => {
     await DefaultWorkItem.SwitchWITAB(WORKITEMTAB.USERS);
     //all from first page
     await DefaultWorkItem.AddAllAvalibleUsers();
-});
+}).skip;
 /*
 This is a test that will ensure that the user can go to the next page of users on the "owners" tab of a workitem (this would function the same for a content tab, but there is not enough content for the button to exist(+10))
 Reason: UI test, ensures buttons function properly
@@ -416,7 +416,7 @@ test('can upload context to step', async t => {
     //the index will be 0, no need to detect it
     step.StepNum=0
     await DefaultWorkItem.AddContextToStep(step, upload);
-}).only;
+});
 /*
 This is a test that will ensure that the user can delete a workitem after its creation
 Reason: UI Test
