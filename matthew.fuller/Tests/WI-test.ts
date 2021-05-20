@@ -11,6 +11,7 @@ import util from "../Utilities/util";
 import WISteps from "../PageObjects/PageComponents/WISteps";
 import { UPLOAD } from "../PageObjects/PageComponents/Upload";
 import { WORKITEMTAB } from"../PageObjects/PageComponents/WITAB";
+import { Selector } from "testcafe";
  /*** @description  An enum representing all possible types for a verification step*/
 const types = VerificationTypes;
 /**@description the class used to represent alerts accross MBE web */
@@ -329,12 +330,11 @@ test('cannot add child wi step to a child wi step (with information filled) of a
     var step = new WISteps();
     step.StepShouldNotHaveInformationFilled = true;
     var step2 = new WISteps();
-    
     await DefaultWorkItem.AddStep(true, step, false, false);
     await DefaultWorkItem.addChildStepToStep(step, step2);
     let selectedstep = await DefaultWorkItem.GetStep(step2.StepNum);
     await t.hover(selectedstep).expect(selectedstep.child(".stepItemRightButtons").child("img").exists).eql(false);
-}).only;
+});
 /*
 This is a test that will ensure that the user can add a child step to a child step within a workitem
 Reason: UI Test
@@ -410,9 +410,13 @@ test('can upload context to step', async t => {
     var step = new WISteps();
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     await DefaultWorkItem.UploadContext(upload);
+    //wait for upload
+    await t.expect(Selector(Selector(".progressRingThrobbing")).exists).notOk({ timeout: 10000 });
     await DefaultWorkItem.AddStep(false, step, false, false);
+    //the index will be 0, no need to detect it
+    step.StepNum=0
     await DefaultWorkItem.AddContextToStep(step, upload);
-})
+}).only;
 /*
 This is a test that will ensure that the user can delete a workitem after its creation
 Reason: UI Test

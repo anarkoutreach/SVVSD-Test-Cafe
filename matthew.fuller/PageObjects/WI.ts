@@ -420,13 +420,15 @@ export default class WI {
         .click(step2)
         .expect(this.addContext.exists).eql(true)
         .click(this.addContext)
-        .expect(this.ContextFiles.nth(num)).ok()
+        .expect(this.ContextFiles.exists).ok({ timeout: 100000 })
+        .expect(this.ContextFiles.nth(num).exists).ok()
         .click(this.ContextFiles.nth(num))
         .expect(Selector('button[data-id="selectButton"]').exists).eql(true)
         .click(Selector('button[data-id="selectButton"]'));
         await t.expect(await this.VerifyContextIsShown(uplaod.Title)).eql(true);
         await this.FeedPageEventEmitter.Update();
     }
+    
     /**
      * @description changes a Workitem's description from the "edit mode" of a WI
      * 
