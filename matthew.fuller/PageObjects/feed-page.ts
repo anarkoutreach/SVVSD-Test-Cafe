@@ -228,6 +228,12 @@ export default class FeedPage {
 		if (Util.Verbose) console.log('-- createWi: work instruction created --');
 		await this.returnToHome();
 	}
+	async selectActivity(name:string){
+		let specific = Selector("div.myActivityTitle").withText(name.toUpperCase());
+		await t
+		.expect(specific.exists).eql(true)
+		.click(specific);
+	}
 	async createWI(workitem: WI, length) {
 
 		const alerts = new Alerts();

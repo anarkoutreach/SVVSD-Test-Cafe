@@ -34,9 +34,64 @@ test('can create an activity', async t => {
     .expect(Selector("#search-tab-tab-Content").exists).eql(true);
     await activities.addEndData();
     await activities.addNthGroup(0);
-    await activities.addGenericTitleAndDescription();
+    let tandd = await activities.addGenericTitleAndDescription();
     await activities.pressCreateBtn();
 });
+test('can navigate to test from feed page', async t =>{
+    await feedPage.openCreateMenu();
+    await t
+    .setNativeDialogHandler(() => true)
+    .click(feedPage.createOptionsActivity)
+    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
+    await activities.addEndData();
+    await activities.addNthGroup(0);
+    let tandd = await activities.addGenericTitleAndDescription();
+    await activities.pressCreateBtn();
+    await feedPage.returnToHome();
+    await activities.navigateToActivity(tandd["title"])
+}).only;
+test('can navigate to edit activity', async t => {
+    await feedPage.openCreateMenu();
+    await t
+    .setNativeDialogHandler(() => true)
+    .click(feedPage.createOptionsActivity)
+    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
+    await activities.addEndData();
+    await activities.addNthGroup(0);
+    let tandd = await activities.addGenericTitleAndDescription();
+    await activities.pressCreateBtn();
+    await feedPage.returnToHome();
+    await activities.navigateToActivity(tandd["title"])
+    await t
+    .expect(activities.editBtn.exists).eql(true)
+    .click(activities.editBtn)
+    .expect(Selector("a").withText("Edit Activity").exists).eql(true)
+    .click(Selector("a").withText("Edit Activity"));
+})
+test('can edit activity title', async t => {
+    await feedPage.openCreateMenu();
+    await t
+    .setNativeDialogHandler(() => true)
+    .click(feedPage.createOptionsActivity)
+    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
+    await activities.addEndData();
+    await activities.addNthGroup(0);
+    let tandd = await activities.addGenericTitleAndDescription();
+    await activities.pressCreateBtn();
+    await feedPage.returnToHome();
+    await activities.navigateToActivity(tandd["title"])
+    await t
+    .expect(activities.editBtn.exists).eql(true)
+    .click(activities.editBtn)
+    .expect(Selector("a").withText("Edit Activity").exists).eql(true)
+    .click(Selector("a").withText("Edit Activity"));
+    await t
+    .click(activities.title)
+    .pressKey('ctrl+a delete')
+    .click(activities.title)
+    .typeText(activities.title,"actTitle:"+Util.randchar(25))
+    await activities.pressCreateBtn();
+})
 test('can create an activity with multiple groups', async t => {
     await feedPage.openCreateMenu();
     await t

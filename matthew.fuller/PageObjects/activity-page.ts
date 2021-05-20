@@ -1,10 +1,12 @@
 import { Selector, t } from "testcafe";
 import util from "../Utilities/util";
-
+import FeedPage from "../PageObjects/feed-page";
+const feedPage = new FeedPage();
 const Util = new util;
 
 export default class ActivityPage {
 	title: Selector;
+	editBtn: Selector;
 	startDate: Selector;
 	endDate: Selector;
 	contentItemTab: Selector;
@@ -13,6 +15,7 @@ export default class ActivityPage {
 	createBtn: Selector;
 	groupsTab:Selector;
 	constructor() {
+		this.editBtn = Selector("div.glyphicon.glyphicon-cog")
 		this.createBtn = Selector("button.create.btn.btn-success")
 		this.endDate = Selector("input.createEndDate")
 		this.startDate = Selector("input.createStartDate")
@@ -57,5 +60,10 @@ export default class ActivityPage {
 		.expect(this.description.exists).eql(true)
 		.click(this.description)
 		.typeText(this.description, desc);
+		return {"title":title,"desc":desc}
+	}
+	async navigateToActivity(name){
+		console.log(name)
+		feedPage.selectActivity(name)
 	}
 }
