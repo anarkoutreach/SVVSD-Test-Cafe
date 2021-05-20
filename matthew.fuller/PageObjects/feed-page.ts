@@ -76,6 +76,8 @@ export default class FeedPage {
 	createButton: Selector;
 	/**@description in the options menu from the create button, the author WI buttton */
 	createOptionsDwi: Selector;
+	/**@description in the options menu from the create button, the create activity buttton */
+	createOptionsActivity: Selector;
 	/**@description in the options menu from the create button, the button to create a user*/
 	createOptionsUser: Selector;
 	/**@description the search bar */
@@ -85,6 +87,7 @@ export default class FeedPage {
 	eventEmitter = new MyClass();
 
 	constructor() {
+		this.createOptionsActivity = Selector("p.createOptionText.activity")
 		this.userInfoBox = Selector("#userBoxRoles")
 		this.userNameField = this.userInfoBox.child("p").nth(0)
 		this.signOutBtn = Selector("#signout")
@@ -468,7 +471,11 @@ export default class FeedPage {
 			.expect(alerts.getAWICancelBtn.visible).eql(true);
 	}
 
-
+	async openCreateMenu(){
+		await t
+		.expect(this.createButton.with({ visibilityCheck: true }).exists).ok('this should pass')
+		.click(this.createButton)
+	}
 	async closeAWIMenu() {
 		const alerts = new Alerts()
 		let firstConversation = new Conversation(this.firstConversation);
