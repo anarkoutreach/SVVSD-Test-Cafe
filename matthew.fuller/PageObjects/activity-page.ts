@@ -27,9 +27,12 @@ export default class ActivityPage {
 	}
 
 	async addEndData(date="10/22/3000 12:00:00 AM"){
+		
 		await t
 		.expect(this.endDate.exists).eql(true)
-		.click(this.endDate)
+		.click(this.endDate);
+		await Util.CtlADelete(this.endDate)
+		await t
 		.typeText(this.endDate,date);
 	}
 	async addNthGroup(nth){

@@ -49,7 +49,7 @@ test('can navigate to test from feed page', async t =>{
     await activities.pressCreateBtn();
     await feedPage.returnToHome();
     await activities.navigateToActivity(tandd["title"])
-}).only;
+});
 test('can navigate to edit activity', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -86,8 +86,9 @@ test('can edit activity title', async t => {
     .expect(Selector("a").withText("Edit Activity").exists).eql(true)
     .click(Selector("a").withText("Edit Activity"));
     await t
-    .click(activities.title)
-    .pressKey('ctrl+a delete')
+    .click(activities.title);
+    await Util.CtlADelete(activities.title)
+    await t
     .click(activities.title)
     .typeText(activities.title,"actTitle:"+Util.randchar(25))
     await activities.pressCreateBtn();
