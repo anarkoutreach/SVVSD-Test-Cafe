@@ -104,36 +104,47 @@ export default class ActivityPage {
 	/**
 	 * @description create a new activity then open it, edit it and verify the edit 
 	 * @param field the selector to edit must be compatible with typetext
-	 * @param fieldName the string representing the text to edit to
+	 * @param fieldName the string representing the field name in obj
+	 * @param text the string of text to type
 	 * @returns 
 	 */
-	async createActivityAndEditField(field:Selector,fieldName:string){
+	async createActivityAndEditField(field:Selector,text:string,fieldName:string){
 		let actObj = await this.createGenericAct();
 		await feedPage.returnToHome();
-		await this.openActivityAndEdit(actObj,field,fieldName)
+		await this.openActivityAndEdit(actObj,field,text,fieldName)
 		return actObj;
 	}
 	/**
 	 * @description open an activity then open it, edit it and verify the edit 
 	 * @param actObj the activity object that already exists to be navigated to and edited.
 	 * @param field the selector to edit must be compatible with typetext
-	 * @param fieldName the string representing the text to edit to
+	 * @param fieldName the string representing the field name on the object
+	 * @param text the string of text to type2
+	 * @param  use the testcafe selector attruibute to use to get the text of it
 	 * @returns 
 	 */
-	async openActivityAndEdit(actObj:activityObj,field:Selector,fieldName:string){
+	async openActivityAndEdit(actObj:activityObj,field:Selector,text:string,fieldName:string,use="value"){
 		await this.openActivityInEditMode(actObj.title)
 		await t.expect(field.exists).eql(true).expect(field.visible).eql(true);
 		await Util.CtlADelete(field);
-		let newTitle =fieldName;
+		let newTitle =text;
 		await t.click(field).typeText(field,newTitle)
 		await this.pressCreateBtn()
-		actObj.title=newTitle
+		actObj[fieldName]=newTitle
 		await feedPage.returnToHome()
 		//returning to the activity will verify as this function will expect the name exists.
 		await this.openActivityInEditMode(actObj.title)
 		//but it will not cover if the field is not the title so we shouldnt rely on that. but none the less we need to be on the activity to check changes. and it will be easiest to do so in edit mode
 		//as such here is a simple verification step
-		await t.expect(await field.innerText == fieldName).eql(true);
+		await t.expect(field.visible).eql(true);
+		let inntrText =await field[use]
+		let test =await String(inntrText).toUpperCase()
+		//console.log("inner: "+test)
+		//console.log("inner: "+inntrText)
+		//console.log("text:" +text)
+		let renderedText =field[use]
+		///set both to uppercase to account for differences
+		await t.expect(test ==  text.toUpperCase() ).eql(true);
 	}
 	/**
 	 * @description press the create button of a activity and verify its creation by checking if activity title exists 

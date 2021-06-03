@@ -134,20 +134,20 @@ test('cannot create an activity without any info', async t => {
     .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
 });
 
-fixture`activity editing tests tests`.page(configManager.homePage).beforeEach(async t => {
+fixture`activity editing tests`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
     await t
         .useRole(t.ctx.user.role);
 }).only;
 test('edit title of activity', async t => {
-    await activities.createActivityAndEditField(activities.title,"title"+Util.randchar(20))
+    await activities.createActivityAndEditField(activities.title,"title"+Util.randchar(20),"title")
 });
 test('edit description of activity', async t => {
-    await activities.createActivityAndEditField(activities.description,"description"+Util.randchar(20))
+    await activities.createActivityAndEditField(activities.description,"description"+Util.randchar(20),"description")
 });
 test('edit endDate of activity', async t => {
-    await activities.createActivityAndEditField(activities.endDate,configManager.defaultEditedEndDate)
+    await activities.createActivityAndEditField(activities.endDate,configManager.defaultEditedEndDate,"endDate")
 });
 test('edit startDate of activity', async t => {
-    await activities.createActivityAndEditField(activities.startDate,configManager.defaultEditedStartDate)
+    await activities.createActivityAndEditField(activities.startDate,configManager.defaultEditedStartDate,"startDate")
 });
