@@ -138,20 +138,16 @@ fixture`activity editing tests tests`.page(configManager.homePage).beforeEach(as
     t.ctx.user = mattUser;
     await t
         .useRole(t.ctx.user.role);
-});
-test('edit title of activity', async t => {
-    let actObj = await activities.createGenericAct();
-    await feedPage.returnToHome();
-    await activities.openActivityInEditMode(actObj.title)
-    await t.expect(activities.title.exists).eql(true).expect(activities.title.visible).eql(true);
-    await Util.CtlADelete(activities.title);
-    let newTitle ="editedTitle:"+Util.randchar(20);
-    await t.click(activities.title).typeText(activities.title,newTitle)
-    await activities.pressCreateBtn()
-    actObj.title=newTitle
-    await feedPage.returnToHome()
-    //returning to the activity will verify as this function will expect the name exists.
-    await activities.navigateToActivity(actObj.title)
-    
-
 }).only;
+test('edit title of activity', async t => {
+    await activities.createActivityAndEditField(activities.title,"title"+Util.randchar(20))
+});
+test('edit description of activity', async t => {
+    await activities.createActivityAndEditField(activities.description,"description"+Util.randchar(20))
+});
+test('edit endDate of activity', async t => {
+    await activities.createActivityAndEditField(activities.endDate,configManager.defaultEditedEndDate)
+});
+test('edit startDate of activity', async t => {
+    await activities.createActivityAndEditField(activities.startDate,configManager.defaultEditedStartDate)
+});

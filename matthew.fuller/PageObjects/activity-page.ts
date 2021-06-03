@@ -2,9 +2,10 @@ import { Selector, t } from "testcafe";
 import util from "../Utilities/util";
 import FeedPage from "../PageObjects/feed-page";
 import activityObj from "./PageComponents/activityObj";
+import ConfigurationManager from "../Configuration/configuration";
 const feedPage = new FeedPage();
 const Util = new util;
-
+const configManager = new ConfigurationManager();
 export default class ActivityPage {
 	editActivityMenuItem: Selector;
 	title: Selector;
@@ -72,7 +73,7 @@ export default class ActivityPage {
 	 * @param date the date to be added with a default value of "10/22/3000 12:00:00 AM"
 	 * @returns null
 	 */
-	async addEndData(date="10/22/3000 12:00:00 AM"){
+	async addEndData(date=configManager.defaultEndDate){
 		
 		await t
 		.expect(this.endDate.exists).eql(true)
@@ -99,6 +100,40 @@ export default class ActivityPage {
 		.expect(this.contentItemTab.exists).eql(true)
 		.click(this.contentItemTab);
 		return null
+	}
+	/**
+	 * @description create a new activity then open it, edit it and verify the edit 
+	 * @param field the selector to edit must be compatible with typetext
+	 * @param fieldName the string representing the text to edit to
+	 * @returns 
+	 */
+	async createActivityAndEditField(field:Selector,fieldName:string){
+		let actObj = await this.createGenericAct();
+		await feedPage.returnToHome();
+		await this.openActivityAndEdit(actObj,field,fieldName)
+		return actObj;
+	}
+	/**
+	 * @description open an activity then open it, edit it and verify the edit 
+	 * @param actObj the activity object that already exists to be navigated to and edited.
+	 * @param field the selector to edit must be compatible with typetext
+	 * @param fieldName the string representing the text to edit to
+	 * @returns 
+	 */
+	async openActivityAndEdit(actObj:activityObj,field:Selector,fieldName:string){
+		await this.openActivityInEditMode(actObj.title)
+		await t.expect(field.exists).eql(true).expect(field.visible).eql(true);
+		await Util.CtlADelete(field);
+		let newTitle =fieldName;
+		await t.click(field).typeText(field,newTitle)
+		await this.pressCreateBtn()
+		actObj.title=newTitle
+		await feedPage.returnToHome()
+		//returning to the activity will verify as this function will expect the name exists.
+		await this.openActivityInEditMode(actObj.title)
+		//but it will not cover if the field is not the title so we shouldnt rely on that. but none the less we need to be on the activity to check changes. and it will be easiest to do so in edit mode
+		//as such here is a simple verification step
+		await t.expect(await field.innerText == fieldName).eql(true);
 	}
 	/**
 	 * @description press the create button of a activity and verify its creation by checking if activity title exists 
