@@ -100,12 +100,16 @@ export default class ActivityPage {
 		.click(this.contentItemTab);
 		return null
 	}
-	/**@description press the create button of a activity and verify its creation by checking if activity title exists */
+	/**
+	 * @description press the create button of a activity and verify its creation by checking if activity title exists 
+	 * @returns null
+	*/
 	async pressCreateBtn(){
 		await t
 		.expect(this.createBtn.exists).eql(true)
 		.click(this.createBtn)
 		.expect(Selector("#activityTitle").exists).eql(true);
+		return null
 	}
 	async addGenericTitleAndDescription(useObj=false,obj=new activityObj()){
 		let title;
@@ -127,8 +131,13 @@ export default class ActivityPage {
 		.typeText(this.description, desc);
 		return {"title":title,"desc":desc}
 	}
-	async navigateToActivity(name){
-		console.log(name)
+	/**
+	 * @description from the feed page click on an activity and navigate to it and verify it has navigated
+	 * @param name a string that represents the name to search for
+	 * @returns null
+	 */
+	async navigateToActivity(name:string){
 		feedPage.selectActivity(name)
+		return null
 	}
 }

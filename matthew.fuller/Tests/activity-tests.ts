@@ -37,23 +37,10 @@ test('can navigate to test from feed page', async t =>{
     await activities.navigateToActivity(tandd["title"])
 });
 test('can navigate to edit activity', async t => {
-    await feedPage.openCreateMenu();
-    await t
-    .setNativeDialogHandler(() => true)
-    .click(feedPage.createOptionsActivity)
-    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
-    await activities.addEndData();
-    await activities.addNthGroup(0);
-    let tandd = await activities.addGenericTitleAndDescription();
-    await activities.pressCreateBtn();
-    await feedPage.returnToHome();
-    await activities.navigateToActivity(tandd["title"])
-    await t
-    .expect(activities.editBtn.exists).eql(true)
-    .click(activities.editBtn)
-    .expect(Selector("a").withText("Edit Activity").exists).eql(true)
-    .click(Selector("a").withText("Edit Activity"));
-})
+    let obj = await activities.createGenericAct()
+    await feedPage.returnToHome()
+    await activities.openActivityInEditMode(obj.title)
+});
 fixture`activity creation tests`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
     await t
@@ -70,7 +57,7 @@ test('can create an activity', async t => {
     let tandd = await activities.addGenericTitleAndDescription();
     await activities.pressCreateBtn();
 });
-
+/**@deprecated replaced with cleaner test */
 test('can edit activity title', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -95,7 +82,7 @@ test('can edit activity title', async t => {
     .click(activities.title)
     .typeText(activities.title,"actTitle:"+Util.randchar(25))
     await activities.pressCreateBtn();
-})
+}).skip;
 test('can create an activity with multiple groups', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -152,8 +139,19 @@ fixture`activity editing tests tests`.page(configManager.homePage).beforeEach(as
     await t
         .useRole(t.ctx.user.role);
 });
-test('cannot create an activity without any info', async t => {
+test('edit title of activity', async t => {
     let actObj = await activities.createGenericAct();
+    await feedPage.returnToHome();
     await activities.openActivityInEditMode(actObj.title)
-     
+    await t.expect(activities.title.exists).eql(true).expect(activities.title.visible).eql(true);
+    await Util.CtlADelete(activities.title);
+    let newTitle ="editedTitle:"+Util.randchar(20);
+    await t.click(activities.title).typeText(activities.title,newTitle)
+    await activities.pressCreateBtn()
+    actObj.title=newTitle
+    await feedPage.returnToHome()
+    //returning to the activity will verify as this function will expect the name exists.
+    await activities.navigateToActivity(actObj.title)
+    
+
 }).only;
