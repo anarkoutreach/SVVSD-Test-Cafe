@@ -12,7 +12,7 @@ import WISteps from "../PageObjects/PageComponents/WISteps";
 import { UPLOAD } from "../PageObjects/PageComponents/Upload";
 import { WORKITEMTAB } from"../PageObjects/PageComponents/WITAB";
 import { Selector } from "testcafe";
- /*** @description  An enum representing all possible types for a verification step*/
+/** @description  An enum representing all possible types for a verification step*/
 const types = VerificationTypes;
 /**@description the class used to represent alerts accross MBE web */
 const alerts = new Alerts();
@@ -521,6 +521,9 @@ fixture`tests that most likly will not fail`.page(configManager.homePage).before
     await feedPage.returnToHome();
     await feedPage.deleteWI(tabs.WORKITEMS, DefaultWorkItem);
 });
+/**
+ * @description add a text verification to a work item
+ */
 test('add a text verification steps', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     var i;
@@ -532,6 +535,7 @@ test('add a text verification steps', async t => {
     
     await feedPage.returnToHome();
 });
+ 
 test('add a checkbox verification steps', async t => {
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     var i;

@@ -12,22 +12,38 @@ export default class Alerts {
     /**@description the generic, and most common Cancel Btn accross MBE web */
     getGenericCancelBtn: Selector;
 
-    // AWI/DWI
+    // AWI/DWI\
+    /**@description any error popups on the page */
     errorPopUp: Selector;
+    /**@description the create btn in the WI create menu */
     getAWICreateBtn: Selector;
+    /**@description the cancel btn in the WI create menu */
     getAWICancelBtn: Selector;
+    /**@description part number input in the Wi create menu */
     getAWIPartNumberInput: Selector;
+    /**@description title input in wi create menu */
     getAWIWorkItemTitleInput: Selector;
+    /**@description descrption input in wi create menu */
     getAWIDescriptionInput: Selector;
+    /**@description revision input in the wi create menu */
     getAWIRevisionInput: Selector;
+    /**@description version inpout in the WI create menu */
     getAWIVersionInput: Selector;
-    getModalForm: Selector;
+    /**@description ?? */
+    getModalForm: Selector
+    /**@description the slider in the wi create menu */
     editslider: Selector;
+    /**@description the input for location in the wi creat emenu */
     editlocation: Selector;
+    /**@description the input for the relese status of the wi create menu */
     editreleasestatus: Selector;
+    /**@description relese status input for wi create menu */
     realeasestatusdropdown: Selector;
+    /**@description the annark login the upper right */
     getAnarkLogo: Selector;
+    /**@description a specific error for dupliciutes */
     WIDuplicateError: Selector;
+    /**@description unknown */
     getAWIIsLatestVersionInput: Selector;
 /**@description the consturctor class used to represent alerts accross MBE web */
     constructor() {
@@ -49,13 +65,13 @@ export default class Alerts {
     this.getAWIVersionInput =  Selector("span[data-property=version]").child("input");
     this.getAWIIsLatestVersionInput =  Selector("span[data-property=islatestrevision]").child("input");
     this.getModalForm = Selector('form#modalForm');
-    this.editlocation = Selector("span[data-property=location]").child(".singleSelectDropdown");
-    this.realeasestatusdropdown = Selector("span[data-property=release_status]").child("div.singleSelectDropdown").child(".css-26l3qy-menu").child(0);
-        this.editreleasestatus = Selector("span[data-property=release_status]").child("div.singleSelectDropdown");
+    this.editlocation = Selector("span[data-property=location]").child("input");
+    this.realeasestatusdropdown = Selector("span[data-property=release_status]").child("input")
+        this.editreleasestatus = Selector("span[data-property=release_status]").child("input");
         
         this.editslider = Selector("span.checkbox-switch-slider");
     }
-    
+    /**@deprecated no longer used */
     getlocationbutton(num){
         const Util = new util;
         
@@ -66,7 +82,13 @@ export default class Alerts {
         if(Util.Errors && num2 > 4){console.log("-getlocationbutton() alerts.ts was given a number greater than 4"); return null}
         return Selector("span[data-property=location]").child(".singleSelectDropdown").child(".css-26l3qy-menu").child().child(num2);
     }
-    
+    /**
+     * 
+     * @param form 1-8 number assosiated with the form of a wi in the wi create menu t ofill
+     * @param text the text to fill the field with
+     * @param workitem the work item object
+     * @returns nulls
+     */
 	async FillForm(form, text, workitem: WI) {
       
        
@@ -114,8 +136,7 @@ export default class Alerts {
                 await t
                 .expect(this.editlocation.exists).eql(true)
                 .click(this.editlocation)
-                .expect(this.getlocationbutton(workitem.Location).exists).eql(true)
-                .click(this.getlocationbutton(workitem.Location))
+                .typeText(this.editlocation, workitem.Location)
                 
 
                 if(Util2.Verbose)console.log("--fillform-alerts \"7\" was passed, ignoring location dropdown currently")
@@ -125,13 +146,9 @@ export default class Alerts {
                 var complate1 = false;
                 await t
                 .expect(this.editreleasestatus.exists).eql(true)
-                .click(this.editreleasestatus);
-                 complate1 = true;
-                await t
-                .expect(complate1).eql(true)
-                .expect(this.realeasestatusdropdown.exists).eql(true)
-                .expect((await workitem.getStatusDropDown(workitem.releasestatus)).exists).eql(true)
-                .click(await workitem.getStatusDropDown(workitem.releasestatus));
+                .click(this.editreleasestatus)
+                .typeText(this.editreleasestatus,workitem.releasestatus)
+               
             
                 break;
 

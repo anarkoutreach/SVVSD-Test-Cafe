@@ -17,16 +17,17 @@ import groupObj from "../PageObjects/PageComponents/groupObj";
 const groupPage = new GroupPage()
 const configManager = new ConfigurationManager();
 const serachPage = new SearchPage()
-fixture`activity navigation tests`.page(configManager.homePage).beforeEach(async t => {
+/**@description execute before every test: loging into mbe web */
+fixture`search tests`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
     await t
         .useRole(t.ctx.user.role);
 });
-
+/**@description navigate to search tab from feed page by searching an empty string */
 test("can navigate to serach tab", async t => {
     await feedPage.naviagteToSearchTab()
 });
+/**@description navigate to search page by saeraching a non-empty string */
 test("can search text in feedpage and navigate to search tab", async t => {
     await feedPage.naviagteToSearchTab("hello")
 });
-

@@ -11,11 +11,12 @@ const Rnum = Math.floor(Math.random() * 100);
 const activities = new ActivityPage();
 
 const configManager = new ConfigurationManager();
-fixture`activity navigation tests`.page(configManager.homePage).beforeEach(async t => {
+fixture`activity tests`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
     await t
         .useRole(t.ctx.user.role);
 });
+/**@description open the activity creation menu from the home page */
 test('can open activity creation menu', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -23,6 +24,7 @@ test('can open activity creation menu', async t => {
     .click(feedPage.createOptionsActivity)
     .expect(activities.title.exists).eql(true)
 });
+/**@description open an activity from the my activites list from feed page */
 test('can navigate to test from feed page', async t =>{
     await feedPage.openCreateMenu();
     await t
@@ -36,11 +38,13 @@ test('can navigate to test from feed page', async t =>{
     await feedPage.returnToHome();
     await activities.navigateToActivity(tandd["title"])
 });
+/**@description navigate to the edit mode of an activity */
 test('can navigate to edit activity', async t => {
     let obj = await activities.createGenericAct()
     await feedPage.returnToHome()
     await activities.openActivityInEditMode(obj.title)
 });
+/**@description can create an activity just that, thats it */
 test('can create an activity', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -53,7 +57,7 @@ test('can create an activity', async t => {
     await activities.pressCreateBtn();
 });
 /**@deprecated replaced with cleaner test */
-test('can edit activity title', async t => {
+test('can edit activity title [DEPRECATED]', async t => {
     await feedPage.openCreateMenu();
     await t
     .setNativeDialogHandler(() => true)
@@ -78,6 +82,7 @@ test('can edit activity title', async t => {
     .typeText(activities.title,"actTitle:"+Util.randchar(25))
     await activities.pressCreateBtn();
 }).skip;
+/**@description try to create an activity with multiple groups attached to it. */
 test('can create an activity with multiple groups', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -104,6 +109,10 @@ test('can create an activity with multiple groups', async t => {
 //     .click(activities.createBtn)
 //     .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
 // }).only;
+/**
+ * @description attempt to create an activity without a title or description,
+ * it should not succsead, as such valifdaton is set up as such
+ */
 test('cannot create an activity without a title or desc', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -117,6 +126,7 @@ test('cannot create an activity without a title or desc', async t => {
     .click(activities.createBtn)
     .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
 });
+/**@description attempt to create an activity without fillign any fields in */
 test('cannot create an activity without any info', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -128,16 +138,19 @@ test('cannot create an activity without any info', async t => {
     .click(activities.createBtn)
     .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
 });
-
+/**@description attempt to edit the title of an actiity by creating an activty then navigating back to it in edit mode */
 test('edit title of activity', async t => {
     await activities.createActivityAndEditField(activities.title,"title"+Util.randchar(20),"title")
 });
+/**@description attempt to edit the description of an actiity by creating an activty then navigating back to it in edit mode */
 test('edit description of activity', async t => {
     await activities.createActivityAndEditField(activities.description,"description"+Util.randchar(20),"description")
 });
+/**@description attempt to edit the endDate of an actiity by creating an activty then navigating back to it in edit mode */
 test('edit endDate of activity', async t => {
     await activities.createActivityAndEditField(activities.endDate,configManager.defaultEditedEndDate,"endDate")
 });
+/**@description attempt to edit the startDate of an actiity by creating an activty then navigating back to it in edit mode */
 test('edit startDate of activity', async t => {
     await activities.createActivityAndEditField(activities.startDate,configManager.defaultEditedStartDate,"startDate")
 });

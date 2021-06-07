@@ -14,7 +14,7 @@ fixture`Log in to MBEweb`.page(configManager.homePage).beforeEach(async t => {
 });
 const Util = new util;
 const feedPage = new FeedPage();
-const Rnum = Math.floor(Math.random() * 100);
+const Rnum = Math.floor(Math.random() * 100)+5;//cannot be zero, causes error
 test('can add comment', async t => {
     const conversation = feedPage.getFirstConversation();
     await conversation.addComment('Can add comment: ' + Util.randchar(Rnum));

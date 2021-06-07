@@ -11,7 +11,7 @@ export default class SearchPage {
 	results: Selector;
 	searchResults: Selector;
     activeTab: Selector;
-
+	/**@description the search page class,  */
 	constructor() {
 		this.contentTab = Selector("#search-tab-tab-Content");
 		this.groupsTab = Selector("#search-tab-tab-Group");
@@ -23,7 +23,7 @@ export default class SearchPage {
 		this.searchResults = Selector('#searchResults');
 		this.activeTab = Selector('#search-tab').child().child('.active').child();
 	}
-
+	/**@description ensure a search exists in search results based on a search text bariable */
 	async validateSerch(SearchText: String) {
 		let count = await this.results.childElementCount;
 		let i;

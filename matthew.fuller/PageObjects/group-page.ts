@@ -10,6 +10,7 @@ export default class GroupPage {
 	createBtn: Selector;
 	cancelBtn: Selector;
 	titleOnEndScreen: Selector;
+	/**@description initalise the group page class */
 	constructor() {
 		this.titleOnEndScreen = Selector("div#groupTitle");
 		this.usersAddList = Selector("button.addButton.btn.btn-primary");
@@ -18,6 +19,9 @@ export default class GroupPage {
 		this.createBtn = Selector("button.create.btn.btn-success");
 		this.cancelBtn = Selector("button.cancelCreate.btn.btn-warning");
 	}
+	/**
+	 * @description navigate to the group creation page: click the create btn then, click create  group.
+	 */
 	async navigateToGroupCreationPage(){
 		if(feedpage.userInitialsIcon.exists){
 			await feedpage.openGroupMenu()
@@ -28,6 +32,11 @@ export default class GroupPage {
 			await feedpage.openGroupMenu()
 		}
 	}
+	/**
+	 * @description search for a user by their name or by a query looking to find a specific name under the querry, and then add it to the group if the name is found
+	 * @param name the name that will be matched with the list of names 
+	 * @param query the query that should be searched to find the name, if left empty this will be the same as the name
+	 */
 	async addUserByName(name:string,query=false as any){
 		if(query!=false){
 
@@ -56,6 +65,8 @@ export default class GroupPage {
 	}
 	/**
 	 * @description create a generic group from a defaul and radomised group obj
+	 * @param click, a parameter:bool, that detemines weathor or not to click 
+	 * create group at the end of excution of this function
 	 */
 	async createGenericGroup(click=true){
 		let obj = new groupObj()
@@ -69,6 +80,11 @@ export default class GroupPage {
 		if(click)
 		await this.clickCreateBtn()
 	}
+	/**
+	 * @description a function that takes a group obj and creates a group on mbe web from it
+	 * @param obj the group object to use for creation
+	 * @param click weathor to click create at the end of execution
+	 */
 	async createGroupFromGroupObj(obj,click=true){
 		await this.navigateToGroupCreationPage()
 		if(obj.title!=null){
@@ -95,12 +111,20 @@ export default class GroupPage {
 		
 		
 	}
+	/**
+	 * @description click the create button of a group creation menu
+	 * and verify its results
+	 */
 	async clickCreateBtn(){
 		await t
 		.expect(this.createBtn.exists).eql(true)
 		.click(this.createBtn)
 		.expect(this.titleOnEndScreen.exists).eql(true);
 	}
+	/**
+	 * @description add the n'th user in the list of users to a group while in creation or editing
+	 * @param n the number var
+	 */
 	async addNthUserToGroup(n){
 		let nthObj =this.usersAddList.nth(n);
 		await t

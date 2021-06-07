@@ -355,6 +355,10 @@ export default class FeedPage {
 
 		}
 	}
+	/**
+	 * @description navigate to the search page by typing a string into the search bar in the feedpage
+	 * @param text the text to search for 
+	 */
 	async naviagteToSearchTab(text=" "){
 		const searchpage = new SearchPage()
 		await t
@@ -366,6 +370,12 @@ export default class FeedPage {
 			.click(this.getSearchSubmitBtn)
 			.expect(searchpage.workItemsTab.visible).eql(true);
 	}
+	/**
+	 * 
+	 * @description search for a string in a specific tab of the search page
+	 * @param text the string to search for
+	 * @param tab the tab to search in: an enum of tab
+	 */
 	async SearchFor(text, tab: tabs) {
 
 		const Util = new util;
@@ -416,6 +426,12 @@ export default class FeedPage {
 		if (Util.Verbose) console.log("-- searchFor: all \"search for\" tests have passed --");
 		await searchpage.validateSerch(text);
 	}
+	/**
+	 * @description navigate from feedpage to work item
+	 * @param tab should not be used?
+	 * @param workitem the work item object
+	 * @returns a selector of the search result 
+	 */
 	async navigateToWi(tab: tabs, workitem: WI) {
 
 		const alerts = new Alerts();
@@ -433,7 +449,11 @@ export default class FeedPage {
 		return searchResult;
 
 	}
-
+	/**
+	 * @description navigate to a work item in edit mode
+	 * @param tab probably unused
+	 * @param workitem the work item object to find
+	 */
 	async NavigateToEditWI(tab: tabs, workitem: WI) {
 		const alerts = new Alerts;
 		const Util = new util;
@@ -446,6 +466,11 @@ export default class FeedPage {
 			.expect(workitem.wiTitle.visible).eql(true)
 		if (Util.Verbose) console.log("Navigated to Edit workitem");
 	}
+	/**
+	 * @description delete a specific work item
+	 * @param tab probably not used?
+	 * @param workitem the work item to use
+	 */
 	async deleteWI(tab: tabs, workitem: WI) {
 		this.returnToHome();
 		const alerts = new Alerts;
@@ -468,7 +493,10 @@ export default class FeedPage {
 		await t.click(alerts.getGenericConfirmBtn);
 		this.eventEmitter.emit("close");
 	}
-
+	/**
+	 * @description open work item menu and then close
+	 * @returns null
+	 */
 	async openAWICreateMenuThenClose() {
 		const alerts = new Alerts()
 		let firstConversation = new Conversation(this.firstConversation);
