@@ -1,7 +1,7 @@
 import { Selector, t, ClientFunction } from "testcafe";
 import FeedPage from "./feed-page";
 
-export default class LoginPage {
+class LoginPage {
 	/**@description the input for the username field of the login page */
 	usernameInput: Selector;
 	/**@description the input for the password field of the login page */
@@ -94,3 +94,4 @@ export default class LoginPage {
 		await t.click(this.loginButton);
 	}
 }
+export default LoginPage as typeof LoginPage & (new () => LoginPage);

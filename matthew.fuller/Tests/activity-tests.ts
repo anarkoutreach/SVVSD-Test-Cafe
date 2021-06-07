@@ -41,11 +41,6 @@ test('can navigate to edit activity', async t => {
     await feedPage.returnToHome()
     await activities.openActivityInEditMode(obj.title)
 });
-fixture`activity creation tests`.page(configManager.homePage).beforeEach(async t => {
-    t.ctx.user = mattUser;
-    await t
-        .useRole(t.ctx.user.role);
-});
 test('can create an activity', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -96,19 +91,19 @@ test('can create an activity with multiple groups', async t => {
     await activities.addGenericTitleAndDescription();
     await activities.pressCreateBtn();
 });
-test('cannot create an activity without groups', async t => {
-    await feedPage.openCreateMenu();
-    await t
-    .setNativeDialogHandler(() => true)
-    .click(feedPage.createOptionsActivity)
-    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
-    await activities.addEndData();
-    await activities.addGenericTitleAndDescription();
-    await t
-    .expect(activities.createBtn.exists).eql(true)
-    .click(activities.createBtn)
-    .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
-});
+//test('cannot create an activity without groups', async t => {
+//     await feedPage.openCreateMenu();
+//     await t
+//     .setNativeDialogHandler(() => true)
+//     .click(feedPage.createOptionsActivity)
+//     .expect(Selector("#search-tab-tab-Content").exists).eql(true);
+//     await activities.addEndData();
+//     await activities.addGenericTitleAndDescription();
+//     await t
+//     .expect(activities.createBtn.exists).eql(true)
+//     .click(activities.createBtn)
+//     .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
+// }).only;
 test('cannot create an activity without a title or desc', async t => {
     await feedPage.openCreateMenu();
     await t
@@ -134,11 +129,6 @@ test('cannot create an activity without any info', async t => {
     .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
 });
 
-fixture`activity editing tests`.page(configManager.homePage).beforeEach(async t => {
-    t.ctx.user = mattUser;
-    await t
-        .useRole(t.ctx.user.role);
-}).only;
 test('edit title of activity', async t => {
     await activities.createActivityAndEditField(activities.title,"title"+Util.randchar(20),"title")
 });

@@ -154,6 +154,7 @@ export default class ActivityPage {
 		await t
 		.expect(this.createBtn.exists).eql(true)
 		.click(this.createBtn)
+		.wait(2000)
 		.expect(Selector("#activityTitle").exists).eql(true);
 		return null
 	}

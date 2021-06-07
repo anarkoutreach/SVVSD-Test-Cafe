@@ -84,6 +84,8 @@ export default class FeedPage {
 	getSearchBar: Selector;
 	/**@description the sumbit button for the search bar */
 	getSearchSubmitBtn: Selector;
+	/**@description the group create btn */
+	createOptionsGroup: Selector;
 	eventEmitter = new MyClass();
 
 	constructor() {
@@ -96,6 +98,7 @@ export default class FeedPage {
 		this.getSearchBar = Selector('#search');
 		this.createButton = Selector('div#navbarCreate.dropdown-toggle');
 		this.createOptionsDwi = Selector('p.createOptionText.dwi');
+		this.createOptionsGroup = Selector('p.createOptionText.group');
 		this.createOptionsUser = Selector('p.createOptionText.user');
 		this.userInitialsIcon = Selector("#navbarUserInfo .initials");
 		this.firstConversation = Selector('.newsItem[data-name]');
@@ -106,6 +109,19 @@ export default class FeedPage {
 		this.addCommentCamera = Selector('[data-name="ahsmzdfhn"] .newCommentCameraContainer');
 		this.addCommentCapture = Selector('[data-name="ahsmzdfhn"] .fade.in #captureOption');
 		this.commentsTextArea = Selector("#comments");
+	}
+	/**
+	 * @description open the group menu
+	 * @returns null
+	 */
+	async openGroupMenu(){
+		await t
+		.setNativeDialogHandler(() => true)
+		.expect(this.createButton.exists).eql(true)
+		.click(this.createButton)
+		.expect(this.createOptionsGroup.exists).eql(true)
+		.expect(this.createOptionsGroup.visible).eql(true)
+		.click(this.createOptionsGroup);
 	}
 	/**
 	 * @description check the UserInfo Box for name and roles of current user, then match them to a userObj 
