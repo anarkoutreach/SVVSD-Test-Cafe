@@ -28,6 +28,32 @@ export default class GroupPage {
 			await feedpage.openGroupMenu()
 		}
 	}
+	async addUserByName(name:string,query=false as any){
+		if(query!=false){
+
+		}else{
+			query=name
+		}
+		const count = await this.usersAddList.count
+		let search =Selector("input#query")
+		await t
+		.expect(search.exists).eql(true)
+		.click(search)
+		.typeText(search,query)
+		.expect(Selector("button.btn.btn-default").exists).eql(true)
+		.pressKey("enter")
+		for(let i=0; i<count;i++){
+			let element = this.usersAddList.nth(i);
+			let userName =await element.parent("div").sibling("article").child("div.searchItemInfo").child("span").innerText;
+			let isUser = name.toUpperCase() == userName;
+			if(isUser){
+				await t
+				.expect(element.exists).eql(true)
+				.click(element);
+				i=Infinity;
+			}
+		}
+	}
 	/**
 	 * @description create a generic group from a defaul and radomised group obj
 	 */
@@ -43,7 +69,7 @@ export default class GroupPage {
 		if(click)
 		await this.clickCreateBtn()
 	}
-	async createGroupFromGroupObj(obj){
+	async createGroupFromGroupObj(obj,click=true){
 		await this.navigateToGroupCreationPage()
 		if(obj.title!=null){
 			await t
@@ -61,11 +87,11 @@ export default class GroupPage {
 		});
 
 		let error = Selector("span.error.createButtons.active")
-		await t.expect(this.createBtn.exists).eql(true)
-		.click(this.createBtn);
+		if(click){
+		await t.expect(this.createBtn.exists).eql(true).click(this.createBtn);
 		if(obj.title==null || obj.description || obj.users.length == 0){
 			await t.expect(error.exists).eql(true);
-		}
+		}}
 		
 		
 	}

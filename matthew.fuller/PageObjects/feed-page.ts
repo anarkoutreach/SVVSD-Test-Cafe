@@ -355,18 +355,23 @@ export default class FeedPage {
 
 		}
 	}
-	async SearchFor(text, tab: tabs) {
-
-		const Util = new util;
-		const alerts = new Alerts()
+	async naviagteToSearchTab(text=" "){
 		const searchpage = new SearchPage()
 		await t
+			.setNativeDialogHandler(() => true)
 			.expect(this.getSearchBar.exists).eql(true)
 			.click(this.getSearchBar)
 			.typeText(this.getSearchBar, text)
 			.expect(this.getSearchSubmitBtn.exists).eql(true)
 			.click(this.getSearchSubmitBtn)
 			.expect(searchpage.workItemsTab.visible).eql(true);
+	}
+	async SearchFor(text, tab: tabs) {
+
+		const Util = new util;
+		const alerts = new Alerts()
+		const searchpage = new SearchPage()
+		await this.naviagteToSearchTab(text);
 		if (Util.Verbose) console.log('-- SearchFor: succsessfully got to search page');
 		let activeTab = await searchpage.activeTab.innerText;
 

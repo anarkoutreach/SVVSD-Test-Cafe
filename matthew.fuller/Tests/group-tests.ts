@@ -3,8 +3,11 @@ import { mattUser } from "../Utilities/roles";
 import ConfigurationManager from "../Configuration/configuration";
 import ActivityPage from "../PageObjects/activity-page";
 import util from "../Utilities/util";
+import userObj from "../PageObjects/PageComponents/userObj";
 import { Selector } from "testcafe";
+import UserPage from "../PageObjects/user-page";
 import GroupPage from "../PageObjects/group-page";
+const userPage = new UserPage()
 const Util = new util;
 const feedPage = new FeedPage();
 const Rnum = Math.floor(Math.random() * 100);
@@ -52,6 +55,36 @@ test('can cancel group creation with all info filled', async t => {
     .click(groupPage.cancelBtn)
     .expect(feedPage.userInitialsIcon.exists).eql(true);
 });
+test('can search for and add user', async t => {
+    await groupPage.navigateToGroupCreationPage()
+    await groupPage.createGenericGroup(false)
+    await groupPage.addUserByName("HIPPO4ZFL0Y");
+    await groupPage.clickCreateBtn();
+});
+test('create user and add to group', async t => {
+    await feedPage.navigateToCreateNewUser()
+    let user = new userObj();
+    await userPage.fillAllFields(user);
+    await userPage.pressCreateBtn();
+    await groupPage.navigateToGroupCreationPage()
+    const obj = new groupObj()
+    await groupPage.createGroupFromGroupObj(obj)
+    await groupPage.addUserByName(user.name);
+    await groupPage.clickCreateBtn();
+});
+test('create user and add to group seraching by email', async t => {
+    await feedPage.navigateToCreateNewUser()
+    let user = new userObj();
+    await userPage.fillAllFields(user);
+    await userPage.pressCreateBtn();
+    await groupPage.navigateToGroupCreationPage()
+    const obj = new groupObj()
+    await groupPage.createGroupFromGroupObj(obj)
+    await groupPage.addUserByName(user.name,user.email);
+    await groupPage.clickCreateBtn();
+}).only;
+
+
 
 
 
