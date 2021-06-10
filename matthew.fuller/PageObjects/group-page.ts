@@ -4,20 +4,45 @@ import groupObj from "./PageComponents/groupObj";
 const feedpage = new FeedPage()
 
 export default class GroupPage {
+	/**@description the list of add buttons associated with adding users */
 	usersAddList: Selector;
+	/**@description the title text area */
 	title: Selector;
+	/**@description teh description text area */
 	description: Selector;
+	/**@description the button to create or update a group */
 	createBtn: Selector;
+	/**@description the button to cancel the creation or editing of a group */
 	cancelBtn: Selector;
+	/**@description the title on the view mode of a group */
 	titleOnEndScreen: Selector;
+	/**@description the settings cog button in the upper right of the screen*/
+	settingsCogBtn: Selector;
+	/**@description the selector of the list of options from the settings cog (nth(0) for edit nth(1) for delete) */
+	settingsList: Selector;
+	/**@description description text */
+	descriptionOnEndScreen: Selector;
 	/**@description initalise the group page class */
 	constructor() {
-		this.titleOnEndScreen = Selector("div#groupTitle");
+		this.descriptionOnEndScreen = Selector("div#infoSide").child("p").child(1);
+		this.titleOnEndScreen = Selector("div#groupTitle").child("span");
 		this.usersAddList = Selector("button.addButton.btn.btn-primary");
 		this.title = Selector("textarea#paneHeaderTitle");
 		this.description = Selector("textarea#paneHeaderDesc");
 		this.createBtn = Selector("button.create.btn.btn-success");
 		this.cancelBtn = Selector("button.cancelCreate.btn.btn-warning");
+		this.settingsCogBtn = Selector("div.glyphicon.glyphicon-cog");
+		this.settingsList = Selector("#groupSettings").sibling("ul").child("li")
+	}
+	/**@description from the group page, click the edit button and switch to edit mode, and verify that the page and its elements have loaded*/
+	async clickEditBtnOnGroupPage(){
+		await t
+		.expect(this.settingsCogBtn.exists).eql(true)
+		.click(this.settingsCogBtn)
+		.expect(this.settingsList.nth(0).exists).eql(true)
+		.click(this.settingsList.nth(0))
+		//verify switch to edit mode
+		.expect(this.title.exists).eql(true);
 	}
 	/**
 	 * @description navigate to the group creation page: click the create btn then, click create  group.
@@ -67,6 +92,7 @@ export default class GroupPage {
 	 * @description create a generic group from a defaul and radomised group obj
 	 * @param click, a parameter:bool, that detemines weathor or not to click 
 	 * create group at the end of excution of this function
+	 * @returns the obj that was created
 	 */
 	async createGenericGroup(click=true){
 		let obj = new groupObj()
@@ -79,6 +105,7 @@ export default class GroupPage {
 		await this.addNthUserToGroup(0)
 		if(click)
 		await this.clickCreateBtn()
+		return obj
 	}
 	/**
 	 * @description a function that takes a group obj and creates a group on mbe web from it

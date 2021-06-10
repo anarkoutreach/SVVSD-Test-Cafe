@@ -6,6 +6,7 @@ import util from "../Utilities/util";
 import userObj from "../PageObjects/PageComponents/userObj";
 import { Selector } from "testcafe";
 import UserPage from "../PageObjects/user-page";
+import Alerts from "../PageObjects/Alerts";
 import GroupPage from "../PageObjects/group-page";
 const userPage = new UserPage()
 const Util = new util;
@@ -13,6 +14,7 @@ const feedPage = new FeedPage();
 const Rnum = Math.floor(Math.random() * 100);
 const activities = new ActivityPage();
 import groupObj from "../PageObjects/PageComponents/groupObj";
+import { tabs } from "../PageObjects/PageComponents/tabs";
 const groupPage = new GroupPage()
 const configManager = new ConfigurationManager();
 fixture`group tests`.page(configManager.homePage).beforeEach(async t => {
@@ -105,6 +107,81 @@ test('create user and add to group seraching by login id', async t => {
     await groupPage.addUserByName(user.name,user.loginId);
     await groupPage.clickCreateBtn();
 });
+/**@description create a group, then navvigate to it and click the edit button, then edit the title */
+test('can edit group title', async t => {
+    let obj = await groupPage.createGenericGroup();
+    await feedPage.returnToHome()
+    //search for the group title in the search bar from the home page
+    await feedPage.SearchFor(obj.title,tabs.GROUPS)
+    //Then find the result
+    let result =await feedPage.findSearchResult(obj.title,tabs.GROUPS);
+    await t.expect(result.exists).eql(true)
+    .click(result);
+    await groupPage.clickEditBtnOnGroupPage();
+    await Util.CtlADelete(groupPage.title);
+    let randTitle ="randEditedTitle"+Util.randchar(20);
+    obj.title =randTitle;
+    await t.typeText(groupPage.title,randTitle);
+    await groupPage.clickCreateBtn();
+await t.expect(await (await groupPage.titleOnEndScreen.innerText).toLowerCase() == randTitle.toLowerCase()).eql(true);
+});
+/**@description create a group, then navvigate to it and click the edit button, then edit the description */
+test('can edit group description', async t => {
+    let obj = await groupPage.createGenericGroup();
+    await feedPage.returnToHome()
+    //search for the group title in the search bar from the home page
+    await feedPage.SearchFor(obj.title,tabs.GROUPS)
+    //Then find the result
+    let result =await feedPage.findSearchResult(obj.title,tabs.GROUPS);
+    await t.expect(result.exists).eql(true)
+    .click(result);
+    await groupPage.clickEditBtnOnGroupPage();
+    await Util.CtlADelete(groupPage.description);
+    let randTitle ="randEditedDescription"+Util.randchar(20);
+    obj.description =randTitle;
+    await t.typeText(groupPage.description,randTitle);
+    await groupPage.clickCreateBtn();
+    await feedPage.returnToHome()
+    await feedPage.SearchFor(obj.title,tabs.GROUPS)
+    //Then find the result
+    let result2 =await feedPage.findSearchResult(obj.title,tabs.GROUPS);
+    await t.expect(result2.exists).eql(true)
+    .click(result2);
+    await groupPage.clickEditBtnOnGroupPage();
+    await t.expect(await (await groupPage.description.value).toLocaleUpperCase() == randTitle.toUpperCase()).eql(true)
+});
+/**@description create a group, the navigate to it and delete it */
+test('can delete group', async t => {
+    let alert = new Alerts()
+    let obj = await groupPage.createGenericGroup();
+    await feedPage.returnToHome()
+    //search for the group title in the search bar from the home page
+    await feedPage.SearchFor(obj.title,tabs.GROUPS)
+    //Then find the result
+    let result =await feedPage.findSearchResult(obj.title,tabs.GROUPS);
+    await t.expect(result.exists).eql(true)
+    .click(result);
+    await t.expect(groupPage.settingsCogBtn.exists).eql(true)
+    .click(groupPage.settingsCogBtn)
+    .expect(groupPage.settingsList.nth(1).exists).eql(true)
+    .click(groupPage.settingsList.nth(1))
+    .expect(alert.getGenericConfirmBtn.exists).eql(true)
+    .click(alert.getGenericConfirmBtn);
+    await feedPage.SearchFor(obj.title,tabs.GROUPS);
+    let result2 =await feedPage.findSearchResult(obj.title,tabs.GROUPS);
+    let exists=false
+    try {
+        await t.expect(result2.exists).eql(false); 
+        exists=true
+    } catch (error) {
+        exists=false
+    }
+    await t.expect(exists).eql(false);
+    
+    
+    
+}).only;
+
 
 
 

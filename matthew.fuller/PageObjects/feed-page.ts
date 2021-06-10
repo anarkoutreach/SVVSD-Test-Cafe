@@ -262,6 +262,10 @@ export default class FeedPage {
 		if (Util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
 		await this.SearchFor(workitem.title, tabs.WORKITEMS);
 		let searchResult = await this.findSearchResult(workitem.title, tabs.WORKITEMS);
+		if(await searchResult.exists == false){
+			await t.expect(searchResult.exists).eql(true);
+			console.log("TEST failed as search result does not exist")
+		}
 		await t
 			.click(searchResult)
 			.click(generinworkitem.settingsGearBtn)
@@ -326,7 +330,13 @@ export default class FeedPage {
 			.setNativeDialogHandler(() => true)
 			.click(alerts.getAWICreateBtn);
 	}
-
+		/**
+		 * @description from the search page click on an item matching the text param.
+		 * @param text the text used to validate
+		 * @param tab the tab to search in 
+		 * @param verify 
+		 * @returns 
+		 */
 	async findSearchResult(text, tab: tabs, verify=true) {
 		const Util = new util;
 		const searchpage = new SearchPage;
@@ -341,9 +351,8 @@ export default class FeedPage {
 			let lowerCaseResult = await results[i].toLowerCase()
 			let expectedText = await text.toLocaleLowerCase();
 			if (Util.Verbose) console.log(" --findSearchResult: script expected : \"" + expectedText + "\" but it recived: \"" + lowerCaseResult + "\" --");
+			await this.switchTabs(tab)
 			await t
-				.click(searchpage.workItemsTab)
-				.wait(100)
 				.expect(await lowerCaseResult.includes(expectedText)).eql(verify);
 
 			if (lowerCaseResult.includes(expectedText)) {
@@ -370,21 +379,9 @@ export default class FeedPage {
 			.click(this.getSearchSubmitBtn)
 			.expect(searchpage.workItemsTab.visible).eql(true);
 	}
-	/**
-	 * 
-	 * @description search for a string in a specific tab of the search page
-	 * @param text the string to search for
-	 * @param tab the tab to search in: an enum of tab
-	 */
-	async SearchFor(text, tab: tabs) {
-
-		const Util = new util;
-		const alerts = new Alerts()
+	async switchTabs(tab:tabs){
+		const Util = new util()
 		const searchpage = new SearchPage()
-		await this.naviagteToSearchTab(text);
-		if (Util.Verbose) console.log('-- SearchFor: succsessfully got to search page');
-		let activeTab = await searchpage.activeTab.innerText;
-
 		switch (tab) {
 
 			case tabs.CONTENT:
@@ -415,6 +412,23 @@ export default class FeedPage {
 				if (Util.Errors) console.log("enter the enum tab that you would like to use");
 				break;
 		}
+	}
+	/**
+	 * 
+	 * @description search for a string in a specific tab of the search page
+	 * @param text the string to search for
+	 * @param tab the tab to search in: an enum of tab
+	 */
+	async SearchFor(text, tab: tabs) {
+
+		const Util = new util;
+		const alerts = new Alerts()
+		const searchpage = new SearchPage()
+		await this.naviagteToSearchTab(text);
+		if (Util.Verbose) console.log('-- SearchFor: succsessfully got to search page');
+		let activeTab = await searchpage.activeTab.innerText;
+		await this.switchTabs(tab)
+
 		let activetab2 = await Selector('#search-tab').child().child('.active').child().innerText;
 		let bannerText = await Selector('#searchResults').child('h5').innerText;
 
