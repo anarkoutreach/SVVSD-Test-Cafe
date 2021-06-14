@@ -180,7 +180,7 @@ test('can delete group', async t => {
     
     
     
-}).only;
+});
 
 
 

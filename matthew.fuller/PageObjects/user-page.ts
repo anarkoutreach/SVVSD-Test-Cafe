@@ -140,13 +140,16 @@ export default class UserPage {
 	/**
 	 * @description create a user and with a role and test if the role was properly assigned
 	 * @param roles an array of strings with the roles to assign, CASE SENSITIVE 
-	 */
+	 * @return user obj 
+	*/
 	async testRoleAssignment(roles: string[]){
 		let userPage = new UserPage()
 		let feedPage = new FeedPage()
 		let user = new userObj(roles);
 		await userPage.fillAllFields(user);
 		await userPage.pressCreateBtn();
+		await feedPage.returnToHome()
+		await feedPage.signOut()
 		await t.useRole(user.user.role);
 		await feedPage.verifyUserAndRoles(user);
 		if(roles[0] == "Viewer" && roles.length == 1){
@@ -154,5 +157,6 @@ export default class UserPage {
 		}else{
 			await t.expect(feedPage.createButton.visible).eql(true)
 		}
+		return user
 	}
 }

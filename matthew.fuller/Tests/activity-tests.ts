@@ -5,6 +5,8 @@ import ActivityPage from "../PageObjects/activity-page";
 import util from "../Utilities/util";
 import { Selector } from "testcafe";
 import activityObj from "../PageObjects/PageComponents/activityObj";
+import * as fs from 'fs';
+import userObj from "../PageObjects/PageComponents/userObj";
 const Util = new util;
 const feedPage = new FeedPage();
 const Rnum = Math.floor(Math.random() * 100);
@@ -13,6 +15,15 @@ const activities = new ActivityPage();
 const configManager = new ConfigurationManager();
 fixture`activity tests`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
+    try {
+        const data = fs.readFileSync(__dirname + "\\scuffedInfo\\activeUser.json", 'utf8')
+        let user = new userObj();
+        await user.initaliseUserObjFromObj(JSON.parse(data));
+        t.ctx.user = user.user;
+      } catch (err) {
+        console.error(err)
+      }
+   
     await t
         .useRole(t.ctx.user.role);
 });

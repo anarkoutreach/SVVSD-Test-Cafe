@@ -48,6 +48,7 @@ class MyClass extends events.EventEmitter {
 	}
 }
 export default class FeedPage {
+
 	/**@description the field in the userInfoBox containing the user Name */
 	userNameField: Selector;
 	/**@description the box containing all the user info on the main feed page */

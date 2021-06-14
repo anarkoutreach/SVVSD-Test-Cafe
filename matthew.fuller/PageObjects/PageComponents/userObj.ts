@@ -63,4 +63,31 @@ this.user = {
 	)
 }
 }
+async initaliseUserObjFromObj(obj:userObj){
+	this.department = obj.department;
+	this.email = obj.email;
+	this.loginId = obj.loginId;
+	this.name = obj.name;
+	this.organization = obj.organization;
+	this.password=obj.password;
+	this.site=obj.site;
+	this.title=obj.title
+	this.roles=obj.roles;
+	this.acLists=obj.acLists;
+	this.user = {
+		username: this.loginId,
+		password: this.password,
+		initials: null,
+		role: Role(
+			//define the server to connect to.
+			configManager.serverUrl,
+			async t => {
+				// define the login function such that when passed to t.use role -> login to MBE web as user
+				await loginPage.login(this.loginId, this.password);
+			},
+			{ preserveUrl: true }
+		)
+	}
+	return this
+}
 }
