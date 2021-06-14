@@ -21,7 +21,7 @@ test("can create user with the specified roles and then save", async t => {
     try {
         const data = fs.readFileSync(__dirname+"\\..\\scuffedInfo\\userTypes.json", 'utf8')
         let userInfo = JSON.parse(data)
-        console.log(userInfo)
+        //console.log(userInfo)
         let user = await userPage.testRoleAssignment(userInfo.roles) as userObj
         user.user.role = null;
         fs.writeFileSync(__dirname + "\\..\\scuffedInfo\\activeUser.json",JSON.stringify(user))
