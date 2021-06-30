@@ -14,20 +14,34 @@ const feedPage = new FeedPage();
 const Rnum = Math.floor(Math.random() * 100);
 const activities = new ActivityPage();
 import groupObj from "../PageObjects/PageComponents/groupObj";
+import { tabs } from "../PageObjects/PageComponents/tabs";
 const groupPage = new GroupPage()
 const configManager = new ConfigurationManager();
-const serachPage = new SearchPage()
+const searchPage = new SearchPage()
 /**@description execute before every test: loging into mbe web */
 fixture`search tests`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
     await t
         .useRole(t.ctx.user.role);
 });
+/**@description navigate to search tab from feed page by searching an empty string and verify that the content tab loads as the default active tab */
+test("content tab loads as default active tab on search page", async t => {
+    await feedPage.naviagteToSearchTab()
+    let activeTab = await searchPage.getActiveTab()
+    await t.expect(activeTab.toLocaleLowerCase().includes("content".toLocaleLowerCase())).eql(true);
+}).only;
+
 /**@description navigate to search tab from feed page by searching an empty string */
 test("can navigate to serach tab", async t => {
     await feedPage.naviagteToSearchTab()
 });
+
 /**@description navigate to search page by saeraching a non-empty string */
 test("can search text in feedpage and navigate to search tab", async t => {
     await feedPage.naviagteToSearchTab("hello")
+});
+
+/**@description navigate to search page by saeraching a non-empty string */
+test("can search text in feedpage and navigate to search tab", async t => {
+    await feedPage.SearchFor("hello",tabs.GROUPS)
 });

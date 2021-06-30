@@ -436,11 +436,16 @@ export default class FeedPage {
 		if (Util.Verbose) console.log("-- searchFor: searched tab: " + tab + "active tab: " + activetab2 + " --");
 		if (Util.Verbose) console.log("-- searchFor: tab's banner text =" + bannerText.toLocaleLowerCase() + " --");
 		await t
+			//expect that the banner text and the active tab concur that the program has navigated and searched in the proper search tab.
 			.expect(bannerText.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true)
 			.expect(activetab2.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true);
 		if (Util.Verbose) console.log("-- searchFor: all \"search for\" tests have passed --");
-		await searchpage.validateSerch(text);
+		//search validation should occur outside of this function as this is just intended to search for a result.
+		//await searchpage.validateSerch(text);
+		
+		
 	}
+	
 	/**
 	 * @description navigate from feedpage to work item
 	 * @param tab should not be used?

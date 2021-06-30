@@ -42,4 +42,12 @@ export default class SearchPage {
 		}
 		
 	}
+	/**
+	 * @description from the search page check the active tab
+	 * @returns a string containing the title of the tab that is currently active on the search page
+	 */
+	async getActiveTab() {
+		let activeTab = await Selector('#search-tab').child().child('.active').child().innerText;
+		return activeTab
+	}
 }

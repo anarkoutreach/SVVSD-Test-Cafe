@@ -177,9 +177,6 @@ test('can delete group', async t => {
         exists=false
     }
     await t.expect(exists).eql(false);
-    
-    
-    
 });
 
 
