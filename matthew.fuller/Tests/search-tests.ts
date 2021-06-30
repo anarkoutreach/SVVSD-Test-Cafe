@@ -41,7 +41,68 @@ test("can search text in feedpage and navigate to search tab", async t => {
     await feedPage.naviagteToSearchTab("hello")
 });
 
-/**@description navigate to search page by saeraching a non-empty string */
-test("can search text in feedpage and navigate to search tab", async t => {
-    await feedPage.SearchFor("hello",tabs.GROUPS)
+/**@description navigate to the groups tab of the search page by searching an empty string */
+test("can navigate to the groups tab of the search page by searching an empty string", async t => {
+    await feedPage.SearchFor("",tabs.GROUPS)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
+    //let bannerText = await searchPage.getBannerText()
+    
+});
+
+/**@description navigate to the groups tab of the search page by searching a non-empty string */
+test("can navigate to the groups tab of the search page by searching a non-empty string", async t => {
+    await feedPage.SearchFor("test",tabs.GROUPS)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
+});
+
+/**@description navigate to the WI tab of the search page by searching an empty string */
+test("can navigate to the WI tab of the search page by searching an empty string", async t => {
+    await feedPage.SearchFor("",tabs.WORKITEMS)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
+    //let bannerText = await searchPage.getBannerText()
+    
+});
+/**@description navigate to the WI tab of the search page by searching a non-empty string */
+test("can navigate to the WI tab of the search page by searching a non-empty string", async t => {
+    await feedPage.SearchFor("test",tabs.WORKITEMS)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
+});
+
+/**@description navigate to the Users tab of the search page by searching an empty string */
+test("can navigate to the Users tab of the search page by searching an empty string", async t => {
+    await feedPage.SearchFor("",tabs.USERS)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
+    //let bannerText = await searchPage.getBannerText()
+    
+});
+/**@description navigate to the Users tab of the search page by searching a non-empty string */
+test("can navigate to the Users tab of the search page by searching a non-empty string", async t => {
+    await feedPage.SearchFor("test",tabs.USERS)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
+});
+
+/**@description navigate to the Templates tab of the search page by searching an empty string */
+test("can navigate to the Templates tab of the search page by searching an empty string", async t => {
+    await feedPage.SearchFor("",tabs.TEMPLATES)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
+    //let bannerText = await searchPage.getBannerText()
+    
+});
+/**@description navigate to the Templates tab of the search page by searching a non-empty string */
+test("can navigate to the Templates tab of the search page by searching a non-empty string", async t => {
+    await feedPage.SearchFor("test",tabs.TEMPLATES)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
+});
+
+/**@description navigate to the ACLs tab of the search page by searching an empty string */
+test("can navigate to the ACLs tab of the search page by searching an empty string", async t => {
+    await feedPage.SearchFor("",tabs.ACLIST)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
+    //let bannerText = await searchPage.getBannerText()
+    
+});
+/**@description navigate to the ACLs tab of the search page by searching a non-empty string */
+test("can navigate to the ACLs tab of the search page by searching a non-empty string", async t => {
+    await feedPage.SearchFor("test",tabs.ACLIST)
+    //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
 });

@@ -50,4 +50,12 @@ export default class SearchPage {
 		let activeTab = await Selector('#search-tab').child().child('.active').child().innerText;
 		return activeTab
 	}
+	/**
+	 * @description while on the search page get and return the text of the banner as a string
+	 * @returns a string containing the banner of the search page IE: "180 group(s) found!"
+	 */
+	async getBannerText(){
+		let bannerText = await Selector('#searchResults').child('h5').innerText;
+		return bannerText
+	}
 }
