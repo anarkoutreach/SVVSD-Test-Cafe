@@ -29,7 +29,7 @@ test("content tab loads as default active tab on search page", async t => {
     await feedPage.naviagteToSearchTab()
     let activeTab = await searchPage.getActiveTab()
     await t.expect(activeTab.toLocaleLowerCase().includes("content".toLocaleLowerCase())).eql(true);
-}).only;
+});
 
 /**@description navigate to search tab from feed page by searching an empty string */
 test("can navigate to serach tab", async t => {
@@ -43,7 +43,7 @@ test("can search text in feedpage and navigate to search tab", async t => {
 
 /**@description navigate to the groups tab of the search page by searching an empty string */
 test("can navigate to the groups tab of the search page by searching an empty string", async t => {
-    await feedPage.SearchFor("",tabs.GROUPS)
+    await feedPage.SearchFor(" ",tabs.GROUPS)
     //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
     //let bannerText = await searchPage.getBannerText()
     
@@ -57,7 +57,7 @@ test("can navigate to the groups tab of the search page by searching a non-empty
 
 /**@description navigate to the WI tab of the search page by searching an empty string */
 test("can navigate to the WI tab of the search page by searching an empty string", async t => {
-    await feedPage.SearchFor("",tabs.WORKITEMS)
+    await feedPage.SearchFor(" ",tabs.WORKITEMS)
     //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
     //let bannerText = await searchPage.getBannerText()
     
@@ -70,7 +70,7 @@ test("can navigate to the WI tab of the search page by searching a non-empty str
 
 /**@description navigate to the Users tab of the search page by searching an empty string */
 test("can navigate to the Users tab of the search page by searching an empty string", async t => {
-    await feedPage.SearchFor("",tabs.USERS)
+    await feedPage.SearchFor(" ",tabs.USERS)
     //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
     //let bannerText = await searchPage.getBannerText()
     
@@ -83,7 +83,7 @@ test("can navigate to the Users tab of the search page by searching a non-empty 
 
 /**@description navigate to the Templates tab of the search page by searching an empty string */
 test("can navigate to the Templates tab of the search page by searching an empty string", async t => {
-    await feedPage.SearchFor("",tabs.TEMPLATES)
+    await feedPage.SearchFor(" ",tabs.TEMPLATES)
     //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
     //let bannerText = await searchPage.getBannerText()
     
@@ -96,7 +96,7 @@ test("can navigate to the Templates tab of the search page by searching a non-em
 
 /**@description navigate to the ACLs tab of the search page by searching an empty string */
 test("can navigate to the ACLs tab of the search page by searching an empty string", async t => {
-    await feedPage.SearchFor("",tabs.ACLIST)
+    await feedPage.SearchFor(" ",tabs.ACLIST)
     //no farther verification is needed as the above function already verifies if the switch to a specific tab was successfully completed
     //let bannerText = await searchPage.getBannerText()
     

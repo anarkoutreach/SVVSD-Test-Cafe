@@ -3,7 +3,7 @@
     CONTENT = "content",
     GROUPS = "group",
     USERS = "user",
-    ACLIST = "list",
+    ACLIST = "acls",
     TEMPLATES = "template",
     WORKITEMS = "work item"
 }

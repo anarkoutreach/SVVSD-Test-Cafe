@@ -420,7 +420,7 @@ export default class FeedPage {
 	 * @param text the string to search for
 	 * @param tab the tab to search in: an enum of tab
 	 */
-	async SearchFor(text, tab: tabs) {
+	async SearchFor(text: string, tab: tabs) {
 
 		const Util = new util;
 		const alerts = new Alerts()
@@ -432,12 +432,18 @@ export default class FeedPage {
 
 		let activetab2 = await Selector('#search-tab').child().child('.active').child().innerText;
 		let bannerText = await Selector('#searchResults').child('h5').innerText;
-
+		
 		if (Util.Verbose) console.log("-- searchFor: searched tab: " + tab + "active tab: " + activetab2 + " --");
 		if (Util.Verbose) console.log("-- searchFor: tab's banner text =" + bannerText.toLocaleLowerCase() + " --");
+		if(tab != tabs.ACLIST)
 		await t
 			//expect that the banner text and the active tab concur that the program has navigated and searched in the proper search tab.
 			.expect(bannerText.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true)
+			.expect(activetab2.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true);
+		else
+		await t
+			//expect that the banner text and the active tab concur that the program has navigated and searched in the proper search tab.
+			.expect(bannerText.toLocaleLowerCase().includes("access control list")).eql(true)
 			.expect(activetab2.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true);
 		if (Util.Verbose) console.log("-- searchFor: all \"search for\" tests have passed --");
 		//search validation should occur outside of this function as this is just intended to search for a result.
