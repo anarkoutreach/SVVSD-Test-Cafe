@@ -2,7 +2,7 @@ import util from "../../Utilities/util";
 import { Role } from "testcafe";
 import LoginPage from "../../PageObjects/login-page";
 import ConfigurationManager from "../../Configuration/configuration";
-
+//login page if used as a global constant here will cause errors, try to keep global variables to an absolute minimum as typescript seems not to like them.
 const configManager = new ConfigurationManager();
 
 const Util = new util();

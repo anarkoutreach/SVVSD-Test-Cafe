@@ -69,7 +69,7 @@ test('can create an activity', async t => {
     await activities.pressCreateBtn();
 });
 /**@deprecated replaced with cleaner test */
-test('can edit activity title [DEPRECATED]', async t => {
+test('[DEPRECATED] can edit activity title ', async t => {
     await feedPage.openCreateMenu();
     await t
     .setNativeDialogHandler(() => true)
