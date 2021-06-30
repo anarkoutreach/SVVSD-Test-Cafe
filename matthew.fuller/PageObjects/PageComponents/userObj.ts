@@ -4,7 +4,7 @@ import LoginPage from "../../PageObjects/login-page";
 import ConfigurationManager from "../../Configuration/configuration";
 
 const configManager = new ConfigurationManager();
-const loginPage = new LoginPage();
+
 const Util = new util();
 Util.randchar(40);
 export default class userObj {
@@ -38,6 +38,7 @@ user
  * @param site the site
  */
 constructor(roles = ["Viewer","Activity Author"], acLists = [], site = null, num = 5){
+const loginPage = new LoginPage();
 this.name = configManager.config.defaultData.user.name + Util.randchar(num);
 this.email = configManager.config.defaultData.user.email+ Util.randchar(num) + "@"+ configManager.config.defaultData.user.email +Util.randchar(5) +".fake";
 this.title = configManager.config.defaultData.user.title;
@@ -64,6 +65,7 @@ this.user = {
 }
 }
 async initaliseUserObjFromObj(obj:userObj){
+	const loginPage = new LoginPage();
 	this.department = obj.department;
 	this.email = obj.email;
 	this.loginId = obj.loginId;

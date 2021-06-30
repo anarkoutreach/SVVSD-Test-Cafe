@@ -15,14 +15,15 @@ const activities = new ActivityPage();
 const configManager = new ConfigurationManager();
 fixture`activity tests`.page(configManager.homePage).beforeEach(async t => {
     t.ctx.user = mattUser;
-    try {
-        const data = fs.readFileSync(__dirname + "\\scuffedInfo\\activeUser.json", 'utf8')
-        let user = new userObj();
-        await user.initaliseUserObjFromObj(JSON.parse(data));
-        t.ctx.user = user.user;
-      } catch (err) {
-        console.error(err)
-      }
+    // try {
+    //     const data = fs.readFileSync(__dirname + "\\scuffedInfo\\activeUser.json", 'utf8')
+    //     let user = new userObj();
+    //     await user.initaliseUserObjFromObj(JSON.parse(data));
+    //     t.ctx.user = user.user;
+    //   } catch (err) {
+    //     t.ctx.user = mattUser;
+    //     //console.error(err)
+    //   }
    
     await t
         .useRole(t.ctx.user.role);

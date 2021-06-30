@@ -30,7 +30,7 @@ test("can login with user from a file", async t => {
         const data = fs.readFileSync(__dirname + "\\..\\scuffedInfo\\activeUser.json", 'utf8')
         let user = new userObj();
         await user.initaliseUserObjFromObj(JSON.parse(data));
-        await feedPage.signOut();
+        //await feedPage.signOut();
         await t.useRole(user.user.role);
       } catch (err) {
         console.error(err)

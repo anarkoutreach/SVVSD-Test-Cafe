@@ -12,15 +12,17 @@ fixture`My first fixture`.page(configManager.homePage).beforeEach(async t => {
     // 	.useRole(t.ctx.user.role);
 });
 
-const loginPage = new LoginPage();
+
 
 test('can successfully login', async t => {
+    const loginPage = new LoginPage();
     const feedPage = await loginPage
         .login(t.ctx.user.username, t.ctx.user.password)
     await feedPage.validateInitials();
 });
 
 test('cannot login without a username', async t => {
+    const loginPage = new LoginPage();
     await loginPage.typePassword(t.ctx.user.password);
     await loginPage.clickSubmit();
     await t.expect(loginPage.checkUsernameValidity()).eql(false);
@@ -29,6 +31,7 @@ test('cannot login without a username', async t => {
 });
 
 test('cannot login without a password', async t => {
+    const loginPage = new LoginPage();
     await loginPage.typeUsername(t.ctx.user.username);
     await loginPage.clickSubmit();
     await t.expect(loginPage.checkUsernameValidity()).eql(true);
@@ -37,6 +40,7 @@ test('cannot login without a password', async t => {
 });
 
 test('cannot login with a non-existent user', async t => {
+    const loginPage = new LoginPage();
     await loginPage.typeUsername('i do not exist');
     await loginPage.typePassword(t.ctx.user.password);
     await loginPage.clickSubmit();
@@ -46,6 +50,7 @@ test('cannot login with a non-existent user', async t => {
 });
 
 test('cannot login with an incorrect password', async t => {
+    const loginPage = new LoginPage();
     await loginPage.typeUsername(t.ctx.user.username);
     await loginPage.typePassword('wrong password');
     await loginPage.clickSubmit();

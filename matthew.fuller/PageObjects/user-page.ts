@@ -149,7 +149,7 @@ export default class UserPage {
 		await userPage.fillAllFields(user);
 		await userPage.pressCreateBtn();
 		await feedPage.returnToHome()
-		await feedPage.signOut()
+		//await feedPage.signOut()
 		await t.useRole(user.user.role);
 		await feedPage.verifyUserAndRoles(user);
 		if(roles[0] == "Viewer" && roles.length == 1){

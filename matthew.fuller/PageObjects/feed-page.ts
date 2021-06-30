@@ -153,7 +153,7 @@ export default class FeedPage {
 			expect(this.userInitialsBtn.exists && this.userInitialsBtn.visible).eql(true)
 			.click(this.userInitialsBtn);
 	}
-	/**@description sign out of MBE web from the home page */
+	/**@deprecated should not be used given how testcafe users work */
 	async signOut() {
 		await this.clickUserIcon()
 		await t

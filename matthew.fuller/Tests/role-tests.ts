@@ -14,8 +14,6 @@ fixture`Login -> Navigate to new user page`.page(configManager.homePage).beforeE
     t.ctx.user = mattUser;
     await t.useRole(t.ctx.user.role);
     await feedPage.navigateToCreateNewUser()
-}).afterEach(async t => {
-
 });
 
  //test if a the create button displays for a user that only has the viewer role (it should not)
