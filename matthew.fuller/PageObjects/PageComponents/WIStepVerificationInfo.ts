@@ -40,12 +40,12 @@ constructor(type: VerificationTypes){
     this.VerificationButtons = Selector("button.list-group-item");
     this.VerificationBtnText = this.VerificationButtons.filter("button").nth(0);
     this.VerificationBtnDecimal = this.VerificationButtons.filter("button").nth(1);
-    this.VerificationBtnInteger = this.VerificationButtons.filter("button").nth(2);
-    this.VerificationBtnDate = this.VerificationButtons.filter("button").nth(3);
-    this.VerificationBtnCheckbox = this.VerificationButtons.filter("button").nth(4);
-    this.VerificationBtnDropdown = this.VerificationButtons.filter("button").nth(5);
-    this.VerificationBtnMultiSelect = this.VerificationButtons.filter("button").nth(6);
-    this.VerificationBtnUpload = this.VerificationButtons.filter("button").nth(7);
+    this.VerificationBtnInteger = this.VerificationButtons.filter("button").nth(1);
+    this.VerificationBtnDate = this.VerificationButtons.filter("button").nth(2);
+    this.VerificationBtnCheckbox = this.VerificationButtons.filter("button").nth(3);
+    this.VerificationBtnDropdown = this.VerificationButtons.filter("button").nth(4);
+    this.VerificationBtnMultiSelect = this.VerificationButtons.filter("button").nth(5);
+    this.VerificationBtnUpload = this.VerificationButtons.filter("button").nth(6);
 }
 
 

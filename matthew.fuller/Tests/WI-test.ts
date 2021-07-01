@@ -430,7 +430,7 @@ test('can create WI then delete', async t => {
  This is a test that will ensure that the user can open and close the verification menu'
  Reason: UI Test
  */
-test('can open and close verification menu', async t => { 
+test('[DEPRECATED] can open and close verification menu', async t => { 
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     let WIstep = new WISteps();
     await DefaultWorkItem.AddStep(true, WIstep, false, false);
@@ -439,11 +439,12 @@ test('can open and close verification menu', async t => {
     await WIstep.closeVerificationMenu();
 
 }).skip;
-/*
+/** 
+* @deprecated the tab in question no longer exists
 This is a test that will ensure that the user can switch between the instructions and verifications tabs in a wi
 Reason: UI Test
 */
-test('switch between instruction and verification tabs', async t => { 
+test('[DEPRECATED] switch between instruction and verification tabs', async t => { 
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     let WIstep = new WISteps();
     await DefaultWorkItem.AddStep(true, WIstep, false, false);
@@ -451,7 +452,7 @@ test('switch between instruction and verification tabs', async t => {
     await WIstep.switchToInstructionsTab();
     await WIstep.switchToVerificationTab();
 
-});
+}).skip;
 /*
 This is a test that will ensure that the user can add a single verification step to a existing work item
 Reason: UI Test
@@ -464,11 +465,12 @@ test('Add one verification step', async t => {
     await WIstep.addVerificationStep(VerificationStep);
     await feedPage.returnToHome();
 });
-/*
+/**
+@deprecated the button in question no longer exists
 This is a test that will ensure that the user can add a single verification step to a existing work item and then check the QPID of that verification step
 Reason: UI Test
 */
-test('view QPID button functions properly', async t => { 
+test('[DEPRECATED] view QPID button functions properly', async t => { 
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     let WIstep = new WISteps();
     await DefaultWorkItem.AddStep(true, WIstep, false, false);
@@ -476,12 +478,13 @@ test('view QPID button functions properly', async t => {
     await WIstep.addVerificationStep(VerificationStep);
     await WIstep.checkQPID()
     await feedPage.returnToHome();
-});
-/*
+}).skip;
+/**
+ @deprecated the button in question no longer exists
 This is a test that will ensure that the user can add a single verification step to a existing work item and then check the QPID feild closes when its supposed to
 Reason: UI Test
 */
-test('view QPID button can close', async t => { 
+test('[DEPRECATED] view QPID button can close', async t => { 
     await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
     let WIstep = new WISteps();
     await DefaultWorkItem.AddStep(true, WIstep, false, false);
@@ -490,7 +493,7 @@ test('view QPID button can close', async t => {
     await WIstep.checkQPID()
     await WIstep.closeQPID()
     await feedPage.returnToHome();
-});
+}).skip;
 /*
 This is a test that will ensure that the user cannot add a step with the same name as another step
 Reason: UI Test
