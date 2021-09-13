@@ -1,9 +1,16 @@
 import os
 import xlsxwriter
-
+failsym = "ù"
+succsesssym = "Ü"
 # Create a workbook and add a worksheet.
 
-
+def fix(passed,fail):
+    for i in range(100):
+        for x in range(100):
+            passed.write(i,x," ")
+            fail.write(i,x," ")
+            x+=1
+        i+=1
 def getNamesFromFile(path):  
     names = []
     with open(path, "r") as file:
@@ -30,7 +37,6 @@ def spreadFromFiles():
     workbook = xlsxwriter.Workbook('tests.xlsx')
     names = getNamesOfTestsInFolder("./Tests/")
     for item in names:
-    
         row = 0
         col = 0
         worksheet = workbook.add_worksheet(item["name"])
@@ -42,43 +48,47 @@ def spreadFromFiles():
     workbook.close()
 def spreadFromLog():
     workbook = xlsxwriter.Workbook('tests.xlsx')
+    passed = workbook.add_worksheet()
+    fail = workbook.add_worksheet()
     fails = []
     success = []
     with open("./tests.log", "r") as file:
         text = file.read()
-        errorSplit = text.split("Ã—")
-        sSplit = text.split("âˆš")
+        errorSplit = text.split(failsym)
+        sSplit = text.split(succsesssym)
         del errorSplit[0]
         del sSplit[0]
         #print(errorSplit[2])
         for item in errorSplit:
-            itemArr = item.split("âˆš")
+            itemArr = item.split(succsesssym)
             fails.append(itemArr[0])
         for item in sSplit:
-            itemArr = item.split("Ã—")
+            itemArr = item.split(failsym)
             itemArr2 = itemArr[0].split("[DEPRECATED]")
             success.append(itemArr2[0])
     row = 0
     col = 0
-    passed = workbook.add_worksheet("passed")
+   
+    
+    
     for item in success:
         passed.write(row,col,item)
         row+=1
-    fail = workbook.add_worksheet("failed")
+    
     row = 0
-    fail.set_column(col,col,20)
-    cell_format = workbook.add_format()
-    cell_format.set_text_wrap()
-    for item in fails:
-        
-        arr = item.split("1)",1)
-        fail.write(row,col,arr[0],cell_format)
-        fail.write(row,col+1,arr[1],cell_format)
-        lenth = len(arr[1])
 
-        fail.set_column(col+1,col+1,100)
-        fail.set_row(row,lenth/2)
+    
+    for item in fails:
+        arr = item.split("1)",1)
+        fail.write(row,col,arr[0])
+        if(len(arr) > 1):
+            fail.write(row,col+1,arr[1])
+        
+       
+        
         row+=1
     
     workbook.close()
+    
+    
 spreadFromLog()

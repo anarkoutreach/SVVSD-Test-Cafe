@@ -90,17 +90,17 @@ export default class FeedPage {
 	eventEmitter = new MyClass();
 
 	constructor() {
-		this.createOptionsActivity = Selector("p.createOptionText.activity")
+		this.createOptionsActivity = Selector("a.dropdown-item").withAttribute("data-title","Activity")
 		this.userInfoBox = Selector("#userBoxRoles")
 		this.userNameField = this.userInfoBox.child("p").nth(0)
 		this.signOutBtn = Selector("#signout")
 		this.userInitialsBtn = Selector("button#navbarUserInfo");
 		this.getSearchSubmitBtn = Selector('#feedSearchBar .btn-default');
 		this.getSearchBar = Selector('#search');
-		this.createButton = Selector('div#navbarCreate.dropdown-toggle');
-		this.createOptionsDwi = Selector('p.createOptionText.dwi');
-		this.createOptionsGroup = Selector('p.createOptionText.group');
-		this.createOptionsUser = Selector('p.createOptionText.user');
+		this.createButton = Selector('button.dropdown-toggle.btn.btn-primary');
+		this.createOptionsDwi = Selector("a.dropdown-item").withAttribute("data-title","Work Item")
+		this.createOptionsGroup = Selector("a.dropdown-item").withAttribute("data-title","Group")
+		this.createOptionsUser = Selector("a.dropdown-item").withAttribute("data-title","User")
 		this.userInitialsIcon = Selector("#navbarUserInfo .initials");
 		this.firstConversation = Selector('.newsItem[data-name]');
 		this.firstAddCommentBtn = this.firstConversation.find('.addCommentButton');
@@ -554,6 +554,7 @@ export default class FeedPage {
 
 	async openCreateMenu(){
 		await t
+		.setNativeDialogHandler(() => true)
 		.expect(this.createButton.with({ visibilityCheck: true }).exists).ok('this should pass')
 		.click(this.createButton)
 	}

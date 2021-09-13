@@ -26,8 +26,10 @@ fixture`activity tests`.page(configManager.homePage).beforeEach(async t => {
     //   }
    
     await t
+        .setNativeDialogHandler(() => true)
         .useRole(t.ctx.user.role);
 });
+
 /**@description open the activity creation menu from the home page */
 test('can open activity creation menu', async t => {
     await feedPage.openCreateMenu();
@@ -36,8 +38,11 @@ test('can open activity creation menu', async t => {
     .click(feedPage.createOptionsActivity)
     .expect(activities.title.exists).eql(true)
 });
-/**@description open an activity from the my activites list from feed page */
-test('can navigate to test from feed page', async t =>{
+/**
+ * @depricated "my activites" no longer exists
+ *  open an activity from the my activites list from feed page 
+ * */
+test('[DEPRECATED] can navigate to test from feed page', async t =>{
     await feedPage.openCreateMenu();
     await t
     .setNativeDialogHandler(() => true)
@@ -49,7 +54,7 @@ test('can navigate to test from feed page', async t =>{
     await activities.pressCreateBtn();
     await feedPage.returnToHome();
     await activities.navigateToActivity(tandd["title"])
-});
+}).skip;
 /**@description navigate to the edit mode of an activity */
 test('can navigate to edit activity', async t => {
     let obj = await activities.createGenericAct()

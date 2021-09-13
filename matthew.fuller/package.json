@@ -5,11 +5,12 @@
   "main": "index.js",
   "dependencies": {
     "colors": "^1.4.0",
-    "testcafe": "^1.8.8"
+    "testcafe": "^1.16.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test-chrome": "testcafe -c 3 chrome Tests/ -e > tests.log |&tee",
+    "test-chrome-tee": "powershell \"npx testcafe chrome Tests/ -e | Tee -filepath ./tests.log\"",
+    "test-chrome": "npx testcafe chrome Tests/ -e",
     "test-chrome-headless": "testcafe chrome:headless Tests/ -e",
     "test-ie": "testcafe ie Tests/ -e",
     "test-edge": "testcafe edge Tests/ -e",

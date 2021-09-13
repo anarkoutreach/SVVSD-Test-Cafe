@@ -30,9 +30,9 @@ export default class ActivityPage {
 		this.startDate = Selector("input.createStartDate")
 		this.title = Selector("#paneHeaderTitle")
 		this.description = Selector("#paneHeaderDesc")
-		this.contentItemTab = Selector("#search-tab-tab-Content");
-		this.usersTab = Selector("#search-tab-tab-User");
-		this.groupsTab = Selector("#search-tab-tab-Group");
+		this.contentItemTab = Selector("button.searchFilter-tab.btn.btn-link").withAttribute("data-type","Content");
+		this.usersTab = Selector("button.searchFilter-tab.btn.btn-link").withAttribute("data-type","User");
+		this.groupsTab = Selector("button.searchFilter-tab.btn.btn-link").withAttribute("data-type","Group");
 	}
 	/**
 	 * @description navigates to activity and then clicks edit button and expect the title exists and is visible to check the operation was successful
@@ -59,7 +59,7 @@ export default class ActivityPage {
 		await t
 		.setNativeDialogHandler(() => true)
 		.click(feedPage.createOptionsActivity)
-		.expect(Selector("#search-tab-tab-Content").exists).eql(true);
+		.expect(Selector("input.searchBar.form-control").exists).eql(true);
 		await this.addEndData();
 		await this.addNthGroup(0);
 		await this.addNthGroup(1);
@@ -92,7 +92,7 @@ export default class ActivityPage {
 		await t
 		.expect(this.groupsTab.exists).eql(true)
 		.click(this.groupsTab);
-		let btn = Selector("button.addButton.btn.btn-primary").nth(nth)
+		let btn = Selector("div.searchItemPrimary").nth(nth)
 		await t
 		.expect(btn.exists).eql(true)
 		.click(btn);
