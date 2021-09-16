@@ -8,6 +8,8 @@ const feedPage = new FeedPage();
 const util = new Util();
 const configManager = new ConfigurationManager();
 export default class ActivityPage {
+	calendarSelectionMenuDays: Selector;
+
 	editActivityMenuItem: Selector;
 
 	title: Selector;
@@ -36,7 +38,7 @@ export default class ActivityPage {
 	  this.editActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(0);
 	  this.deleteActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(1);
 	  this.generateReportActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(2);
-
+	  this.calendarSelectionMenuDays = Selector('td.rdtDay');
 	  this.editBtn = Selector('div.glyphicon.glyphicon-cog');
 	  this.createBtn = Selector('button.create.btn.btn-success');
 	  this.endDate = Selector('input.createEndDate');
@@ -79,7 +81,11 @@ export default class ActivityPage {
 	    .setNativeDialogHandler(() => true)
 	    .click(feedPage.createOptionsActivity)
 	    .expect(Selector('input.searchBar.form-control').exists).eql(true);
-	  await this.addEndData();
+	  const date = await this.getSpecificDayInCalenderMenu('30');
+	  await t
+	  .click(this.endDate)
+	  .expect(date.visible).eql(true)
+	  .click(date);
 	  await this.addNthGroup(0);
 	  await this.addNthGroup(1);
 	  await this.addNthGroup(2);
@@ -101,6 +107,10 @@ export default class ActivityPage {
 	  await t
 	    .typeText(this.endDate, date);
 	  return null;
+	}
+
+	async getSpecificDayInCalenderMenu(day) {
+	  return this.calendarSelectionMenuDays.withText(day);
 	}
 
 	/**
