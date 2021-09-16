@@ -1,25 +1,26 @@
-import util from "../../Utilities/util";
-const Util = new util();
+import Util from '../../Utilities/util';
+
+const util = new Util();
 /** @description a class, representing an upload within a Workitem */
- export class UPLOAD {
-     /**@description the index of the upload */
-    Index;
+export default class UPLOAD {
+  /** @description the index of the upload */
+    Index: any;
+
     /** @description the files to upload */
     Files: string;
+
     /** @description the title of the upload */
     Title: string;
+
     /** @description the description of the upload */
     Description: string;
-    /**@description the constructor to create a new Upload Object
+
+    /** @description the constructor to create a new Upload Object
      * @param files the path to the file, or files that should be uploaded
      */
-    constructor(files){
-        this.Files = files;
-        this.Title =  "upload: "  +Util.randchar(25);
-        this.Description =  "Description: "  +Util.randchar(250);
+    constructor(files) {
+      this.Files = files;
+      this.Title = `upload: ${util.randChar(25)}`;
+      this.Description = `Description: ${util.randChar(250)}`;
     }
-
-    
-
 }
- 

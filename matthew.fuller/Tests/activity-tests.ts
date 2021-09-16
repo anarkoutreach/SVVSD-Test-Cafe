@@ -1,119 +1,118 @@
-import FeedPage from "../PageObjects/feed-page";
-import { mattUser } from "../Utilities/roles";
-import ConfigurationManager from "../Configuration/configuration";
-import ActivityPage from "../PageObjects/activity-page";
-import util from "../Utilities/util";
-import { Selector } from "testcafe";
-import activityObj from "../PageObjects/PageComponents/activityObj";
-import * as fs from 'fs';
-import userObj from "../PageObjects/PageComponents/userObj";
-const Util = new util;
+import { Selector } from 'testcafe';
+import FeedPage from '../PageObjects/feed-page';
+import { mattUser } from '../Utilities/roles';
+import ConfigurationManager from '../Configuration/configuration';
+import ActivityPage from '../PageObjects/activity-page';
+import Util from '../Utilities/util';
+
+const util = new Util();
 const feedPage = new FeedPage();
-const Rnum = Math.floor(Math.random() * 100);
 const activities = new ActivityPage();
 
 const configManager = new ConfigurationManager();
-fixture`activity tests`.page(configManager.homePage).beforeEach(async t => {
-    t.ctx.user = mattUser;
-    // try {
-    //     const data = fs.readFileSync(__dirname + "\\scuffedInfo\\activeUser.json", 'utf8')
-    //     let user = new userObj();
-    //     await user.initaliseUserObjFromObj(JSON.parse(data));
-    //     t.ctx.user = user.user;
-    //   } catch (err) {
-    //     t.ctx.user = mattUser;
-    //     //console.error(err)
-    //   }
-   
-    await t
-        .setNativeDialogHandler(() => true)
-        .useRole(t.ctx.user.role);
+fixture`activity tests`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  // the below is a scuffed method of allowing multiple users to run the same tests
+  // try {
+  //     const data = fs.readFileSync(__dirname + "\\scuffedInfo\\activeUser.json", 'utf8')
+  //     let user = new userObj();
+  //     await user.initaliseUserObjFromObj(JSON.parse(data));
+  //     t.ctx.user = user.user;
+  //   } catch (err) {
+  //     t.ctx.user = mattUser;
+  //     //console.error(err)
+  //   }
+
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
 });
 
-/**@description open the activity creation menu from the home page */
-test('can open activity creation menu', async t => {
-    await feedPage.openCreateMenu();
-    await t
+/** @description open the activity creation menu from the home page */
+test('can open activity creation menu', async (t) => {
+  await feedPage.openCreateMenu();
+  await t
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
-    .expect(activities.title.exists).eql(true)
+    .expect(activities.title.exists).eql(true);
 });
 /**
  * @depricated "my activites" no longer exists
- *  open an activity from the my activites list from feed page 
+ *  open an activity from the my activites list from feed page
  * */
-test('[DEPRECATED] can navigate to test from feed page', async t =>{
-    await feedPage.openCreateMenu();
-    await t
+test('[DEPRECATED] can navigate to test from feed page', async (t) => {
+  await feedPage.openCreateMenu();
+  await t
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
-    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
-    await activities.addEndData();
-    await activities.addNthGroup(0);
-    let tandd = await activities.addGenericTitleAndDescription();
-    await activities.pressCreateBtn();
-    await feedPage.returnToHome();
-    await activities.navigateToActivity(tandd["title"])
+    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+  await activities.addEndData();
+  await activities.addNthGroup(0);
+  const titleAndDescription = await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
+  await feedPage.returnToHome();
+  await activities.navigateToActivity(titleAndDescription.title);
 }).skip;
-/**@description navigate to the edit mode of an activity */
-test('can navigate to edit activity', async t => {
-    let obj = await activities.createGenericAct()
-    await feedPage.returnToHome()
-    await activities.openActivityInEditMode(obj.title)
+/** @description navigate to the edit mode of an activity */
+test('can navigate to edit activity', async (t) => {
+  const obj = await activities.createGenericAct();
+  await feedPage.returnToHome();
+  await activities.openActivityInEditMode(obj.title);
 });
-/**@description can create an activity just that, thats it */
-test('can create an activity', async t => {
-    await feedPage.openCreateMenu();
-    await t
+/** @description can create an activity just that, thats it */
+test('can create an activity', async (t) => {
+  await feedPage.openCreateMenu();
+  await t
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
-    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
-    await activities.addEndData();
-    await activities.addNthGroup(0);
-    let tandd = await activities.addGenericTitleAndDescription();
-    await activities.pressCreateBtn();
+    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+  await activities.addEndData();
+  await activities.addNthGroup(0);
+  const tandd = await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
 });
-/**@deprecated replaced with cleaner test */
-test('[DEPRECATED] can edit activity title ', async t => {
-    await feedPage.openCreateMenu();
-    await t
+/** @deprecated replaced with cleaner test */
+test('[DEPRECATED] can edit activity title ', async (t) => {
+  await feedPage.openCreateMenu();
+  await t
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
-    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
-    await activities.addEndData();
-    await activities.addNthGroup(0);
-    let tandd = await activities.addGenericTitleAndDescription();
-    await activities.pressCreateBtn();
-    await feedPage.returnToHome();
-    await activities.navigateToActivity(tandd["title"])
-    await t
+    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+  await activities.addEndData();
+  await activities.addNthGroup(0);
+  const tandd = await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
+  await feedPage.returnToHome();
+  await activities.navigateToActivity(tandd.title);
+  await t
     .expect(activities.editBtn.exists).eql(true)
     .click(activities.editBtn)
-    .expect(Selector("a").withText("Edit Activity").exists).eql(true)
-    .click(Selector("a").withText("Edit Activity"));
-    await t
+    .expect(Selector('a').withText('Edit Activity').exists)
+    .eql(true)
+    .click(Selector('a').withText('Edit Activity'));
+  await t
     .click(activities.title);
-    await Util.CtlADelete(activities.title)
-    await t
+  await util.CtlADelete(activities.title);
+  await t
     .click(activities.title)
-    .typeText(activities.title,"actTitle:"+Util.randchar(25))
-    await activities.pressCreateBtn();
+    .typeText(activities.title, `actTitle:${util.randChar(25)}`);
+  await activities.pressCreateBtn();
 }).skip;
-/**@description try to create an activity with multiple groups attached to it. */
-test('can create an activity with multiple groups', async t => {
-    await feedPage.openCreateMenu();
-    await t
+/** @description try to create an activity with multiple groups attached to it. */
+test('can create an activity with multiple groups', async (t) => {
+  await feedPage.openCreateMenu();
+  await t
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
-    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
-    await activities.addEndData();
-    await activities.addNthGroup(0);
-    await activities.addNthGroup(1);
-    await activities.addNthGroup(2);
-    await activities.addGenericTitleAndDescription();
-    await activities.pressCreateBtn();
+    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+  await activities.addEndData();
+  await activities.addNthGroup(0);
+  await activities.addNthGroup(1);
+  await activities.addNthGroup(2);
+  await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
 });
-//test('cannot create an activity without groups', async t => {
+// test('cannot create an activity without groups', async t => {
 //     await feedPage.openCreateMenu();
 //     await t
 //     .setNativeDialogHandler(() => true)
@@ -130,44 +129,46 @@ test('can create an activity with multiple groups', async t => {
  * @description attempt to create an activity without a title or description,
  * it should not succsead, as such valifdaton is set up as such
  */
-test('cannot create an activity without a title or desc', async t => {
-    await feedPage.openCreateMenu();
-    await t
+test('cannot create an activity without a title or desc', async (t) => {
+  await feedPage.openCreateMenu();
+  await t
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
-    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
-    await activities.addNthGroup(0);
-    await activities.addEndData();
-    await t
+    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+  await activities.addNthGroup(0);
+  await activities.addEndData();
+  await t
     .expect(activities.createBtn.exists).eql(true)
     .click(activities.createBtn)
-    .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
+    .expect(Selector('span.error.createButtons.top.active').exists)
+    .eql(true);
 });
-/**@description attempt to create an activity without fillign any fields in */
-test('cannot create an activity without any info', async t => {
-    await feedPage.openCreateMenu();
-    await t
+/** @description attempt to create an activity without fillign any fields in */
+test('cannot create an activity without any info', async (t) => {
+  await feedPage.openCreateMenu();
+  await t
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
-    .expect(Selector("#search-tab-tab-Content").exists).eql(true);
-    await t
+    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+  await t
     .expect(activities.createBtn.exists).eql(true)
     .click(activities.createBtn)
-    .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
+    .expect(Selector('span.error.createButtons.top.active').exists)
+    .eql(true);
 });
-/**@description attempt to edit the title of an actiity by creating an activty then navigating back to it in edit mode */
-test('edit title of activity', async t => {
-    await activities.createActivityAndEditField(activities.title,"title"+Util.randchar(20),"title")
+/** @description attempt to edit the title of an actiity by creating an activty then navigating back to it in edit mode */
+test('edit title of activity', async (t) => {
+  await activities.createActivityAndEditField(activities.title, `title${util.randChar(20)}`, 'title');
 });
-/**@description attempt to edit the description of an actiity by creating an activty then navigating back to it in edit mode */
-test('edit description of activity', async t => {
-    await activities.createActivityAndEditField(activities.description,"description"+Util.randchar(20),"description")
+/** @description attempt to edit the description of an actiity by creating an activty then navigating back to it in edit mode */
+test('edit description of activity', async (t) => {
+  await activities.createActivityAndEditField(activities.description, `description${util.randChar(20)}`, 'description');
 });
-/**@description attempt to edit the endDate of an actiity by creating an activty then navigating back to it in edit mode */
-test('edit endDate of activity', async t => {
-    await activities.createActivityAndEditField(activities.endDate,configManager.defaultEditedEndDate,"endDate")
+/** @description attempt to edit the endDate of an actiity by creating an activty then navigating back to it in edit mode */
+test('edit endDate of activity', async (t) => {
+  await activities.createActivityAndEditField(activities.endDate, configManager.defaultEditedEndDate, 'endDate');
 });
-/**@description attempt to edit the startDate of an actiity by creating an activty then navigating back to it in edit mode */
-test('edit startDate of activity', async t => {
-    await activities.createActivityAndEditField(activities.startDate,configManager.defaultEditedStartDate,"startDate")
+/** @description attempt to edit the startDate of an actiity by creating an activty then navigating back to it in edit mode */
+test('edit startDate of activity', async (t) => {
+  await activities.createActivityAndEditField(activities.startDate, configManager.defaultEditedStartDate, 'startDate');
 });
