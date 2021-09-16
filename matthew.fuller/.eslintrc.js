@@ -17,6 +17,9 @@ module.exports = {
     'testcafe',
   ],
   rules: {
+    'max-classes-per-file': ['error', 2],
+    'no-mixed-spaces-and-tabs': 0,
+    'no-tabs': 0,
     'no-async-promise-executor': 0,
     'for-direction': 0,
     'no-await-in-loop': 0,

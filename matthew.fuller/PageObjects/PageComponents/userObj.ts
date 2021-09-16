@@ -1,12 +1,13 @@
 import { Role } from 'testcafe';
-import util from '../../Utilities/util';
+import Util from '../../Utilities/util';
 import LoginPage from '../login-page';
 import ConfigurationManager from '../../Configuration/configuration';
-// login page if used as a global constant here will cause errors, try to keep global variables to an absolute minimum as typescript seems not to like them.
+// login page if used as a global constant here will cause errors,
+// try to keep global variables to an absolute minimum as typescript seems not to like them.
 const configManager = new ConfigurationManager();
 
-const Util = new util();
-Util.randChar(40);
+const util = new Util();
+util.randChar(40);
 export default class UserObj {
 /** @description the name of the user */
 name: string;
@@ -50,13 +51,13 @@ user
  */
 constructor(roles = ['Viewer', 'Activity Author'], acLists = [], site = null, num = 5) {
   const loginPage = new LoginPage();
-  this.name = configManager.config.defaultData.user.name + Util.randChar(num);
-  this.email = `${configManager.config.defaultData.user.email + Util.randChar(num)}@${configManager.config.defaultData.user.email}${Util.randChar(5)}.fake`;
+  this.name = configManager.config.defaultData.user.name + util.randChar(num);
+  this.email = `${configManager.config.defaultData.user.email + util.randChar(num)}@${configManager.config.defaultData.user.email}${util.randChar(5)}.fake`;
   this.title = configManager.config.defaultData.user.title;
   this.organization = configManager.config.defaultData.user.organization;
   this.department = configManager.config.defaultData.user.department;
-  this.loginId = configManager.config.defaultData.user.loginID + Util.randChar(num);
-  this.password = configManager.config.defaultData.user.password + Util.randChar(num);
+  this.loginId = configManager.config.defaultData.user.loginID + util.randChar(num);
+  this.password = configManager.config.defaultData.user.password + util.randChar(num);
   this.site = site;
   this.roles = roles;
   this.acLists = acLists;
@@ -67,7 +68,7 @@ constructor(roles = ['Viewer', 'Activity Author'], acLists = [], site = null, nu
     role: Role(
       // define the server to connect to.
       configManager.serverUrl,
-      async (t) => {
+      async () => {
         // define the login function such that when passed to t.use role -> login to MBE web as user
         await loginPage.login(this.loginId, this.password);
       },
@@ -76,7 +77,7 @@ constructor(roles = ['Viewer', 'Activity Author'], acLists = [], site = null, nu
   };
 }
 
-async initaliseUserObjFromObj(obj:userObj) {
+async initaliseUserObjFromObj(obj:UserObj) {
   const loginPage = new LoginPage();
   this.department = obj.department;
   this.email = obj.email;
@@ -95,7 +96,7 @@ async initaliseUserObjFromObj(obj:userObj) {
     role: Role(
       // define the server to connect to.
       configManager.serverUrl,
-      async (t) => {
+      async () => {
         // define the login function such that when passed to t.use role -> login to MBE web as user
         await loginPage.login(this.loginId, this.password);
       },

@@ -705,24 +705,9 @@ export default class WI {
       });
     }
 
-    /**
-     * @deprecated Just don't touch this
-     * @param finished
-     * @param i
-     * @param NumOfSteps
-     */
-    async fixerthingythingthingy(finished, i, NumOfSteps) {
-      while (finished == false) {
-        if (i >= NumOfSteps) {
-          finished = true;
-        }
-      }
-      if (finished == true) {
-        return finished;
-      }
-    }
-
-    /** @deprecated this would switch between verficiation to referance tab, but that tab was removed */
+    /** @deprecated this would switch between verficiation to referance tab,
+     * but that tab was removed */
+    // eslint-disable-next-line class-methods-use-this
     async switchToReferanceTab() {
       await t
         .expect(Selector('#WIPlayerTabArea-tab-referenceinfo').exists).eql(true)
@@ -730,8 +715,10 @@ export default class WI {
     }
 
     /**
-     * @description Fills in the Description and Saftey and compliance fields of a WorkitemStep based upon a WIsteps object
-     * @param {WISteps} step the step object that will be used to provide text for description and saftey and compliance.
+     * @description Fills in the Description and Saftey and compliance
+     * fields of a WorkitemStep based upon a WIsteps object
+     * @param {WISteps} step the step object that will be used to provide
+     * text for description and saftey and compliance.
      * @returns null
      */
     async FillallStepFields(step: WISteps) {
@@ -756,6 +743,7 @@ export default class WI {
     @returns null
      */
     async SwitchWITAB(WItab: WORKITEMTAB) {
+      // eslint-disable-next-line default-case
       switch (WItab) {
         case '0':
           await t
@@ -784,37 +772,35 @@ export default class WI {
     }
 
     /**
-     * @deprecated
-     * @param WiField Not sure what this was
-     */
-    async CheckError(WiField) {
-      const alerts = new Alerts();
-      await t
-        .expect(alerts.errorPopUp.withText('empty'));
-    }
-
-    /**
-     * @description Adds a new step to a WI (AppendStep Btn) then fills the information and initalises the step into storage
+     * @description Adds a new step to a WI (AppendStep Btn) then fills the
+     * information and initalises the step into storage
      *
      *
-     * @param {Boolean} BugWorkaround When a step is added, the user cannot add another step, until they have switched to a different wi tab and back. If true, this will switch to a differnt tab and back, working around the bug.
-     * @param {WISteps} step The step object that should be created then stored into the array of all steps
-     * @param {Boolean} letDuplicate Weathor or not the script will allow a duplicate step to be created. If false, the script will add a -x to the end of a duplicate name and contuine, logging a console warning.
-     * @param {Boolean} StepIsAlreadyCreated Used in the case of adding a child step to a step (skips creation the step, instead only adding data, and adding it to the array of steps)
+     * @param {Boolean} BugWorkaround When a step is added, the user cannot add
+     *  another step, until they have switched to a different wi tab and back.
+     * If true, this will switch to a differnt tab and back, working around the bug.
+     * @param {WISteps} step The step object that should be created then stored
+     * into the array of all steps
+     * @param {Boolean} letDuplicate Weathor or not the script will allow a
+     * duplicate step to be created. If false, the script will add a -x to
+     * the end of a duplicate name and contuine, logging a console warning.
+     * @param {Boolean} StepIsAlreadyCreated Used in the case of adding a child step to a step
+     * (skips creation the step, instead only adding data, and adding it to the array of steps)
 
      * @returns null
      */
+    // eslint-disable-next-line max-len
     async AddStep(BugWorkaround: boolean, step: WISteps, letDuplicate: boolean, StepIsAlreadyCreated: boolean) {
       const workaroundbug = BugWorkaround;
       let StepExists: boolean;
-      const util = new util();
-      if (this.steps) var NumOfSteps = this.steps.length;
+      let NumOfSteps;
+      if (this.steps) NumOfSteps = this.steps.length;
       let i;
 
       NumOfSteps = await this.CountSteps();
 
-      for (i = 0; i > NumOfSteps; i++) {
-        while (this.steps[i].StepName == step.StepName && letDuplicate == false) {
+      for (i = 0; i > NumOfSteps; i += 1) {
+        while (this.steps[i].StepName === step.StepName && letDuplicate === false) {
           if (util.Warnings)console.log('(Warnings) WI.ts-- AddStep: A step already exists with the text given -changing name with: "-i"');
           StepExists = true;
           step.StepName = `${step.StepName}-${i}`;
@@ -846,7 +832,6 @@ export default class WI {
           await this.FeedPageEventEmitter.Update();
         }
       } else if (letDuplicate) {
-        let dupicateError: boolean;
         const alerts = new Alerts();
 
         await t
@@ -862,7 +847,7 @@ export default class WI {
           .expect(WIERRORDUPLICATECHECK).eql(true);
 
         const DuplicateErrorBool = this.TestDuplicteError(step, alerts);
-        if (await DuplicateErrorBool == false) {
+        if (await DuplicateErrorBool === false) {
           if (this.steps) this.steps.push(step);
           if (!this.steps) this.steps.push(step);
           if (!step.StepShouldNotHaveInformationFilled) await this.FillallStepFields(step);
@@ -873,8 +858,9 @@ export default class WI {
       if (workaroundbug) {
         NumOfSteps = await this.CountSteps();
         if (NumOfSteps > 0) step.StepNum = NumOfSteps - 1;
-        if (NumOfSteps == 0) step.StepNum = NumOfSteps;
-        // selects a different tab and then goes back to main tab to allow new steps to be created easily
+        if (NumOfSteps === 0) step.StepNum = NumOfSteps;
+        // selects a different tab and then goes back to main tab to allow
+        // new steps to be created easily
         await this.SwitchWITAB(WORKITEMTAB.USERS);
         await this.SwitchWITAB(WORKITEMTAB.WORKITEM);
         await this.CatalogSteps();
@@ -892,12 +878,11 @@ export default class WI {
          * @returns Promise<Selector>
          */
     async GetStepByName(step: WISteps): Promise<Selector> {
-      let num: number;
-
+      // eslint-disable-next-line consistent-return
       this.steps.forEach(async (step3) => {
-        if (step3.StepName === step.StepName) { return await this.GetStep(step.StepNum); }
+        if (step3.StepName === step.StepName) { return this.GetStep(step.StepNum); }
       });
-      return await this.GetStep(0);
+      return this.GetStep(0);
     }
 
     /**
@@ -906,7 +891,6 @@ export default class WI {
          * @param {Alerts} alerts
          */
     async TestDuplicteError(step: WISteps, alerts: Alerts) {
-      const util = new util();
       await t
         .click(this.appendProccessStep);
       util.CtlADelete;
@@ -914,13 +898,11 @@ export default class WI {
       let i;
       const DuplicateErrorBool: boolean = (await alerts.WIDuplicateError.innerText).includes('Step titles must be unique');
 
-      for (i = 0; i > NumOfSteps; i++) {
+      for (i = 0; i > NumOfSteps; i += 1) {
         this.CatalogSteps();
-        while (this.steps[i].StepName == step.StepName) {
+        while (this.steps[i].StepName === step.StepName) {
           if (util.Errors)console.log('(errors) WI.ts-- AddStep: A step already exists with the text given -changing name with: "-i"');
-          let StepExists = true;
           `${step.StepName}-${i}`;
-          StepExists = false;
         }
       }
       await t
@@ -932,18 +914,20 @@ export default class WI {
     }
 
     /**
-         * @description checks if the name of a idiviual step object is the same as a setp in the array
+         * @description checks if the name of a idiviual step object is the
+         * same as a setp in the array
          * @param {WISteps} step the step that needs to be validated
          * @returns promise <bool>
          */
     private async validateText(step: WISteps) {
       let valid: boolean;
-      if (this.steps) var NumOfSteps = this.steps.length;
+      let NumOfSteps;
+      if (this.steps) NumOfSteps = this.steps.length;
 
       if (!NumOfSteps) { NumOfSteps = 0; if (util.Verbose)console.log('--AddStep: Number of steps equaled null, asineing zero'); }
       let i;
-      for (i = 0; i > NumOfSteps; i++) {
-        if (this.steps[i].StepName == step.StepName) {
+      for (i = 0; i > NumOfSteps; i += 1) {
+        if (this.steps[i].StepName === step.StepName) {
           valid = true;
         }
       }

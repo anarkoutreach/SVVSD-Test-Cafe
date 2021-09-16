@@ -6,18 +6,15 @@ import Alerts from './Alerts';
 import WI from './WI';
 import { tabs } from './PageComponents/tabs';
 import SearchPage from './search-page';
-import util from '../Utilities/util';
+import Util from '../Utilities/util';
 import UserPage from './user-page';
 import userObj from './PageComponents/userObj';
 
-const tick = () => new Promise<void>((resolve) => {
-  setTimeout(() => {
-    console.log('tick');
-    resolve();
-  }, 1000);
-});
-// using this event system, creating massive stress tests on WI items is speed up by a ton, as this ensures data for the WI persists even through new WI objects being created if it needs to,
-// due to a few places creating new WI objects when still inside the same WI, this fixes that problem
+// using this event system, creating massive stress tests on WI items is speed up by a ton,
+// as this ensures data for the WI persists even through new WI objects being created if
+// it needs to,
+// due to a few places creating new WI objects when still inside the same WI,
+// this fixes that problem
 
 // Just don't touch this.... i will be documenting this last :(
 class MyClass extends events.EventEmitter {
@@ -32,7 +29,7 @@ class MyClass extends events.EventEmitter {
           fsWait = setTimeout(() => {
             fsWait = true;
           }, 100);
-          if (event == 'change') {
+          if (event === 'change') {
             watcher.close();
             resolve('timeout');
           }
@@ -142,10 +139,13 @@ export default class FeedPage {
 	}
 
 	/**
-	 * @description check the UserInfo Box for name and roles of current user, then match them to a userObj
+	 * @description check the UserInfo Box for name and roles of current user,
+	 *  then match them to a userObj
 	 * @param user the userObj to compare */
 	async verifyUserAndRoles(user: userObj) {
-	  await t.expect(await (await this.getUsername()).toLowerCase()).eql(await user.name.toLowerCase());
+	  await t.expect(
+		  await (await this.getUsername()).toLowerCase(),
+	  ).eql(await user.name.toLowerCase());
 	  user.roles.forEach(async (role) => {
 	    await t.expect((await this.getAllUserInfo()).includes(await role.toLowerCase()));
 	  });
@@ -154,7 +154,7 @@ export default class FeedPage {
 	/** @returns an array containing all information contained in UserInfoBox */
 	async getAllUserInfo() {
 	  const array = [];
-	  for (let index = 0; index < await this.userInfoBox.child('p').count; index++) {
+	  for (let index = 0; index < await this.userInfoBox.child('p').count; index += 1) {
 	    const element = await this.userInfoBox.child('p').nth(index).innerText;
 	    array.push(await element.toLowerCase());
 	  }
@@ -166,7 +166,8 @@ export default class FeedPage {
 	  return this.userNameField.innerText;
 	}
 
-	/** @description clicks the icon in the upper right of the feed page containing the initials of the user */
+	/** @description clicks the icon in the upper right of the feed page
+	 *  containing the initials of the user */
 	async clickUserIcon() {
 	  await t
 	    .expect(this.userInitialsBtn.exists && this.userInitialsBtn.visible).eql(true)
@@ -197,31 +198,30 @@ export default class FeedPage {
 	}
 
 	async addCommentToFirstConversation(text) {
-	  const Util = new util();
+	  const util = new Util();
 	  const firstConversation = new Conversation(this.firstConversation);
 
 	  await firstConversation
 	    .addComment(text);
-	  if (Util.Verbose) console.log(`-- addCommentToFirstConversation: added "${text}" to first conversation --`);
+	  if (util.Verbose) console.log(`-- addCommentToFirstConversation: added "${text}" to first conversation --`);
 	}
 
 	getFirstConversation(): Conversation {
-	  const Util = new util();
-	  if (Util.Verbose) console.log('-- getFirstConversation: returning new Conversation --');
+	  const util = new Util();
+	  if (util.Verbose) console.log('-- getFirstConversation: returning new Conversation --');
 	  return new Conversation(this.firstConversation);
 	}
 
 	async validateInitials() {
-	  const Util = new util();
+	  const util = new Util();
 	  await t
 	    .expect(this.userInitialsIcon.textContent).eql(t.ctx.user.initials);
-	  if (Util.Verbose) console.log('-- validateInitals: validated user initals --');
+	  if (util.Verbose) console.log('-- validateInitals: validated user initals --');
 	}
 
 	async returnToHome() {
 	  const alerts = new Alerts();
-	  const Util = new util();
-	  const feedpage = new FeedPage();
+	  const util = new Util();
 	  const workitem = new WI();
 	  if (!alerts.getAnarkLogo.exists) {
 	    await t
@@ -241,13 +241,14 @@ export default class FeedPage {
 	      .expect(this.getSearchBar.visible)
 	      .eql(true);
 	  }
-	  if (Util.Verbose) console.log('-- returnToHome: returned to home page --');
+	  if (util.Verbose) console.log('-- returnToHome: returned to home page --');
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	combineStringWithRandID(title: string, length: number) {
-	  const Util = new util();
-	  const result = `${title}random id${Util.randChar(length)}`;
-	  if (Util.Verbose) console.log('-- combineStringWithRandID: Returning string(Title) combined with random id --');
+	  const util = new Util();
+	  const result = `${title}random id${util.randChar(length)}`;
+	  if (util.Verbose) console.log('-- combineStringWithRandID: Returning string(Title) combined with random id --');
 	  return result;
 	}
 
@@ -257,8 +258,7 @@ export default class FeedPage {
 	 */
 	async CreateWIthenReturnHome(workitem: WI) {
 	  const alerts = new Alerts();
-	  const Util = new util();
-	  const searchpage = new SearchPage();
+	  const util = new Util();
 	  // ???????? why
 	  const generinworkitem = workitem;
 	  await this.openAWICreateMenu();
@@ -271,10 +271,11 @@ export default class FeedPage {
 	    .wait(200)
 	    .expect(generinworkitem.getDWItab.visible)
 	    .eql(true);
-	  if (Util.Verbose) console.log('-- createWi: work instruction created --');
+	  if (util.Verbose) console.log('-- createWi: work instruction created --');
 	  await this.returnToHome();
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	async selectActivity(name:string) {
 	  const specific = Selector('div.myActivityTitle').withText(name.toUpperCase());
 	  await t
@@ -282,25 +283,24 @@ export default class FeedPage {
 	    .click(specific);
 	}
 
-	async createWI(workitem: WI, length) {
-	  const alerts = new Alerts();
-	  const Util = new util();
-	  const searchpage = new SearchPage();
+	async createWI(workitem: WI) {
+	  const util = new Util();
 	  // ???????? why
 	  const generinworkitem = workitem;
 
 	  await this.CreateWIthenReturnHome(workitem);
-	  if (Util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
+	  if (util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
 	  await this.SearchFor(workitem.title, tabs.WORKITEMS);
 	  const searchResult = await this.findSearchResult(workitem.title, tabs.WORKITEMS);
-	  if (await searchResult.exists == false) {
+	  if (await searchResult.exists === false) {
 	    await t.expect(searchResult.exists).eql(true);
 	    console.log('TEST failed as search result does not exist');
 	  }
 	  await t
 	    .click(searchResult)
 	    .click(generinworkitem.settingsGearBtn)
-	  // due to work items no longer having titles displayed on the view page you must change to the edit page first
+	  // due to work items no longer having titles displayed on the view page
+	  // you must change to the edit page first
 	    .click(generinworkitem.settingsGearPanelEdit)
 	    .expect(generinworkitem.wiTitle.visible)
 	    .eql(true);
@@ -317,17 +317,16 @@ export default class FeedPage {
 	}
 
 	/**
-	 * @description this will create a workitem and then test if there is a title in the "view" mode of the work item
+	 * @description this will create a workitem and then test if there is a
+	 *  title in the "view" mode of the work item
 	 * @param workitem the workitem that should be created
 	 */
-	async createWI_CheckIfTitle(workitem: WI) {
-	  const alerts = new Alerts();
-	  const Util = new util();
-	  const searchpage = new SearchPage();
+	async createWICheckIfTitle(workitem: WI) {
+	  const util = new Util();
 	  // this is bad dont do this
 	  const generinworkitem = workitem;
 	  await this.CreateWIthenReturnHome(workitem);
-	  if (Util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
+	  if (util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
 	  await this.SearchFor(workitem.title, tabs.WORKITEMS);
 	  const searchResult = await this.findSearchResult(workitem.title, tabs.WORKITEMS);
 	  await t
@@ -335,16 +334,20 @@ export default class FeedPage {
 	    .wait(100);
 	  await t
 	    .expect(generinworkitem.wiViewTitle.visible).eql(true)
-	    .expect((await generinworkitem.wiViewTitle.innerText).toLowerCase()).eql(generinworkitem.title.toLowerCase());
+	    .expect(
+	      (await generinworkitem.wiViewTitle.innerText).toLowerCase(),
+	    ).eql(generinworkitem.title.toLowerCase());
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	async onCloseWI() {
 	  fs.writeFileSync('./saved_data/ActiveWI.json', '{"CLOSED":"TRUE"}');
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	async FillallWIFields(workitem: WI) {
 	  const alerts = new Alerts();
-	  const Util = new util();
+	  const util = new Util();
 	  await alerts.FillForm(1, workitem.title, workitem);
 	  await alerts.FillForm(2, workitem.description, workitem);
 	  await alerts.FillForm(3, workitem.partnum, workitem);
@@ -353,12 +356,12 @@ export default class FeedPage {
 	  await alerts.FillForm(7, null, workitem);
 	  await alerts.FillForm(8, null, workitem);
 
-	  if (Util.Verbose) console.log('-- FillallWIFields: Filled in all fields of a WI create form --');
+	  if (util.Verbose) console.log('-- FillallWIFields: Filled in all fields of a WI create form --');
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	async clickWIcreateBtn() {
 	  const alerts = new Alerts();
-	  const generinworkitem = new WI();
 	  await t
 	    .setNativeDialogHandler(() => true)
 	    .click(alerts.getAWICreateBtn);
@@ -371,27 +374,28 @@ export default class FeedPage {
 		 * @param verify
 		 * @returns
 		 */
+	// eslint-disable-next-line consistent-return
 	async findSearchResult(text, tab: tabs, verify = true) {
-	  const Util = new util();
+	  const util = new Util();
 	  const searchpage = new SearchPage();
 	  const count = await searchpage.results.childElementCount;
-	  if (Util.Verbose) console.log(`--findSearchResult: child element count: ${count} --`);
+	  if (util.Verbose) console.log(`--findSearchResult: child element count: ${count} --`);
 	  let i = 0;
 	  const results = [];
-	  for (i; i < count; i++) {
-	    if (Util.Verbose) console.log(`--findSearchResult: find search results -  entered for loop with: ${count} --`);
+	  for (i; i < count; i += 1) {
+	    if (util.Verbose) console.log(`--findSearchResult: find search results -  entered for loop with: ${count} --`);
 	    const name = await searchpage.results.child(i).innerText;
 	    results[i] = await name;
 	    const lowerCaseResult = await results[i].toLowerCase();
 	    const expectedText = await text.toLocaleLowerCase();
-	    if (Util.Verbose) console.log(` --findSearchResult: script expected : "${expectedText}" but it recived: "${lowerCaseResult}" --`);
+	    if (util.Verbose) console.log(` --findSearchResult: script expected : "${expectedText}" but it recived: "${lowerCaseResult}" --`);
 	    await this.switchTabs(tab);
 	    await t
 	      .expect(await lowerCaseResult.includes(expectedText)).eql(verify);
 
 	    if (lowerCaseResult.includes(expectedText)) {
-	      if (Util.Verbose) console.log('findSearchResult: expected text exists');
-	      if (Util.Verbose) console.log(' -- findSearchResult: findSearchResult has functioned properly and returns Selector of search -- ');
+	      if (util.Verbose) console.log('findSearchResult: expected text exists');
+	      if (util.Verbose) console.log(' -- findSearchResult: findSearchResult has functioned properly and returns Selector of search -- ');
 	      return Selector('#searchResults').child().sibling().child()
 	        .child(i)
 	        .child('.searchItemInfo')
@@ -418,8 +422,9 @@ export default class FeedPage {
 	    .eql(true);
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	async switchTabs(tab:tabs) {
-	  const Util = new util();
+	  const util = new Util();
 	  const searchpage = new SearchPage();
 	  switch (tab) {
 	    case tabs.CONTENT:
@@ -447,7 +452,7 @@ export default class FeedPage {
 	        .click(searchpage.workItemsTab);
 	      break;
 	    default:
-	      if (Util.Errors) console.log('enter the enum tab that you would like to use');
+	      if (util.Errors) console.log('enter the enum tab that you would like to use');
 	      break;
 	  }
 	}
@@ -459,32 +464,35 @@ export default class FeedPage {
 	 * @param tab the tab to search in: an enum of tab
 	 */
 	async SearchFor(text: string, tab: tabs) {
-	  const Util = new util();
-	  const alerts = new Alerts();
+	  const util = new Util();
 	  const searchpage = new SearchPage();
 	  await this.naviagteToSearchTab(text);
-	  if (Util.Verbose) console.log('-- SearchFor: succsessfully got to search page');
+	  if (util.Verbose) console.log('-- SearchFor: succsessfully got to search page');
+	  // eslint-disable-next-line no-unused-vars
 	  const activeTab = await searchpage.activeTab.innerText;
 	  await this.switchTabs(tab);
 
 	  const activetab2 = await Selector('#search-tab').child().child('.active').child().innerText;
 	  const bannerText = await Selector('#searchResults').child('h5').innerText;
 
-	  if (Util.Verbose) console.log(`-- searchFor: searched tab: ${tab}active tab: ${activetab2} --`);
-	  if (Util.Verbose) console.log(`-- searchFor: tab's banner text =${bannerText.toLocaleLowerCase()} --`);
-	  if (tab != tabs.ACLIST) {
+	  if (util.Verbose) console.log(`-- searchFor: searched tab: ${tab}active tab: ${activetab2} --`);
+	  if (util.Verbose) console.log(`-- searchFor: tab's banner text =${bannerText.toLocaleLowerCase()} --`);
+	  if (tab !== tabs.ACLIST) {
 	    await t
-	  // expect that the banner text and the active tab concur that the program has navigated and searched in the proper search tab.
+	  // expect that the banner text and the active tab concur that the
+	  // program has navigated and searched in the proper search tab.
 	    .expect(bannerText.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true)
 	    .expect(activetab2.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true);
 	  } else {
 	    await t
-	  // expect that the banner text and the active tab concur that the program has navigated and searched in the proper search tab.
+	  // expect that the banner text and the active tab concur that
+	  // the program has navigated and searched in the proper search tab.
 	    .expect(bannerText.toLocaleLowerCase().includes('access control list')).eql(true)
 	    .expect(activetab2.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true);
 	  }
-	  if (Util.Verbose) console.log('-- searchFor: all "search for" tests have passed --');
-	  // search validation should occur outside of this function as this is just intended to search for a result.
+	  if (util.Verbose) console.log('-- searchFor: all "search for" tests have passed --');
+	  // search validation should occur outside of this function as this
+	  // is just intended to search for a result.
 	  // await searchpage.validateSerch(text);
 	}
 
@@ -495,18 +503,16 @@ export default class FeedPage {
 	 * @returns a selector of the search result
 	 */
 	async navigateToWi(tab: tabs, workitem: WI) {
-	  const alerts = new Alerts();
-	  const Util = new util();
-	  const searchpage = new SearchPage();
+	  const util = new Util();
 	  const { title } = workitem;
-	  if (Util.Verbose) console.log('-- navigateToWi: started Navigate To WI script ()--');
-	  if (Util.Verbose) console.log('-- navigateToWi:started " Search for script "--');
+	  if (util.Verbose) console.log('-- navigateToWi: started Navigate To WI script ()--');
+	  if (util.Verbose) console.log('-- navigateToWi:started " Search for script "--');
 	  await this.SearchFor(title, tabs.WORKITEMS);
-	  if (Util.Verbose) console.log('-- navigateToWi: finished "Search for" script --');
-	  if (Util.Verbose) console.log('-- navigateToWi: started "find search result" -script --');
+	  if (util.Verbose) console.log('-- navigateToWi: finished "Search for" script --');
+	  if (util.Verbose) console.log('-- navigateToWi: started "find search result" -script --');
 	  const searchResult = await this.findSearchResult(title, tabs.WORKITEMS);
-	  if (Util.Verbose) console.log('-- navigateToWi: finished "Search for result" script --');
-	  if (Util.Verbose) console.log('-- navigateToWi: return - Search Result --');
+	  if (util.Verbose) console.log('-- navigateToWi: finished "Search for result" script --');
+	  if (util.Verbose) console.log('-- navigateToWi: return - Search Result --');
 	  return searchResult;
 	}
 
@@ -516,17 +522,17 @@ export default class FeedPage {
 	 * @param workitem the work item object to find
 	 */
 	async NavigateToEditWI(tab: tabs, workitem: WI) {
-	  const alerts = new Alerts();
-	  const Util = new util();
+	  const util = new Util();
 	  const searchResult = await this.navigateToWi(tab, workitem);
 	  await t
 	    .click(searchResult)
 	    .click(workitem.settingsGearBtn)
-	  // due to work items no longer having titles displayed on the view page you must change to the edit page first
+	  // due to work items no longer having titles displayed on the view page
+	  // you must change to the edit page first
 	    .click(workitem.settingsGearPanelEdit)
 	    .expect(workitem.wiTitle.visible)
 	    .eql(true);
-	  if (Util.Verbose) console.log('Navigated to Edit workitem');
+	  if (util.Verbose) console.log('Navigated to Edit workitem');
 	}
 
 	/**
@@ -537,27 +543,28 @@ export default class FeedPage {
 	async deleteWI(tab: tabs, workitem: WI) {
 	  this.returnToHome();
 	  const alerts = new Alerts();
-	  const Util = new util();
+	  const util = new Util();
 	  const searchResult = await this.navigateToWi(tab, workitem);
 	  await t
 	    .expect(searchResult.exists).eql(true)
 	    .click(searchResult)
 	    .click(workitem.settingsGearBtn)
-	  // due to work items no longer having titles displayed on the view page you must change to the edit page first
+	  // due to work items no longer having titles displayed on
+	  // the view page you must change to the edit page first
 	    .click(workitem.settingsGearPanelEdit)
 	    .expect(workitem.wiTitle.visible)
 	    .eql(true)
-	    .expect(workitem.settingsGearBtn_edit.exists)
+	    .expect(workitem.settingsGearBtnEdit.exists)
 	    .eql(true)
-	    .click(workitem.settingsGearBtn_edit)
-	    .expect(workitem.settingsGearPanel_edit.exists)
+	    .click(workitem.settingsGearBtnEdit)
+	    .expect(workitem.settingsGearPanelEdit.exists)
 	    .eql(true)
-	    .expect(workitem.settingsGearPanelDelete_edit.exists)
+	    .expect(workitem.settingsGearPanelDeleteEdit.exists)
 	    .eql(true)
-	    .click(workitem.settingsGearPanelDelete_edit)
+	    .click(workitem.settingsGearPanelDeleteEdit)
 	    .expect(searchResult.exists)
 	    .eql(false);
-	  if (Util.Verbose) console.log('-- deleteWI: finished deleating WI --');
+	  if (util.Verbose) console.log('-- deleteWI: finished deleating WI --');
 	  await t.click(alerts.getGenericConfirmBtn);
 	  this.eventEmitter.emit('close');
 	}
@@ -568,7 +575,6 @@ export default class FeedPage {
 	 */
 	async openAWICreateMenuThenClose() {
 	  const alerts = new Alerts();
-	  const firstConversation = new Conversation(this.firstConversation);
 
 	  await t
 	    .expect(this.createButton.with({ visibilityCheck: true }).exists).ok('this should pass')
@@ -587,7 +593,6 @@ export default class FeedPage {
 
 	async openAWICreateMenu() {
 	  const alerts = new Alerts();
-	  const firstConversation = new Conversation(this.firstConversation);
 
 	  await t
 	    .expect(this.createButton.with({ visibilityCheck: true }).exists).ok('this should pass')
@@ -610,7 +615,6 @@ export default class FeedPage {
 
 	async closeAWIMenu() {
 	  const alerts = new Alerts();
-	  const firstConversation = new Conversation(this.firstConversation);
 	  await t
 	    .expect(alerts.getAWICreateBtn.visible).eql(true)
 	    .expect(alerts.getAWICancelBtn.visible).eql(true)

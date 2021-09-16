@@ -1,13 +1,8 @@
-import { Role } from 'testcafe';
-import util from '../../Utilities/util';
-import LoginPage from '../login-page';
-import ConfigurationManager from '../../Configuration/configuration';
+import Util from '../../Utilities/util';
 
-const configManager = new ConfigurationManager();
-const loginPage = new LoginPage();
-const Util = new util();
-Util.randChar(40);
-export default class activityObj {
+const util = new Util();
+util.randChar(40);
+export default class ActivityObj {
 /** @description the title of the activity */
 title: string;
 
@@ -34,8 +29,8 @@ groups: Array<string>;
  * @param num the number of random charectors to generate for pass and username
  */
 constructor(title = 'DefaultActivity', desc = 'defualtDesc', num = 5, endDate = '10/22/3000 12:00:00 AM') {
-  this.title = title + Util.randChar(num);
-  this.description = desc + Util.randChar(num);
+  this.title = title + util.randChar(num);
+  this.description = desc + util.randChar(num);
   // this.startDate = configManager.config.defaultData.user.organization;
   this.endDate = endDate;
 }

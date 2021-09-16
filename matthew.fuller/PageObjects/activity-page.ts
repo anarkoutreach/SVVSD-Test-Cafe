@@ -1,11 +1,11 @@
 import { Selector, t } from 'testcafe';
-import util from '../Utilities/util';
+import Util from '../Utilities/util';
 import FeedPage from './feed-page';
-import activityObj from './PageComponents/activityObj';
+import ActivityObj from './PageComponents/activityObj';
 import ConfigurationManager from '../Configuration/configuration';
 
 const feedPage = new FeedPage();
-const Util = new util();
+const util = new Util();
 const configManager = new ConfigurationManager();
 export default class ActivityPage {
 	editActivityMenuItem: Selector;
@@ -49,7 +49,8 @@ export default class ActivityPage {
 	}
 
 	/**
-	 * @description navigates to activity and then clicks edit button and expect the title exists and is visible to check the operation was successful
+	 * @description navigates to activity and then clicks edit button and expect the
+	 * title exists and is visible to check the operation was successful
 	 * @extends navigateToActivity
 	 * @returns null
 	 */
@@ -72,7 +73,7 @@ export default class ActivityPage {
 	 * @description navigate to activity creation and create a activity, returning the activity object
 	 * @returns activity object
 	 */
-	async createGenericAct(actObj = new activityObj()) {
+	async createGenericAct(actObj = new ActivityObj()) {
 	  await feedPage.openCreateMenu();
 	  await t
 	    .setNativeDialogHandler(() => true)
@@ -96,7 +97,7 @@ export default class ActivityPage {
 	  await t
 	    .expect(this.endDate.exists).eql(true)
 	    .click(this.endDate);
-	  await Util.CtlADelete(this.endDate);
+	  await util.CtlADelete(this.endDate);
 	  await t
 	    .typeText(this.endDate, date);
 	  return null;
@@ -144,10 +145,10 @@ export default class ActivityPage {
 	 * @param  use the testcafe selector attruibute to use to get the text of it
 	 * @returns
 	 */
-	async openActivityAndEdit(actObj:activityObj, field:Selector, text:string, fieldName:string, use = 'value') {
+	async openActivityAndEdit(actObj:ActivityObj, field:Selector, text:string, fieldName:string, use = 'value') {
 	  await this.openActivityInEditMode(actObj.title);
 	  await t.expect(field.exists).eql(true).expect(field.visible).eql(true);
-	  await Util.CtlADelete(field);
+	  await util.CtlADelete(field);
 	  const newTitle = text;
 	  await t.click(field).typeText(field, newTitle);
 	  await this.pressCreateBtn();
@@ -155,7 +156,9 @@ export default class ActivityPage {
 	  await feedPage.returnToHome();
 	  // returning to the activity will verify as this function will expect the name exists.
 	  await this.openActivityInEditMode(actObj.title);
-	  // but it will not cover if the field is not the title so we shouldnt rely on that. but none the less we need to be on the activity to check changes. and it will be easiest to do so in edit mode
+	  // but it will not cover if the field is not the title so we
+	  // shouldnt rely on that. but none the less we need to be on the
+	  // activity to check changes. and it will be easiest to do so in edit mode
 	  // as such here is a simple verification step
 	  await t.expect(field.visible).eql(true);
 	  const inntrText = await field[use];
@@ -163,13 +166,13 @@ export default class ActivityPage {
 	  // console.log("inner: "+test)
 	  // console.log("inner: "+inntrText)
 	  // console.log("text:" +text)
-	  const renderedText = field[use];
 	  /// set both to uppercase to account for differences
-	  await t.expect(test == text.toUpperCase()).eql(true);
+	  await t.expect(test === text.toUpperCase()).eql(true);
 	}
 
 	/**
-	 * @description press the create button of a activity and verify its creation by checking if activity title exists
+	 * @description press the create button of a activity and verify its creation by
+	 *  checking if activity title exists
 	 * @returns null
 	*/
 	async pressCreateBtn() {
@@ -182,15 +185,15 @@ export default class ActivityPage {
 	  return null;
 	}
 
-	async addGenericTitleAndDescription(useObj = false, obj = new activityObj()) {
+	async addGenericTitleAndDescription(useObj = false, obj = new ActivityObj()) {
 	  let title;
 	  let desc;
-	  if (useObj != false) {
+	  if (useObj !== false) {
 	    title = obj.title;
 	    desc = obj.description;
 	  } else {
-	    title += `GenericTitle${Util.randChar(25)}`;
-	    desc += `GenericDesc${Util.randChar(25)}`;
+	    title += `GenericTitle${util.randChar(25)}`;
+	    desc += `GenericDesc${util.randChar(25)}`;
 	  }
 
 	  await t
@@ -205,10 +208,12 @@ export default class ActivityPage {
 	}
 
 	/**
-	 * @description from the feed page click on an activity and navigate to it and verify it has navigated
+	 * @description from the feed page click on an activity and navigate
+	 * to it and verify it has navigated
 	 * @param name a string that represents the name to search for
 	 * @returns null
 	 */
+	// eslint-disable-next-line class-methods-use-this
 	async navigateToActivity(name:string) {
 	  feedPage.selectActivity(name);
 	  return null;

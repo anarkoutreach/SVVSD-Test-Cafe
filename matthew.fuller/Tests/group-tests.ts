@@ -6,6 +6,7 @@ import UserObj from '../PageObjects/PageComponents/userObj';
 import UserPage from '../PageObjects/user-page';
 import Alerts from '../PageObjects/Alerts';
 import GroupPage from '../PageObjects/group-page';
+// eslint-disable-next-line import/no-unresolved
 import GroupObj from '../PageObjects/PageComponents/GroupObj';
 import { tabs } from '../PageObjects/PageComponents/tabs';
 

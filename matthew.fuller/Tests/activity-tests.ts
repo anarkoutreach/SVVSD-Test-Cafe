@@ -54,7 +54,7 @@ test('[DEPRECATED] can navigate to test from feed page', async (t) => {
   await activities.navigateToActivity(titleAndDescription.title);
 }).skip;
 /** @description navigate to the edit mode of an activity */
-test('can navigate to edit activity', async (t) => {
+test('can navigate to edit activity', async () => {
   const obj = await activities.createGenericAct();
   await feedPage.returnToHome();
   await activities.openActivityInEditMode(obj.title);
@@ -68,7 +68,6 @@ test('can create an activity', async (t) => {
     .expect(Selector('#search-tab-tab-Content').exists).eql(true);
   await activities.addEndData();
   await activities.addNthGroup(0);
-  const tandd = await activities.addGenericTitleAndDescription();
   await activities.pressCreateBtn();
 });
 /** @deprecated replaced with cleaner test */
@@ -156,19 +155,23 @@ test('cannot create an activity without any info', async (t) => {
     .expect(Selector('span.error.createButtons.top.active').exists)
     .eql(true);
 });
-/** @description attempt to edit the title of an actiity by creating an activty then navigating back to it in edit mode */
-test('edit title of activity', async (t) => {
+/** @description attempt to edit the title of an actiity by creating an
+ *  activty then navigating back to it in edit mode */
+test('edit title of activity', async () => {
   await activities.createActivityAndEditField(activities.title, `title${util.randChar(20)}`, 'title');
 });
-/** @description attempt to edit the description of an actiity by creating an activty then navigating back to it in edit mode */
-test('edit description of activity', async (t) => {
+/** @description attempt to edit the description of an actiity by creating
+ * an activty then navigating back to it in edit mode */
+test('edit description of activity', async () => {
   await activities.createActivityAndEditField(activities.description, `description${util.randChar(20)}`, 'description');
 });
-/** @description attempt to edit the endDate of an actiity by creating an activty then navigating back to it in edit mode */
-test('edit endDate of activity', async (t) => {
+/** @description attempt to edit the endDate of an actiity by creating an
+ * activty then navigating back to it in edit mode */
+test('edit endDate of activity', async () => {
   await activities.createActivityAndEditField(activities.endDate, configManager.defaultEditedEndDate, 'endDate');
 });
-/** @description attempt to edit the startDate of an actiity by creating an activty then navigating back to it in edit mode */
-test('edit startDate of activity', async (t) => {
+/** @description attempt to edit the startDate of an actiity by creating
+ * an activty then navigating back to it in edit mode */
+test('edit startDate of activity', async () => {
   await activities.createActivityAndEditField(activities.startDate, configManager.defaultEditedStartDate, 'startDate');
 });
