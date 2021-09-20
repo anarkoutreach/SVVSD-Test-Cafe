@@ -3,6 +3,7 @@ import Util from '../Utilities/util';
 import FeedPage from './feed-page';
 import ActivityObj from './PageComponents/activityObj';
 import ConfigurationManager from '../Configuration/configuration';
+import { tabs } from './PageComponents/tabs';
 
 const feedPage = new FeedPage();
 const util = new Util();
@@ -20,6 +21,8 @@ export default class ActivityPage {
 
 	editBtn: Selector;
 
+	moreInfoSpan: Selector;
+
 	startDate: Selector;
 
 	endDate: Selector;
@@ -34,13 +37,20 @@ export default class ActivityPage {
 
 	groupsTab:Selector;
 
+	activitiesSearchBat: Selector;
+
 	constructor() {
+	  /**
+	   *  @description the button used on the search page to open the more options menu
+	   * ie: edit/delete */
+	  this.moreInfoSpan = Selector('span.fas.fa-ellipsis-h');
+	  this.activitiesSearchBat = Selector('input.searchBar.form-control');
 	  this.editActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(0);
 	  this.deleteActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(1);
 	  this.generateReportActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(2);
 	  this.calendarSelectionMenuDays = Selector('td.rdtDay');
-	  this.editBtn = Selector('div.glyphicon.glyphicon-cog');
-	  this.createBtn = Selector('button.create.btn.btn-success');
+	  this.editBtn = Selector('a.dropdown-item').withText('Edit');
+	  this.createBtn = Selector('button.createButtons-submit.btn.btn-primary');
 	  this.endDate = Selector('input.createEndDate');
 	  this.startDate = Selector('input.createStartDate');
 	  this.title = Selector('#paneHeaderTitle');
@@ -59,16 +69,33 @@ export default class ActivityPage {
 	async openActivityInEditMode(actName:string) {
 	  await this.navigateToActivity(actName);
 	  await t
-	    .expect(this.editBtn.exists).eql(true)
-	    .click(this.editBtn)
-	    .expect(this.editActivityMenuItem.visible)
+	    .expect(this.moreInfoSpan.exists).eql(true)
+	    .click(this.moreInfoSpan)
+	    .expect(this.editBtn.exists)
 	    .eql(true)
-	    .click(this.editActivityMenuItem)
+	    .click(this.editBtn)
 	    .expect(this.title.exists)
 	    .eql(true)
 	    .expect(this.title.visible)
 	    .eql(true);
 	  return null;
+	}
+
+	async clickCreateActivity() {
+	  await t
+	    .setNativeDialogHandler(() => true)
+	    .click(feedPage.createOptionsActivity)
+	    .expect(this.activitiesSearchBat.exists).eql(true);
+	}
+
+	/** @description in the activities creation menu click on to the calender and then select a day */
+	async clickOnDayInCurrentMonth(day:string) {
+	  await t
+	    .click(this.endDate);
+	  const date = await this.getSpecificDayInCalenderMenu(day);
+	  await t
+	  .expect(date.visible).ok('this should pass')
+	  .click(date);
 	}
 
 	/**
@@ -81,11 +108,9 @@ export default class ActivityPage {
 	    .setNativeDialogHandler(() => true)
 	    .click(feedPage.createOptionsActivity)
 	    .expect(Selector('input.searchBar.form-control').exists).eql(true);
-	  const date = await this.getSpecificDayInCalenderMenu('30');
-	  await t
-	  .click(this.endDate)
-	  .expect(date.visible).eql(true)
-	  .click(date);
+
+	  await this.clickOnDayInCurrentMonth('30');
+
 	  await this.addNthGroup(0);
 	  await this.addNthGroup(1);
 	  await this.addNthGroup(2);
@@ -110,7 +135,8 @@ export default class ActivityPage {
 	}
 
 	async getSpecificDayInCalenderMenu(day) {
-	  return this.calendarSelectionMenuDays.withText(day);
+	  // Selector('td.rdtDay').withAttribute('data-value', '30');
+	  return this.calendarSelectionMenuDays.withAttribute('data-value', day).filterVisible();
 	}
 
 	/**
@@ -190,7 +216,7 @@ export default class ActivityPage {
 	    .expect(this.createBtn.exists).eql(true)
 	    .click(this.createBtn)
 	    .wait(2000)
-	    .expect(Selector('#activityTitle').exists)
+	    .expect(Selector('div.appTitle').child('span').exists)
 	    .eql(true);
 	  return null;
 	}
@@ -225,7 +251,7 @@ export default class ActivityPage {
 	 */
 	// eslint-disable-next-line class-methods-use-this
 	async navigateToActivity(name:string) {
-	  feedPage.selectActivity(name);
+	  await feedPage.SearchFor(name, tabs.ACTIVITIES);
 	  return null;
 	}
 }

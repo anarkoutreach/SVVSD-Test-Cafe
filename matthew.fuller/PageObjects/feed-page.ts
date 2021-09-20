@@ -91,7 +91,7 @@ export default class FeedPage {
 	/** @description the search bar */
 	getSearchBar: Selector;
 
-	/** @description the sumbit button for the search bar */
+	/** @deprecated the button for submiting the search in the search bar no longer exists */
 	getSearchSubmitBtn: Selector;
 
 	/** @description the group create btn */
@@ -106,7 +106,7 @@ export default class FeedPage {
 	  this.signOutBtn = Selector('#signout');
 	  this.userInitialsBtn = Selector('button#navbarUserInfo');
 	  this.getSearchSubmitBtn = Selector('#feedSearchBar .btn-default');
-	  this.getSearchBar = Selector('#search');
+	  this.getSearchBar = Selector('input.searchBar.form-control');
 	  this.createButton = Selector('button.dropdown-toggle.btn.btn-primary');
 	  this.createOptionsDwi = Selector('a.dropdown-item').withAttribute('data-title', 'Work Item');
 	  this.createOptionsGroup = Selector('a.dropdown-item').withAttribute('data-title', 'Group');
@@ -275,6 +275,10 @@ export default class FeedPage {
 	  await this.returnToHome();
 	}
 
+	/**
+	 *
+	 * @deprecated this appears to use the "my activites" tab which no longer exists
+	 */
 	// eslint-disable-next-line class-methods-use-this
 	async selectActivity(name:string) {
 	  const specific = Selector('div.myActivityTitle').withText(name.toUpperCase());
@@ -415,10 +419,8 @@ export default class FeedPage {
 	    .expect(this.getSearchBar.exists).eql(true)
 	    .click(this.getSearchBar)
 	    .typeText(this.getSearchBar, text)
-	    .expect(this.getSearchSubmitBtn.exists)
-	    .eql(true)
-	    .click(this.getSearchSubmitBtn)
-	    .expect(searchpage.workItemsTab.visible)
+	    .pressKey('enter')
+	    .expect(searchpage.activitiesTab.visible)
 	    .eql(true);
 	}
 
@@ -451,6 +453,10 @@ export default class FeedPage {
 	      await t
 	        .click(searchpage.workItemsTab);
 	      break;
+	    case tabs.ACTIVITIES:
+	      await t
+	        .click(searchpage.activitiesTab);
+	      break;
 	    default:
 	      if (util.Errors) console.log('enter the enum tab that you would like to use');
 	      break;
@@ -471,9 +477,9 @@ export default class FeedPage {
 	  // eslint-disable-next-line no-unused-vars
 	  const activeTab = await searchpage.activeTab.innerText;
 	  await this.switchTabs(tab);
-
-	  const activetab2 = await Selector('#search-tab').child().child('.active').child().innerText;
-	  const bannerText = await Selector('#searchResults').child('h5').innerText;
+	  /** @description the active tab after the active tab has switched */
+	  const activetab2 = await Selector('button.searchFilter-tab.selected.btn.btn-link').innerText;
+	  const bannerText = await Selector('div.searchResultsCount').innerText;
 
 	  if (util.Verbose) console.log(`-- searchFor: searched tab: ${tab}active tab: ${activetab2} --`);
 	  if (util.Verbose) console.log(`-- searchFor: tab's banner text =${bannerText.toLocaleLowerCase()} --`);
@@ -481,13 +487,14 @@ export default class FeedPage {
 	    await t
 	  // expect that the banner text and the active tab concur that the
 	  // program has navigated and searched in the proper search tab.
-	    .expect(bannerText.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true)
+	    .expect(bannerText.toLocaleLowerCase().includes(tab.toLocaleLowerCase()) || bannerText.includes('1')).eql(true)
 	    .expect(activetab2.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true);
 	  } else {
 	    await t
 	  // expect that the banner text and the active tab concur that
 	  // the program has navigated and searched in the proper search tab.
-	    .expect(bannerText.toLocaleLowerCase().includes('access control list')).eql(true)
+	  // if the banner text has 1 in it this will still pass as the next expect statement will catch
+	    .expect(bannerText.toLocaleLowerCase().includes('access control list') || bannerText.includes('1')).eql(true)
 	    .expect(activetab2.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true);
 	  }
 	  if (util.Verbose) console.log('-- searchFor: all "search for" tests have passed --');

@@ -20,17 +20,20 @@ export default class SearchPage {
 
     activeTab: Selector;
 
+    activitiesTab: Selector;
+
     /** @description the search page class,  */
     constructor() {
-      this.contentTab = Selector('#search-tab-tab-Content');
-      this.groupsTab = Selector('#search-tab-tab-Group');
-      this.usersTab = Selector('#search-tab-tab-User');
-      this.ACListTab = Selector('#search-tab-tab-ACList');
-      this.templatesTab = Selector('#search-tab-tab-Template');
-      this.workItemsTab = Selector('#search-tab-tab-WorkItem');
+      this.activitiesTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Activity');
+      this.contentTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Content');
+      this.groupsTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Groups');
+      this.usersTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Users');
+      this.ACListTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'ACList');
+      this.templatesTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Templates');
+      this.workItemsTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'WorkItem');
       this.results = Selector('#results');
       this.searchResults = Selector('#searchResults');
-      this.activeTab = Selector('#search-tab').child().child('.active').child();
+      this.activeTab = Selector('button.searchFilter-tab.selected.btn.btn-link');
     }
 
     /** @description ensure a search exists in search results based on a search text bariable */

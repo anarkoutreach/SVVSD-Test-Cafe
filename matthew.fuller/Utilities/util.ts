@@ -1,16 +1,15 @@
+/* eslint-disable class-methods-use-this */
 import { Selector, t } from 'testcafe';
 /** @description a Utility class, used for various random functions, and logging variables */
 export default class Util {
-  /** @description the empty constructor a Utility class, used for various random functions, and logging variables */
-  constructor() {}
-
   // logging vars
   /** @description Wethor or not verbose logs should be loged */
   Verbose = false;
 
   /** @description Weathor or not Error logs should be loged
    *
-   * Note: this refers to errors that will not terminate the program and that i have marked "if(errors)log"
+   * Note: this refers to errors that will not terminate the program and that i
+   * have marked "if(errors)log"
    */
   Errors = true
 
@@ -22,11 +21,12 @@ export default class Util {
    * @param {number} length a number representing the length of the string
    * @returns string
    */
+  // eslint-disable-next-line class-methods-use-this
   randChar(length: number) {
     let result = '';
     const charlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charlength = charlist.length;
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i += 1) {
       result += charlist.charAt(Math.floor(Math.random() * charlength));
     }
     return result;
@@ -38,8 +38,7 @@ export default class Util {
    * @returns string
    */
   async randnum(length: number) {
-    let result: string;
-    result = await (Math.random() * length).toString();
+    const result = await (Math.random() * length).toString();
     return result;
   }
 
@@ -47,7 +46,9 @@ export default class Util {
     return new Promise((res) => setTimeout(res, ms));
   }
 
-  /** @description presses "Ctrl + A" then "delete" through testcafe @param {Selector} field the editable feild that should be cleared @returns null */
+  /**
+   * @description presses "Ctrl + A" then "delete" through testcafe
+   *  @param {Selector} field the editable feild that should be cleared @returns null */
   async CtlADelete(field: Selector) {
     await t
       .click(field)

@@ -60,15 +60,8 @@ test('can navigate to edit activity', async () => {
   await activities.openActivityInEditMode(obj.title);
 });
 /** @description can create an activity just that, thats it */
-test('can create an activity', async (t) => {
-  await feedPage.openCreateMenu();
-  await t
-    .setNativeDialogHandler(() => true)
-    .click(feedPage.createOptionsActivity)
-    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
-  await activities.addEndData();
-  await activities.addNthGroup(0);
-  await activities.pressCreateBtn();
+test('can create an activity', async () => {
+  await activities.createGenericAct();
 });
 /** @deprecated replaced with cleaner test */
 test('[DEPRECATED] can edit activity title ', async (t) => {
@@ -76,7 +69,7 @@ test('[DEPRECATED] can edit activity title ', async (t) => {
   await t
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
-    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+    .expect(Selector('input.searchBar.form-control').exists).eql(true);
   await activities.addEndData();
   await activities.addNthGroup(0);
   const tandd = await activities.addGenericTitleAndDescription();
@@ -98,13 +91,10 @@ test('[DEPRECATED] can edit activity title ', async (t) => {
   await activities.pressCreateBtn();
 }).skip;
 /** @description try to create an activity with multiple groups attached to it. */
-test('can create an activity with multiple groups', async (t) => {
+test('can create an activity with multiple groups', async () => {
   await feedPage.openCreateMenu();
-  await t
-    .setNativeDialogHandler(() => true)
-    .click(feedPage.createOptionsActivity)
-    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
-  await activities.addEndData();
+  await activities.clickCreateActivity();
+  await activities.clickOnDayInCurrentMonth('30');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
@@ -130,10 +120,7 @@ test('can create an activity with multiple groups', async (t) => {
  */
 test('cannot create an activity without a title or desc', async (t) => {
   await feedPage.openCreateMenu();
-  await t
-    .setNativeDialogHandler(() => true)
-    .click(feedPage.createOptionsActivity)
-    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+  await activities.clickCreateActivity();
   await activities.addNthGroup(0);
   await activities.addEndData();
   await t
@@ -145,10 +132,7 @@ test('cannot create an activity without a title or desc', async (t) => {
 /** @description attempt to create an activity without fillign any fields in */
 test('cannot create an activity without any info', async (t) => {
   await feedPage.openCreateMenu();
-  await t
-    .setNativeDialogHandler(() => true)
-    .click(feedPage.createOptionsActivity)
-    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+  await activities.clickCreateActivity();
   await t
     .expect(activities.createBtn.exists).eql(true)
     .click(activities.createBtn)

@@ -64,7 +64,7 @@ export default class Alerts {
       this.errorPopUp = Selector('span.error.createButtons');
       this.getGenericConfirmBtn = Selector('#okayConfirm');
       this.getGenericCancelBtn = Selector('#cancelConfirm');
-      this.getAnarkLogo = Selector('#navApp .navbar-brand');
+      this.getAnarkLogo = Selector('span.navbar-brand');
 
       // AWI/DWI
 
