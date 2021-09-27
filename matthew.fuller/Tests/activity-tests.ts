@@ -126,7 +126,7 @@ test('cannot create an activity without a title or desc', async (t) => {
   await t
     .expect(activities.createBtn.exists).eql(true)
     .click(activities.createBtn)
-    .expect(Selector('span.error.createButtons.top.active').exists)
+    .expect(Selector('span.error.manageactivitypage.title.active').exists)
     .eql(true);
 });
 /** @description attempt to create an activity without fillign any fields in */
@@ -136,7 +136,7 @@ test('cannot create an activity without any info', async (t) => {
   await t
     .expect(activities.createBtn.exists).eql(true)
     .click(activities.createBtn)
-    .expect(Selector('span.error.createButtons.top.active').exists)
+    .expect(Selector('span.error.manageactivitypage.title.active').visible)
     .eql(true);
 });
 /** @description attempt to edit the title of an actiity by creating an
@@ -150,12 +150,72 @@ test('edit description of activity', async () => {
   await activities.createActivityAndEditField(activities.description, `description${util.randChar(20)}`, 'description');
 });
 /** @description attempt to edit the endDate of an actiity by creating an
- * activty then navigating back to it in edit mode */
-test('edit endDate of activity', async () => {
+ * activty then navigating back to it in edit mode  and typing in the
+ * calender input field */
+test('edit endDate of activity by typing', async () => {
   await activities.createActivityAndEditField(activities.endDate, configManager.defaultEditedEndDate, 'endDate');
 });
 /** @description attempt to edit the startDate of an actiity by creating
- * an activty then navigating back to it in edit mode */
-test('edit startDate of activity', async () => {
+ * an activty then navigating back to it in edit mode and
+ *  typing in the calendar input field */
+test('edit startDate of activity by typing', async () => {
   await activities.createActivityAndEditField(activities.startDate, configManager.defaultEditedStartDate, 'startDate');
+});
+/** @description attempt to edit the endDate of an actiity by creating an
+ * activty then navigating back to it in edit mode  and clicking in the
+ * calender menu */
+test('edit endDate of activity by clicking', async () => {
+  await feedPage.openCreateMenu();
+  await activities.clickCreateActivity();
+  await activities.clickOnDayInCurrentMonth('30', 'start');
+  await activities.addNthGroup(0);
+  await activities.addNthGroup(1);
+  await activities.addNthGroup(2);
+  await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
+});
+/** @description attempt to edit the startDate of an actiity by creating
+ * an activty then navigating back to it in edit mode and
+ *  clicking in the calendar menu */
+test('edit startDate of activity by clicking', async () => {
+  await feedPage.openCreateMenu();
+  await activities.clickCreateActivity();
+  await activities.clickOnDayInCurrentMonth('30', 'start');
+  await activities.addNthGroup(0);
+  await activities.addNthGroup(1);
+  await activities.addNthGroup(2);
+  await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
+});
+
+/** @description use the calendar wigit's month arrows */
+test('test calendar wigit month forward arrow', async () => {
+  await feedPage.openCreateMenu();
+  await activities.clickCreateActivity();
+  await activities.clickOnDayInCurrentMonth('30', 'start');
+  await activities.clickToNextMonth();
+  await activities.clickOnDayInCurrentMonth('30', 'start');
+
+  await activities.addNthGroup(0);
+  await activities.addNthGroup(1);
+  await activities.addNthGroup(2);
+  await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
+});
+
+/** @description use the calendar wigit's forward and backwards month arrows */
+test('test calendar wigit month all arrows', async () => {
+  await feedPage.openCreateMenu();
+  await activities.clickCreateActivity();
+  await activities.clickOnDayInCurrentMonth('30', 'start');
+  for (let index = 0; index < 10; index += 1) {
+    await activities.clickToNextMonth();
+  }
+  await activities.clickToPreviousMonth();
+  await activities.clickOnDayInCurrentMonth('30', 'start');
+  await activities.addNthGroup(0);
+  await activities.addNthGroup(1);
+  await activities.addNthGroup(2);
+  await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
 });
