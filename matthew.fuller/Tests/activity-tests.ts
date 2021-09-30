@@ -195,7 +195,6 @@ test('test calendar wigit month forward arrow', async () => {
   await activities.clickOnDayInCurrentMonth('30', 'start');
   await activities.clickToNextMonth();
   await activities.clickOnDayInCurrentMonth('30', 'start');
-
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
@@ -207,11 +206,16 @@ test('test calendar wigit month forward arrow', async () => {
 test('test calendar wigit month all arrows', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('30', 'start');
+  await activities.clickOnDayInCurrentMonth('30', 'end');
   for (let index = 0; index < 10; index += 1) {
     await activities.clickToNextMonth();
   }
   await activities.clickToPreviousMonth();
+  await activities.clickOnDayInCurrentMonth('30', 'end');
+  await activities.clickOnDayInCurrentMonth('30', 'start');
+  for (let index = 0; index < 10; index += 1) {
+    await activities.clickToPreviousMonth();
+  }
   await activities.clickOnDayInCurrentMonth('30', 'start');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);

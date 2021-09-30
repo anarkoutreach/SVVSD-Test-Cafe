@@ -10,6 +10,7 @@ fixture`Log in to MBEweb`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
 
   await t
+    .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
 });
 const util = new Util();

@@ -62,8 +62,8 @@ export default class Alerts {
     constructor() {
       this.WIDuplicateError = Selector('span.error.processStepTitleInlineError.active');
       this.errorPopUp = Selector('span.error.createButtons');
-      this.getGenericConfirmBtn = Selector('#okayConfirm');
-      this.getGenericCancelBtn = Selector('#cancelConfirm');
+      this.getGenericConfirmBtn = Selector('button.createButtons-submit.btn.btn-primary');
+      this.getGenericCancelBtn = Selector('button.createButtons-cancel.btn.btn-default');
       this.getAnarkLogo = Selector('span.navbar-brand');
 
       // AWI/DWI
