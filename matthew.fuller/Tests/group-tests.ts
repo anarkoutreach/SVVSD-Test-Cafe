@@ -18,6 +18,7 @@ const configManager = new ConfigurationManager();
 fixture`group tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   await t
+    .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
 });
 /** test if the group creation tab can be opened by attempting to open it,

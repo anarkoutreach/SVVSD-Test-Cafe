@@ -1,14 +1,19 @@
 import { t, Selector } from 'testcafe';
 import Comment from './comment';
 import Alerts from '../Alerts';
+import SharedElements from '../sharedElements';
 
+const sharedElements = new SharedElements();
 export default class Conversation {
     userInitialsIcon: Selector;
 
+    /** @description the first conversation on the current page */
     firstConversation: Selector;
 
+    /** @description the button to open the comment creation menu */
     addCommentBtn: any;
 
+    /** @description the cancel button */
     getCancelBtn: any;
 
     addCommentSubmitBtn: Selector;
@@ -28,8 +33,8 @@ export default class Conversation {
     constructor(selector: Selector) {
       this.self = selector;
       this.addCommentBtn = Selector('button.addCommentButton');
-      this.getCancelBtn = Selector('button.cancel.btn.btn-default');
-      this.addCommentSubmitBtn = Selector('button.update.btn.btn-primary');
+      this.getCancelBtn = sharedElements.genericCancelButton;
+      this.addCommentSubmitBtn = sharedElements.genericUpdateBtn;
       this.addCommentInput = Selector('#new-comment');
       this.addCommentCamera = Selector('.newCommentCameraContainer');
       this.addCommentCapture = Selector('fade.in #captureOption');

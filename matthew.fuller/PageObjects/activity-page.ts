@@ -5,7 +5,9 @@ import ActivityObj from './PageComponents/activityObj';
 import ConfigurationManager from '../Configuration/configuration';
 import { tabs } from './PageComponents/tabs';
 import months from './PageComponents/months';
+import SharedElements from './sharedElements';
 
+const sharedElements = new SharedElements();
 const feedPage = new FeedPage();
 const util = new Util();
 const configManager = new ConfigurationManager();
@@ -60,7 +62,7 @@ export default class ActivityPage {
 	  this.generateReportActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(2);
 	  this.calendarSelectionMenuDays = Selector('td.rdtDay');
 	  this.editBtn = Selector('a.dropdown-item').withText('Edit');
-	  this.createBtn = Selector('button.createButtons-submit.btn.btn-primary');
+	  this.createBtn = sharedElements.genericConfimButton;
 	  this.endDate = Selector('input.createEndDate');
 	  this.startDate = Selector('input.createStartDate');
 	  this.title = Selector('#paneHeaderTitle');

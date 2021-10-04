@@ -8,8 +8,8 @@ import Util from '../Utilities/util';
 const util = new Util();
 const feedPage = new FeedPage();
 const activities = new ActivityPage();
-
 const configManager = new ConfigurationManager();
+
 fixture`activity tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   // the below is a scuffed method of allowing multiple users to run the same tests

@@ -1,6 +1,7 @@
 import { Selector, t } from 'testcafe';
 import Util from '../Utilities/util';
 import WI from './WI';
+
 /** @description the class used to represent alerts accross MBE web */
 export default class Alerts {
     /** @description the generic, and most common Comfirm Btn accross MBE web */
@@ -61,9 +62,9 @@ export default class Alerts {
     /** @description the consturctor class used to represent alerts accross MBE web */
     constructor() {
       this.WIDuplicateError = Selector('span.error.processStepTitleInlineError.active');
-      this.errorPopUp = Selector('span.error.createButtons');
-      this.getGenericConfirmBtn = Selector('button.createButtons-submit.btn.btn-primary');
-      this.getGenericCancelBtn = Selector('button.createButtons-cancel.btn.btn-default');
+      this.errorPopUp = Selector('span.error');
+      this.getGenericConfirmBtn = Selector('button.btn').filter('.createButtons-submit');
+      this.getGenericCancelBtn = Selector('button.btn').filter('.createButtons-cancel');
       this.getAnarkLogo = Selector('span.navbar-brand');
 
       // AWI/DWI

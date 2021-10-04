@@ -2,7 +2,9 @@
 import { Selector, t } from 'testcafe';
 import FeedPage from './feed-page';
 import GroupObj from './PageComponents/groupObj';
+import SharedElements from './sharedElements';
 
+const sharedElements = new SharedElements();
 const feedpage = new FeedPage();
 
 export default class GroupPage {
@@ -38,11 +40,11 @@ export default class GroupPage {
 	constructor() {
 	  this.descriptionOnEndScreen = Selector('div#infoSide').child('p').child(1);
 	  this.titleOnEndScreen = Selector('div#groupTitle').child('span');
-	  this.usersAddList = Selector('button.addButton.btn.btn-primary');
+	  this.usersAddList = Selector(sharedElements.genericItemPrimaryBtn);
 	  this.title = Selector('textarea#paneHeaderTitle');
 	  this.description = Selector('textarea#paneHeaderDesc');
-	  this.createBtn = Selector('button.create.btn.btn-success');
-	  this.cancelBtn = Selector('button.cancelCreate.btn.btn-warning');
+	  this.createBtn = sharedElements.genericCreateBtn;
+	  this.cancelBtn = sharedElements.CreateCancelButton;
 	  this.settingsCogBtn = Selector('div.glyphicon.glyphicon-cog');
 	  this.settingsList = Selector('#groupSettings').sibling('ul').child('li');
 	}
@@ -154,7 +156,7 @@ export default class GroupPage {
 	  });
 	  }
 
-	  const error = Selector('span.error.createButtons.active');
+	  const error = sharedElements.alerts.errorPopUp;
 	  if (click) {
 	    await t.expect(this.createBtn.exists).eql(true).click(this.createBtn);
 	    if (obj.title == null || obj.description || obj.users.length === 0) {

@@ -9,7 +9,9 @@ import SearchPage from './search-page';
 import Util from '../Utilities/util';
 import UserPage from './user-page';
 import userObj from './PageComponents/userObj';
+import SharedElements from './sharedElements';
 
+const sharedElements = new SharedElements();
 // using this event system, creating massive stress tests on WI items is speed up by a ton,
 // as this ensures data for the WI persists even through new WI objects being created if
 // it needs to,
