@@ -32,6 +32,12 @@ export default class SharedElements {
     /** @description a class for alerts accross MBEweb */
     alerts: Alerts;
 
+    /** @description the title of objects on the website that are refered to as apps */
+    appTitle: Selector;
+
+    /** @description the generic search bar for WBEweb */
+    searchbar: Selector;
+
     constructor() {
       this.alerts = new Alerts();
       this.anarkLogo = Selector('span.navbar-brand');
@@ -42,6 +48,8 @@ export default class SharedElements {
       this.genericCancelButton = Selector('button.cancel.btn.btn-default');
       this.CreateCancelButton = this.genericBtn.filter('.createButtons-cancel');
       this.genericCreateBtn = this.genericBtn.filter('.createButtons-submit');
+      this.appTitle = Selector('div.appTitle');
+      this.searchbar = Selector('input.searchBar');
     }
 
     async findCancelBtn() {

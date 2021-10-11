@@ -1,8 +1,9 @@
 import { Selector, t } from 'testcafe';
 import UserObj from './PageComponents/userObj';
 import FeedPage from './feed-page';
+import SharedElements from './sharedElements';
 /** @description A class represnting the "feedpage" on MBE-web */
-
+const sharedElements = new SharedElements();
 export default class UserPage {
 	/** @description the input representing the name field in the user create page */
 	nameField: Selector;
@@ -44,15 +45,15 @@ export default class UserPage {
 	  this.nameField = Selector('input#formHorizontalName');
 	  this.emailField = Selector('input#formHorizontalEmail');
 	  this.titleField = Selector('input#formHorizontalTitle');
-	  this.OrganizationField = Selector('input#formHorizontalOrg');
+	  this.OrganizationField = Selector('div').withText('organization');
 	  this.DepartmentField = Selector('input#formHorizontalDept');
 	  this.LoginIdField = Selector('input#formHorizontalUsername');
 	  this.PasswordField = Selector('input#formHorizontalPwd');
-	  this.SiteField = Selector('#formHorizontalSite');
+	  this.SiteField = Selector('div').withText('site');
 	  this.RolesField = Selector('#formHorizontalRoles');
-	  this.ACListsField = Selector('#formHorizontalLists');
-	  this.createBtn = Selector('button#submit');
-	  this.cancelBtn = Selector('button#cancel');
+	  this.ACListsField = Selector('div').withText('AC');
+	  this.createBtn = sharedElements.genericCreateBtn;
+	  this.cancelBtn = sharedElements.CreateCancelButton;
 	}
 
 	/**

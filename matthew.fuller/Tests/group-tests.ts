@@ -45,10 +45,12 @@ test('cannot create group without desc', async () => {
   obj.users.push(0);
   await groupPage.createGroupFromGroupObj(obj);
 });
+
 /** A generic test that tests if a normal group can be created */
 test('can create group', async () => {
   await groupPage.createGenericGroup();
 });
+
 /** @description chek if the cancel button on the group page works properly */
 test('can cancel group creation', async (t) => {
   await groupPage.navigateToGroupCreationPage();
@@ -60,7 +62,6 @@ test('can cancel group creation', async (t) => {
 });
 /** Check if the cancel button still works if information has been filled out already */
 test('can cancel group creation with all info filled', async (t) => {
-  await groupPage.navigateToGroupCreationPage();
   await groupPage.createGenericGroup(false);
   await t
     .expect(groupPage.cancelBtn.exists).eql(true)
@@ -70,7 +71,6 @@ test('can cancel group creation with all info filled', async (t) => {
 });
 /** Check if a user can be found though searching and then added to the group */
 test('can search for and add user', async () => {
-  await groupPage.navigateToGroupCreationPage();
   await groupPage.createGenericGroup(false);
   await groupPage.addUserByName('HIPPO4ZFL0Y');
   await groupPage.clickCreateBtn();
@@ -81,7 +81,6 @@ test('create user and add to group', async () => {
   const user = new UserObj();
   await userPage.fillAllFields(user);
   await userPage.pressCreateBtn();
-  await groupPage.navigateToGroupCreationPage();
   const obj = new GroupObj();
   await groupPage.createGroupFromGroupObj(obj);
   await groupPage.addUserByName(user.name);
@@ -93,7 +92,6 @@ test('create user and add to group searching by email', async () => {
   const user = new UserObj();
   await userPage.fillAllFields(user);
   await userPage.pressCreateBtn();
-  await groupPage.navigateToGroupCreationPage();
   const obj = new GroupObj();
   await groupPage.createGroupFromGroupObj(obj);
   await groupPage.addUserByName(user.name, user.email);
@@ -106,7 +104,6 @@ test('create user and add to group seraching by login id', async () => {
   const user = new UserObj();
   await userPage.fillAllFields(user);
   await userPage.pressCreateBtn();
-  await groupPage.navigateToGroupCreationPage();
   const obj = new GroupObj();
   await groupPage.createGroupFromGroupObj(obj);
   await groupPage.addUserByName(user.name, user.loginId);

@@ -11,6 +11,9 @@ export default class GroupPage {
   /** @description the list of add buttons associated with adding users */
 	usersAddList: Selector;
 
+	/** @description the list of user info in the saerch field */
+	usersList: Selector;
+
 	/** @description the title text area */
 	title: Selector;
 
@@ -38,8 +41,9 @@ export default class GroupPage {
 
 	/** @description initalise the group page class */
 	constructor() {
+	  this.usersList = Selector('article.search-result');
 	  this.descriptionOnEndScreen = Selector('div#infoSide').child('p').child(1);
-	  this.titleOnEndScreen = Selector('div#groupTitle').child('span');
+	  this.titleOnEndScreen = sharedElements.appTitle;
 	  this.usersAddList = Selector(sharedElements.genericItemPrimaryBtn);
 	  this.title = Selector('textarea#paneHeaderTitle');
 	  this.description = Selector('textarea#paneHeaderDesc');
@@ -92,7 +96,7 @@ export default class GroupPage {
 	    query = name;
 	  }
 	  const count = await this.usersAddList.count;
-	  const search = Selector('input#query');
+	  const search = sharedElements.searchbar;
 	  await t
 	    .expect(search.exists).eql(true)
 	    .click(search)
@@ -101,13 +105,16 @@ export default class GroupPage {
 	    .eql(true)
 	    .pressKey('enter');
 	  for (let i = 0; i < count; i += 1) {
-	    const element = this.usersAddList.nth(i);
-	    const userName = await element.parent('div').sibling('article').child('div.searchItemInfo').child('span').innerText;
-	    const isUser = name.toUpperCase() === userName;
-	    if (isUser) {
+	    const element = this.usersList.nth(i);
+	    const userName = await element.find('span.searchItemName').innerText;
+	    console.log(userName);
+	    console.log(name.toUpperCase());
+	    const isUser = (name === userName);
+	    console.log(isUser);
+	    if (isUser === true) {
 	      await t
-	        .expect(element.exists).eql(true)
-	        .click(element);
+	        .expect(this.usersAddList.nth(i).exists).eql(true)
+	        .click(this.usersAddList.nth(i));
 	      i = Infinity;
 	    }
 	  }
@@ -181,10 +188,31 @@ export default class GroupPage {
 	 * @description add the n'th user in the list of users to a group while in creation or editing
 	 * @param n the number var
 	 */
-	async addNthUserToGroup(n) {
-	  const nthObj = this.usersAddList.nth(n);
-	  await t
-	    .expect(nthObj.exists).eql(true)
-	    .click(nthObj);
+	async addNthUserToGroup(n: number, exact = false) {
+	  if (exact === true) {
+	    const nthObj = this.usersAddList.nth(n);
+	    const nthUserInfo = this.usersList.nth(n);
+	    if (await nthUserInfo.find('span.inactive').exists === false) {
+	      await t
+	        .expect(nthObj.exists).eql(true)
+	        .click(nthObj);
+	      return true;
+	    }
+	    return false;
+	  }
+	  await this.addNearestUser(n);
+	  return true;
+	}
+
+	/**
+	 * @description add nearest active user to nth
+	 * @param n the number to find
+	 */
+	async addNearestUser(n) {
+	  let result = false;
+	  while (result !== true) {
+	    result = await this.addNthUserToGroup(n, true);
+	    n += 1;
+	  }
 	}
 }
