@@ -31,6 +31,7 @@ fixture`Login`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
 
   await t
+    .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
 });
 // test is the title is present in the view mode of the workitem
@@ -134,6 +135,7 @@ fixture`WI test initalisation`.page(configManager.homePage).beforeEach(async (t)
   t.ctx.user = mattUser;
 
   await t
+    .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
   await feedPage.createWI(DefaultWorkItem);
   await feedPage.returnToHome();
@@ -546,6 +548,7 @@ fixture`tests that most likly will not fail`.page(configManager.homePage).before
   t.ctx.user = mattUser;
 
   await t
+    .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
 
   await feedPage.createWI(DefaultWorkItem);

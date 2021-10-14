@@ -9,6 +9,7 @@ import SearchPage from './search-page';
 import Util from '../Utilities/util';
 import UserPage from './user-page';
 import userObj from './PageComponents/userObj';
+import SharedElements from './sharedElements';
 
 // using this event system, creating massive stress tests on WI items is speed up by a ton,
 // as this ensures data for the WI persists even through new WI objects being created if
@@ -103,18 +104,19 @@ export default class FeedPage {
 	eventEmitter = new MyClass();
 
 	constructor() {
+	  const sharedElements = new SharedElements();
 	  this.createOptionsActivity = Selector('a.dropdown-item').withAttribute('data-title', 'Activity');
 	  this.userInfoBox = Selector('#userBoxRoles');
-	  this.userNameField = this.userInfoBox.child('p').nth(0);
+	  this.userNameField = Selector('p.MBEWebNavbar-usermenuname');
 	  this.signOutBtn = Selector('#signout');
 	  this.userInitialsBtn = Selector('button#navbarUserInfo');
 	  this.getSearchSubmitBtn = Selector('#feedSearchBar .btn-default');
 	  this.getSearchBar = Selector('input.searchBar.form-control');
-	  this.createButton = Selector('button.dropdown-toggle.btn.btn-primary');
+	  this.createButton = sharedElements.feedPageBtn;
 	  this.createOptionsDwi = Selector('a.dropdown-item').withAttribute('data-title', 'Work Item');
 	  this.createOptionsGroup = Selector('a.dropdown-item').withAttribute('data-title', 'Group');
 	  this.createOptionsUser = Selector('a.dropdown-item').withAttribute('data-title', 'User');
-	  this.userInitialsIcon = Selector('#navbarUserInfo .initials');
+	  this.userInitialsIcon = sharedElements.userIcon;
 	  this.firstConversation = Selector('.newsItem[data-name]');
 	  this.firstAddCommentBtn = this.firstConversation.find('.addCommentButton');
 	  this.firstAddCommentSubmitBtn = this.firstConversation.find('#modifyButtons .btn-primary');
@@ -149,6 +151,11 @@ export default class FeedPage {
 	  await t.expect(
 		  await (await this.getUsername()).toLowerCase(),
 	  ).eql(await user.name.toLowerCase());
+	  const sharedElements = new SharedElements();
+	  await t
+	  .setNativeDialogHandler(() => true)
+	  .expect(sharedElements.dropDownAccount.visible).eql(true)
+	  .click(sharedElements.dropDownAccount);
 	  user.roles.forEach(async (role) => {
 	    await t.expect((await this.getAllUserInfo()).includes(await role.toLowerCase()));
 	  });
@@ -166,6 +173,10 @@ export default class FeedPage {
 
 	/** @returns the username field innertext */
 	async getUsername() {
+	  const sharedElements = new SharedElements();
+	  await t
+	  	.expect(sharedElements.userIcon.visible).eql(true)
+	    .click(sharedElements.userIcon);
 	  return this.userNameField.innerText;
 	}
 

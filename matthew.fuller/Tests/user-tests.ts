@@ -13,7 +13,9 @@ const configManager = new ConfigurationManager();
 const feedPage = new FeedPage();
 fixture`Login -> Navigate to new user page`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
-  await t.useRole(t.ctx.user.role);
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
   await feedPage.navigateToCreateNewUser();
 }).afterEach(async () => {
 
@@ -34,7 +36,9 @@ test('can create and login to new user', async (t) => {
   const user = new UserObj();
   await userPage.fillAllFields(user);
   await userPage.pressCreateBtn();
-  await t.useRole(user.user.role);
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(user.user.role);
   await feedPage.verifyUserAndRoles(user);
 });
 // test if a duplicate user can be created by creating a user, then trying to create it again

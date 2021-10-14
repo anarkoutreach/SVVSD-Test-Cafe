@@ -7,9 +7,11 @@ import userObj from '../../PageObjects/PageComponents/userObj';
 
 const feedPage = new FeedPage();
 const configManager = new ConfigurationManager();
-fixture`Login -> Navigate to new user page`.page(configManager.homePage).beforeEach(async (t) => {
+fixture`scuffed multi user tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
-  await t.useRole(t.ctx.user.role);
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
   await feedPage.navigateToCreateNewUser();
 }).afterEach(async () => {
 

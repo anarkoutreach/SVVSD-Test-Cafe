@@ -47,12 +47,22 @@ export default class SharedElements {
     /** @description the drop down edit button (should be the same accross most of the website) */
     dropDownEdit: Selector;
 
+    /** @description the drop down account button
+     *  (should be the same accross most of the website) */
+    dropDownAccount: Selector;
+
     /** @description the drop down add to favorite button
      * (should be the same accross most of the website) */
     dropDownFavorite: Selector;
 
     /** @description generic elpipisis */
     ellipsis: Selector;
+
+    /** @description the user icon at the top right of the page */
+    userIcon: Selector;
+
+    /** @description feed page btn */
+    feedPageBtn: Selector;
 
     constructor() {
       this.alerts = new Alerts();
@@ -67,11 +77,16 @@ export default class SharedElements {
       this.appTitle = Selector('div.appTitle');
       this.searchbar = Selector('input.searchBar');
       this.genericCog = Selector('span.fas.fa-cog');
+
       // case insensitive .withtext
       this.dropDownDelete = Selector('a').withText(/delete/gi);
       this.dropDownEdit = Selector('a').withText(/edit/gi);
       this.dropDownFavorite = Selector('a').withText(/favorite/gi);
+      this.dropDownAccount = Selector('a').withText(/account/gi);
+
       this.ellipsis = Selector('span.fa-ellipsis-h');
+      this.userIcon = Selector('#navbarUserInfo').find('.initials');
+      this.feedPageBtn = Selector('span.MenuList-icon.fas.fa-plus-circle');
     }
 
     async findCancelBtn() {

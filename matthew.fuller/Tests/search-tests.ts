@@ -11,6 +11,7 @@ const searchPage = new SearchPage();
 fixture`search tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   await t
+    .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
 });
 /** @description navigate to search tab from feed page by
