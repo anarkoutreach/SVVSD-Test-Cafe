@@ -9,6 +9,9 @@ import SearchPage from './search-page';
 import Util from '../Utilities/util';
 import UserPage from './user-page';
 import userObj from './PageComponents/userObj';
+import ActivityObj from './PageComponents/activityObj';
+import ActivityPage from './activity-page';
+import SharedElements from './sharedElements';
 
 // using this event system, creating massive stress tests on WI items is speed up by a ton,
 // as this ensures data for the WI persists even through new WI objects being created if
@@ -97,9 +100,13 @@ export default class FeedPage {
 	/** @description the group create btn */
 	createOptionsGroup: Selector;
 
+	/** @description the generic cog btn */
+	cogBtn: Selector;
+
 	eventEmitter = new MyClass();
 
 	constructor() {
+	  const sharedElement = new SharedElements();
 	  this.createOptionsActivity = Selector('a.dropdown-item').withAttribute('data-title', 'Activity');
 	  this.userInfoBox = Selector('#userBoxRoles');
 	  this.userNameField = this.userInfoBox.child('p').nth(0);
@@ -120,6 +127,26 @@ export default class FeedPage {
 	  this.addCommentCamera = Selector('[data-name="ahsmzdfhn"] .newCommentCameraContainer');
 	  this.addCommentCapture = Selector('[data-name="ahsmzdfhn"] .fade.in #captureOption');
 	  this.commentsTextArea = Selector('#comments');
+	  this.cogBtn = sharedElement.genericCog;
+	}
+
+	/**
+	 * @description delete an activity using an activity object
+	 * @param obj activity object to delete
+	 */
+	async deleteActivity(obj: ActivityObj) {
+	  const sharedElement = new SharedElements();
+	  const activityPage = new ActivityPage();
+	  activityPage.navigateToActivity(obj.title);
+	  await t
+	  .expect(this.cogBtn.visible).eql(true)
+	  .click(this.cogBtn)
+	  .expect(sharedElement.dropDownDelete.visible)
+	  .eql(true)
+	  .click(sharedElement.dropDownDelete)
+	  .expect(sharedElement.genericCreateBtn.visible)
+	  .eql(true)
+	  .click(sharedElement.genericCreateBtn);
 	}
 
 	/**

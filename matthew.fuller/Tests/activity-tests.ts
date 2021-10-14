@@ -9,7 +9,7 @@ const util = new Util();
 const feedPage = new FeedPage();
 const activities = new ActivityPage();
 const configManager = new ConfigurationManager();
-
+let activityToDelete;
 fixture`activity tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   // the below is a scuffed method of allowing multiple users to run the same tests
@@ -26,6 +26,11 @@ fixture`activity tests`.page(configManager.homePage).beforeEach(async (t) => {
   await t
     .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
+}).afterEach(async () => {
+  await feedPage.returnToHome();
+  if (activityToDelete) {
+    await feedPage.deleteActivity(activityToDelete);
+  }
 });
 
 /** @description open the activity creation menu from the home page */
@@ -61,7 +66,7 @@ test('can navigate to edit activity', async () => {
 });
 /** @description can create an activity just that, thats it */
 test('can create an activity', async () => {
-  await activities.createGenericAct();
+  activityToDelete = await activities.createGenericAct();
 });
 /** @deprecated replaced with cleaner test */
 test('[DEPRECATED] can edit activity title ', async (t) => {

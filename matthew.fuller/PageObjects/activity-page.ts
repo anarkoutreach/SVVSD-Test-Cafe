@@ -62,7 +62,7 @@ export default class ActivityPage {
 	  this.generateReportActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(2);
 	  this.calendarSelectionMenuDays = Selector('td.rdtDay');
 	  this.editBtn = Selector('a.dropdown-item').withText('Edit');
-	  this.createBtn = sharedElements.genericConfimButton;
+	  this.createBtn = sharedElements.genericCreateBtn;
 	  this.endDate = Selector('input.createEndDate');
 	  this.startDate = Selector('input.createStartDate');
 	  this.title = Selector('#paneHeaderTitle');

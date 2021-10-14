@@ -38,6 +38,12 @@ export default class SharedElements {
     /** @description the generic search bar for WBEweb */
     searchbar: Selector;
 
+    /** @description the generic selector that will select most cog icons accrsos the website. */
+    genericCog: Selector;
+
+    /** @description the drop down delete button (should be the same accross most of the website) */
+    dropDownDelete: Selector;
+
     constructor() {
       this.alerts = new Alerts();
       this.anarkLogo = Selector('span.navbar-brand');
@@ -50,6 +56,8 @@ export default class SharedElements {
       this.genericCreateBtn = this.genericBtn.filter('.createButtons-submit');
       this.appTitle = Selector('div.appTitle');
       this.searchbar = Selector('input.searchBar');
+      this.genericCog = Selector('span.fas.fa-cog');
+      this.dropDownDelete = Selector('a').withText('delete');
     }
 
     async findCancelBtn() {
@@ -59,5 +67,18 @@ export default class SharedElements {
         return (this.CreateCancelButton);
       }
       return (this.genericBtn.filter('.cancel'));
+    }
+
+    async findConfirmBtn() {
+      if (this.genericUpdateBtn.visible) {
+        return (this.genericUpdateBtn);
+      } if (this.genericConfimButton.visible) {
+        return (this.genericConfimButton);
+      } if (this.genericCreateBtn.visible) {
+        return (this.genericCreateBtn);
+      } if (this.genericBtn.filter('.confirm').visible) {
+        return (this.genericBtn.filter('.confirm'));
+      }
+      return (this.genericBtn);
     }
 }
