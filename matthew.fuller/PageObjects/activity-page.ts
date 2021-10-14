@@ -24,6 +24,7 @@ export default class ActivityPage {
 
 	editBtn: Selector;
 
+	/** @description the ellipsis on the search page to open more options */
 	moreInfoSpan: Selector;
 
 	startDate: Selector;
@@ -48,11 +49,13 @@ export default class ActivityPage {
 
 	calendarMonthBtn: Selector;
 
+	cogBtn: Selector;
+
 	constructor() {
 	  /**
 	   *  @description the button used on the search page to open the more options menu
 	   * ie: edit/delete */
-	  this.moreInfoSpan = Selector('span.fas.fa-ellipsis-h');
+	  this.moreInfoSpan = sharedElements.ellipsis;
 	  this.calendarMonthBtn = Selector('th.rdtSwitch');
 	  this.calendarNextBtn = Selector('th.rdtNext');
 	  this.calendarBackBtn = Selector('th.rdtPrev');
@@ -70,7 +73,41 @@ export default class ActivityPage {
 	  this.contentItemTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Content');
 	  this.usersTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'User');
 	  this.groupsTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Group');
+	  this.cogBtn = sharedElements.genericCog;
 	}
+
+	/**
+	 * @description delete an activity using an activity object.
+	 * navigate from home page to an activity and delete it.
+	 * @param obj activity object to delete
+	 * @param enter weather to click on the activity and delete from the cog gear button
+	 * if left blank activity will be deleted from main page
+	 */
+	 async deleteActivity(obj: ActivityObj, enter = false) {
+	  const sharedElement = new SharedElements();
+	  const activityPage = new ActivityPage();
+	  if (enter) {
+	  await activityPage.navigateToActivity(obj.title, true);
+	  await t
+	    .expect(this.cogBtn.visible).eql(true)
+	    .click(this.cogBtn);
+	  } else {
+	    await activityPage.navigateToActivity(obj.title);
+	    await t
+	      .expect(sharedElement.ellipsis.visible).eql(true)
+	      .click(sharedElement.ellipsis);
+	  }
+	  await t
+	  .expect(sharedElement.dropDownDelete.visible)
+	    .eql(true)
+	    .click(sharedElement.dropDownDelete)
+	    .expect(sharedElement.genericCreateBtn.visible)
+	    .eql(true)
+	    .click(sharedElement.genericCreateBtn);
+	  await activityPage.navigateToActivity(obj.title);
+	  const result = await feedPage.findSearchResult(obj.title, tabs.ACTIVITIES, true);
+	  await t.expect(result).eql(null);
+	  }
 
 	/**
 	 * @description navigates to activity and then clicks edit button and expect the
@@ -342,14 +379,20 @@ export default class ActivityPage {
 	}
 
 	/**
-	 * @description from the feed page click on an activity and navigate
-	 * to it and verify it has navigated
+	 * @description navigate to an activity in the search bar
 	 * @param name a string that represents the name to search for
+	 * @param shouldOpen weathor or not to click on the search result on the page
 	 * @returns null
 	 */
 	// eslint-disable-next-line class-methods-use-this
-	async navigateToActivity(name:string) {
+	async navigateToActivity(name:string, shouldOpen = false) {
 	  await feedPage.SearchFor(name, tabs.ACTIVITIES);
+	  if (shouldOpen) {
+	    const result = await feedPage.findSearchResult(name, tabs.ACTIVITIES, true);
+	    await t
+	      .expect(result.visible).eql(true)
+	      .click(result);
+	  }
 	  return null;
 	}
 }

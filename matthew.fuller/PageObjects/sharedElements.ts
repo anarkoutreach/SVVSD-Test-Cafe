@@ -44,6 +44,16 @@ export default class SharedElements {
     /** @description the drop down delete button (should be the same accross most of the website) */
     dropDownDelete: Selector;
 
+    /** @description the drop down edit button (should be the same accross most of the website) */
+    dropDownEdit: Selector;
+
+    /** @description the drop down add to favorite button
+     * (should be the same accross most of the website) */
+    dropDownFavorite: Selector;
+
+    /** @description generic elpipisis */
+    ellipsis: Selector;
+
     constructor() {
       this.alerts = new Alerts();
       this.anarkLogo = Selector('span.navbar-brand');
@@ -57,7 +67,11 @@ export default class SharedElements {
       this.appTitle = Selector('div.appTitle');
       this.searchbar = Selector('input.searchBar');
       this.genericCog = Selector('span.fas.fa-cog');
-      this.dropDownDelete = Selector('a').withText('delete');
+      // case insensitive .withtext
+      this.dropDownDelete = Selector('a').withText(/delete/gi);
+      this.dropDownEdit = Selector('a').withText(/edit/gi);
+      this.dropDownFavorite = Selector('a').withText(/favorite/gi);
+      this.ellipsis = Selector('span.fa-ellipsis-h');
     }
 
     async findCancelBtn() {

@@ -4,12 +4,28 @@ import { mattUser } from '../Utilities/roles';
 import ConfigurationManager from '../Configuration/configuration';
 import ActivityPage from '../PageObjects/activity-page';
 import Util from '../Utilities/util';
+import ActivityObj from '../PageObjects/PageComponents/activityObj';
 
 const util = new Util();
 const feedPage = new FeedPage();
 const activities = new ActivityPage();
 const configManager = new ConfigurationManager();
-let activityToDelete;
+let activityToDelete: ActivityObj;
+fixture`activity deletion tests`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+});
+test('can delete activity from search', async () => {
+  activityToDelete = await activities.createGenericAct();
+  activities.deleteActivity(activityToDelete);
+});
+test('can delete activity from activity page', async () => {
+  activityToDelete = await activities.createGenericAct();
+  activities.deleteActivity(activityToDelete, true);
+});
+
 fixture`activity tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   // the below is a scuffed method of allowing multiple users to run the same tests
@@ -29,7 +45,7 @@ fixture`activity tests`.page(configManager.homePage).beforeEach(async (t) => {
 }).afterEach(async () => {
   await feedPage.returnToHome();
   if (activityToDelete) {
-    await feedPage.deleteActivity(activityToDelete);
+    await activities.deleteActivity(activityToDelete);
   }
 });
 
