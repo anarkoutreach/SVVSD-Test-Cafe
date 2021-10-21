@@ -106,7 +106,7 @@ export default class FeedPage {
 	constructor() {
 	  const sharedElements = new SharedElements();
 	  this.createOptionsActivity = Selector('a.dropdown-item').withAttribute('data-title', 'Activity');
-	  this.userInfoBox = Selector('#userBoxRoles');
+	  this.userInfoBox = Selector('div.userRoles');
 	  this.userNameField = Selector('p.MBEWebNavbar-usermenuname');
 	  this.signOutBtn = Selector('#signout');
 	  this.userInitialsBtn = Selector('button#navbarUserInfo');
@@ -163,11 +163,20 @@ export default class FeedPage {
 
 	/** @returns an array containing all information contained in UserInfoBox */
 	async getAllUserInfo() {
+	  const sharedElements = new SharedElements();
+	  await this.returnToHome();
+	  await t
+	  .expect(this.userInitialsBtn.visible).eql(true)
+	  .click(this.userInitialsBtn)
+	  .expect(sharedElements.dropDownAccount.visible)
+	    .eql(true)
+	  .click(sharedElements.dropDownAccount);
 	  const array = [];
 	  for (let index = 0; index < await this.userInfoBox.child('p').count; index += 1) {
 	    const element = await this.userInfoBox.child('p').nth(index).innerText;
 	    array.push(await element.toLowerCase());
 	  }
+	  await this.returnToHome();
 	  return array;
 	}
 

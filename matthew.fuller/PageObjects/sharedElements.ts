@@ -89,6 +89,12 @@ export default class SharedElements {
       this.feedPageBtn = Selector('span.MenuList-icon.fas.fa-plus-circle');
     }
 
+    // eslint-disable-next-line class-methods-use-this
+    async findGenericDropdownSelector(text) {
+      const re = new RegExp(`/${text}/gi`);
+      return Selector('a').withText(re);
+    }
+
     async findCancelBtn() {
       if (this.genericCancelButton.visible) {
         return (this.genericCancelButton);
