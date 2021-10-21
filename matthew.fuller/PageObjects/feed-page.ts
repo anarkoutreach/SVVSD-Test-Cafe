@@ -113,7 +113,7 @@ export default class FeedPage {
 	  this.getSearchSubmitBtn = Selector('#feedSearchBar .btn-default');
 	  this.getSearchBar = Selector('input.searchBar.form-control');
 	  this.createButton = sharedElements.feedPageBtn;
-	  this.createOptionsDwi = Selector('a.dropdown-item').withAttribute('data-title', 'Work Item');
+	  this.createOptionsDwi = sharedElements.dropDownWorkItem;
 	  this.createOptionsGroup = Selector('a.dropdown-item').withAttribute('data-title', 'Group');
 	  this.createOptionsUser = Selector('a.dropdown-item').withAttribute('data-title', 'User');
 	  this.userInitialsIcon = sharedElements.userIcon;
@@ -631,16 +631,16 @@ export default class FeedPage {
 
 	async openAWICreateMenu() {
 	  const alerts = new Alerts();
-
+	  const sharedElements = new SharedElements();
 	  await t
-	    .expect(this.createButton.with({ visibilityCheck: true }).exists).ok('this should pass')
+	    .expect(this.createButton.visible).eql(true)
 	    .click(this.createButton)
 	    .click(this.createOptionsDwi)
-	    .expect(alerts.getModalForm.with({ visibilityCheck: true }).exists)
-	    .ok('this should pass')
-	    .expect(alerts.getAWICreateBtn.visible)
+	    .expect(alerts.getModalForm.visible)
 	    .eql(true)
-	    .expect(alerts.getAWICancelBtn.visible)
+	    .expect(sharedElements.genericCreateBtn.visible)
+	    .eql(true)
+	    .expect(sharedElements.CreateCancelButton.visible)
 	    .eql(true);
 	}
 

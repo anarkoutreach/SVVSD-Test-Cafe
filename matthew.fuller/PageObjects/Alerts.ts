@@ -1,5 +1,6 @@
 import { Selector, t } from 'testcafe';
 import Util from '../Utilities/util';
+import SharedElements from './sharedElements';
 import WI from './WI';
 
 /** @description the class used to represent alerts accross MBE web */
@@ -35,7 +36,7 @@ export default class Alerts {
     /** @description version inpout in the WI create menu */
     getAWIVersionInput: Selector;
 
-    /** @description ?? */
+    /** @description any model form */
     getModalForm: Selector
 
     /** @description the slider in the wi create menu */
@@ -104,43 +105,45 @@ export default class Alerts {
      *
      * @param form 1-8 number assosiated with the form of a wi in the wi create menu t ofill
      * @param text the text to fill the field with
-     * @param workitem the work item object
+     * @param workItem the work item object
      * @returns nulls
      */
-    async FillForm(form, text, workitem: WI) {
+    async FillForm(form, text, workItem: WI) {
+      const sharedElements = new SharedElements();
+      await sharedElements.getCurrentInputs();
       switch (form) {
         case 1:
           await t
-            .click(this.getAWIWorkItemTitleInput)
-            .typeText(this.getAWIWorkItemTitleInput, text)
-            .expect(this.getAWIWorkItemTitleInput.value).eql(text);
+            .click(sharedElements.genericTitleInput)
+            .typeText(sharedElements.genericTitleInput, text)
+            .expect(sharedElements.genericTitleInput.value).eql(text);
           break;
         case 2:
           await t
-            .click(this.getAWIDescriptionInput)
-            .typeText(this.getAWIDescriptionInput, text)
-            .expect(this.getAWIDescriptionInput.value).eql(text);
+            .click(sharedElements.genericDescInput)
+            .typeText(sharedElements.genericDescInput, text)
+            .expect(sharedElements.genericDescInput.value).eql(text);
           break;
         case 3:
 
           await t
-            .click(this.getAWIPartNumberInput)
-            .typeText(this.getAWIPartNumberInput, text)
-            .expect(this.getAWIPartNumberInput.value).eql(text);
+            .click(sharedElements.genericPartNumberInput)
+            .typeText(sharedElements.genericPartNumberInput, text)
+            .expect(sharedElements.genericPartNumberInput.value).eql(text);
           break;
 
         case 4:
           await t
-            .click(this.getAWIRevisionInput)
-            .typeText(this.getAWIRevisionInput, text)
-            .expect(this.getAWIRevisionInput.value).eql(text);
+            .click(sharedElements.genericRevisionInput)
+            .typeText(sharedElements.genericRevisionInput, text)
+            .expect(sharedElements.genericRevisionInput.value).eql(text);
           break;
         case 5:
 
           await t
-            .click(this.getAWIVersionInput)
-            .typeText(this.getAWIVersionInput, text)
-            .expect(this.getAWIVersionInput.value).eql(text);
+            .click(sharedElements.genericVersionInput)
+            .typeText(sharedElements.genericVersionInput, text)
+            .expect(sharedElements.genericVersionInput.value).eql(text);
           break;
         case 6:
           await t
@@ -151,17 +154,17 @@ export default class Alerts {
           // eslint-disable-next-line no-case-declarations
           const util2 = new Util();
           await t
-            .expect(this.editlocation.exists).eql(true)
-            .click(this.editlocation)
-            .typeText(this.editlocation, workitem.Location);
+            .expect(sharedElements.genericLocationInput.exists).eql(true)
+            .click(sharedElements.genericLocationInput)
+            .typeText(sharedElements.genericLocationInput, workItem.Location);
 
           if (util2.Verbose)console.log('--fillform-alerts "7" was passed, ignoring location dropdown currently');
           return;
         case 8:
           await t
-            .expect(this.editreleasestatus.exists).eql(true)
-            .click(this.editreleasestatus)
-            .typeText(this.editreleasestatus, workitem.releasestatus);
+            .expect(sharedElements.genericReleaseStatus.exists).eql(true)
+            .click(sharedElements.genericReleaseStatus)
+            .typeText(sharedElements.genericReleaseStatus, workItem.releasestatus);
 
           break;
 

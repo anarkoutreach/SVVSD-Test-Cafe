@@ -64,7 +64,32 @@ export default class SharedElements {
     /** @description feed page btn */
     feedPageBtn: Selector;
 
+    /** @description the selector for generic dropdowns containing the text work item non case  */
+    dropDownWorkItem: Selector;
+
+    /** @description a default title input selector */
+    genericTitleInput: Selector;
+
+    /** @description generic description input selector */
+    genericDescInput: Selector;
+
+    /** @description generic version input */
+    genericVersionInput: Selector;
+
+    /** @description generic revision input */
+    genericRevisionInput: Selector;
+
+    /** @description generic partNumberInput */
+    genericPartNumberInput: Selector;
+
+    /** @description generic location input */
+    genericLocationInput: Selector;
+
+    /** @description generic release status input */
+    genericReleaseStatus: Selector;
+
     constructor() {
+      /** @type {any} */
       this.alerts = new Alerts();
       this.anarkLogo = Selector('span.navbar-brand');
       this.genericBtn = Selector('button.btn');
@@ -83,16 +108,44 @@ export default class SharedElements {
       this.dropDownEdit = Selector('a').withText(/edit/gi);
       this.dropDownFavorite = Selector('a').withText(/favorite/gi);
       this.dropDownAccount = Selector('a').withText(/account/gi);
+      this.dropDownWorkItem = Selector('a').withText(/work item/gi);
 
       this.ellipsis = Selector('span.fa-ellipsis-h');
       this.userIcon = Selector('#navbarUserInfo').find('.initials');
       this.feedPageBtn = Selector('span.MenuList-icon.fas.fa-plus-circle');
+
+      // creation menu shared inputs
+    }
+
+    /** @description updates all selectors for inputs */
+    async getCurrentInputs() {
+      this.genericTitleInput = await this.findGenericInputOrTextarea('title');
+      this.genericDescInput = await this.findGenericInputOrTextarea('description');
+      this.genericVersionInput = await this.findGenericInputOrTextarea('version');
+      this.genericRevisionInput = await this.findGenericInputOrTextarea('revision');
+      this.genericPartNumberInput = await this.findGenericInputOrTextarea('part number');
+      this.genericLocationInput = await this.findGenericInputOrTextarea('location');
+      this.genericReleaseStatus = await this.findGenericInputOrTextarea('release status');
     }
 
     // eslint-disable-next-line class-methods-use-this
     async findGenericDropdownSelector(text) {
       const re = new RegExp(`/${text}/gi`);
       return Selector('a').withText(re);
+    }
+
+    /** @description find any input or feild with placeholder matching
+     * If both are found function will return input over textarea
+     * @returns selector if one is found, returns selector of * if nether are found
+     */
+    // eslint-disable-next-line class-methods-use-this
+    async findGenericInputOrTextarea(text) {
+      const re = new RegExp(`\\b${text}\\b`, 'gi');
+      const i = Selector('input').withAttribute('placeholder', re);
+      const t = Selector('textarea').withAttribute('placeholder', re);
+      if (i.visible) { return i; }
+      if (t.visible) { return t; }
+      return Selector('*');
     }
 
     async findCancelBtn() {

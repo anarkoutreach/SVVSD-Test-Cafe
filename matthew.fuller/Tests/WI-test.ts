@@ -27,7 +27,7 @@ any WI's created under this fixture need to be removed at the end of their test.
  * --Note: cannot use an after each fixture here to delete WI's as some
 of the tests under this fixture do not create a WI
  */
-fixture`Login`.page(configManager.homePage).beforeEach(async (t) => {
+fixture`WorkItems`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
 
   await t
