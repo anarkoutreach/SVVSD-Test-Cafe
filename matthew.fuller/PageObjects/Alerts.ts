@@ -125,11 +125,13 @@ export default class Alerts {
             .expect(sharedElements.genericDescInput.value).eql(text);
           break;
         case 3:
-
+          console.log('test');
           await t
+            .expect(sharedElements.genericPartNumberInput.exists).eql(true)
             .click(sharedElements.genericPartNumberInput)
             .typeText(sharedElements.genericPartNumberInput, text)
-            .expect(sharedElements.genericPartNumberInput.value).eql(text);
+            .expect(sharedElements.genericPartNumberInput.value)
+            .eql(text);
           break;
 
         case 4:

@@ -282,10 +282,8 @@ export default class FeedPage {
 	async CreateWIthenReturnHome(workitem: WI) {
 	  const alerts = new Alerts();
 	  const util = new Util();
-	  // ???????? why
 	  const generinworkitem = workitem;
 	  await this.openAWICreateMenu();
-
 	  await this.FillallWIFields(workitem);
 	  await t
 

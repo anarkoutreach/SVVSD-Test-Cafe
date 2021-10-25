@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { Selector } from 'testcafe';
 import Alerts from './Alerts';
 /** @description the class used to contain functions and elements that are shared across the website
@@ -143,9 +144,21 @@ export default class SharedElements {
       const re = new RegExp(`\\b${text}\\b`, 'gi');
       const i = Selector('input').withAttribute('placeholder', re);
       const t = Selector('textarea').withAttribute('placeholder', re);
-      if (i.visible) { return i; }
-      if (t.visible) { return t; }
+      if (await i.filterVisible().exists) { return i; }
+      if (await t.filterVisible().exists) { return t; }
       return Selector('*');
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    async withSibling(selector:Selector, sibling:string) {
+      const count = await selector.count;
+      for (let i = 0; i < count; i += 1) {
+        const element = selector.nth(i);
+        if (await element.sibling(sibling).exists) {
+          return element;
+        }
+        return selector;
+      }
     }
 
     async findCancelBtn() {
