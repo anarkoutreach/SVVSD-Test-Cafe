@@ -99,7 +99,7 @@ test('test if a work item can have a parenthisis in it', async () => {
   await feedPage.createWI(customWorkItem);
   await feedPage.returnToHome();
   await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
-  await feedPage.findSearchResult(customWorkItem.title, tabs.WORKITEMS);
+  await feedPage.findSearchResult(customWorkItem.title);
 });
 test('test if a work item can have a a pair of parenthisis at the end of it', async () => {
   const customWorkItem = new WI();
@@ -107,7 +107,7 @@ test('test if a work item can have a a pair of parenthisis at the end of it', as
   await feedPage.createWI(customWorkItem);
   await feedPage.returnToHome();
   await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
-  await feedPage.findSearchResult(customWorkItem.title, tabs.WORKITEMS);
+  await feedPage.findSearchResult(customWorkItem.title);
 });
 test('test if a work item can have a parenthisis at the end "name(hello)" and be found by searching "name("', async () => {
   const customWorkItem = new WI();
@@ -116,7 +116,7 @@ test('test if a work item can have a parenthisis at the end "name(hello)" and be
   await feedPage.returnToHome();
   const searchFor = 'TEST1234(';
   await feedPage.SearchFor(searchFor, tabs.WORKITEMS);
-  await feedPage.findSearchResult(customWorkItem.title, tabs.WORKITEMS);
+  await feedPage.findSearchResult(customWorkItem.title);
 });
 test('test if a work item can have a parenthisis at the end of it', async () => {
   const customWorkItem = new WI();
@@ -124,7 +124,7 @@ test('test if a work item can have a parenthisis at the end of it', async () => 
   await feedPage.createWI(customWorkItem);
   await feedPage.returnToHome();
   await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
-  await feedPage.findSearchResult(customWorkItem.title, tabs.WORKITEMS);
+  await feedPage.findSearchResult(customWorkItem.title);
 });
 /*
 *@description this is a fixture that will login to MBE web,

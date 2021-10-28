@@ -80,14 +80,15 @@ export default class Alerts {
       /** @deprecated */
       this.getAWIDescriptionInput = Selector('textarea#description');
 
-      this.getAWIPartNumberInput = Selector('span[data-property=partnumber]').child('input');
-      this.getAWIRevisionInput = Selector('span[data-property=revision]').child('input');
-      this.getAWIVersionInput = Selector('span[data-property=version]').child('input');
-      this.getAWIIsLatestVersionInput = Selector('span[data-property=islatestrevision]').child('input');
+      this.getAWIPartNumberInput = Selector('div[data-property=partnumber]').find('input');
+      this.getAWIRevisionInput = Selector('div[data-property=revision]').find('input');
+      this.getAWIVersionInput = Selector('div[data-property=version]').find('input');
+      this.getAWIIsLatestVersionInput = Selector('div[data-property=islatestrevision]').find('input');
+      this.locationInput = Selector('div[data-property=location]').find('input');
       this.getModalForm = Selector('form#modalForm');
-      this.editlocation = Selector('span[data-property=location]').child('input');
-      this.relesceStatusInput = Selector('span[data-property=release_status]').child('input');
-      this.editreleasestatus = Selector('span[data-property=release_status]').child('input');
+      this.editlocation = Selector('div[data-property=location]').find('input');
+      this.relesceStatusInput = Selector('div[data-property=release_status]').find('input');
+      this.editreleasestatus = Selector('div[data-property=release_status]').find('input');
 
       this.editslider = Selector('span.checkbox-switch-slider');
     }
@@ -147,9 +148,9 @@ export default class Alerts {
         case 5:
 
           await t
-            .click(this.getAWIVersionInput)
-            .typeText(this.getAWIVersionInput, text)
-            .expect(this.getAWIVersionInput.value).eql(text);
+            .click(this.getAWIPartNumberInput)
+            .typeText(this.getAWIPartNumberInput, text)
+            .expect(this.getAWIPartNumberInput.value).eql(text);
           break;
         case 6:
           await t

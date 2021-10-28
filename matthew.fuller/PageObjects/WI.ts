@@ -7,6 +7,7 @@ import Alerts from './Alerts';
 import { location } from './PageComponents/location';
 import { status } from './PageComponents/releasestatus';
 import { WORKITEMTAB } from './PageComponents/WITAB';
+import SharedElements from './sharedElements';
 
 const util = new Util();
 // everything (in this file) is documented in JSDOCs YAY!!!!
@@ -577,6 +578,7 @@ export default class WI {
     }
 
     /**
+     * @deprecated no longer a drop down
      * @description Gets the dropdown button to click from the Release status dropdown.
      *
      * @param {status} num An object from an Enum representing the status of the work item to return
@@ -585,10 +587,9 @@ export default class WI {
     // eslint-disable-next-line class-methods-use-this
     async getStatusDropDown(num: status) {
       const split = num.split(' ');
-      const num2 = parseInt(split[0], 10);
       if (util.Verbose)console.log(`--getStatusDropDown split =${split}`);
-      const alerts = new Alerts();
-      return alerts.realeasestatusdropdown.child(num2);
+      const sharedElements = new SharedElements();
+      return sharedElements.findGenericDropdownSelector('Release');
     }
 
     /**

@@ -281,7 +281,6 @@ export default class FeedPage {
 	 */
 	async CreateWIthenReturnHome(workitem: WI) {
 	  const util = new Util();
-	  const generinworkitem = workitem;
 	  const sharedElements = new SharedElements();
 	  await this.openAWICreateMenu();
 	  await this.FillallWIFields(workitem);
@@ -290,7 +289,8 @@ export default class FeedPage {
 	    .setNativeDialogHandler(() => true)
 	    .click(sharedElements.genericCreateBtn)
 	    .wait(200)
-	    .expect(generinworkitem.getDWItab.visible)
+	  // check if app title is visible
+	    .expect(sharedElements.appTitle.visible)
 	    .eql(true);
 	  if (util.Verbose) console.log('-- createWi: work instruction created --');
 	  await this.returnToHome();
@@ -316,7 +316,7 @@ export default class FeedPage {
 	  await this.CreateWIthenReturnHome(workitem);
 	  if (util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
 	  await this.SearchFor(workitem.title, tabs.WORKITEMS);
-	  const searchResult = await this.findSearchResult(workitem.title, tabs.WORKITEMS);
+	  const searchResult = await this.findSearchResult(workitem.title);
 	  if (await searchResult.exists === false) {
 	    await t.expect(searchResult.exists).eql(true);
 	    console.log('TEST failed as search result does not exist');
@@ -348,20 +348,20 @@ export default class FeedPage {
 	 */
 	async createWICheckIfTitle(workitem: WI) {
 	  const util = new Util();
-	  // this is bad dont do this
-	  const generinworkitem = workitem;
 	  await this.CreateWIthenReturnHome(workitem);
 	  if (util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
 	  await this.SearchFor(workitem.title, tabs.WORKITEMS);
-	  const searchResult = await this.findSearchResult(workitem.title, tabs.WORKITEMS);
+	  const searchResult = await this.findSearchResult(workitem.title);
+	  console.log(workitem.title);
 	  await t
+	  	.hover(searchResult)
 	    .click(searchResult)
 	    .wait(100);
 	  await t
-	    .expect(generinworkitem.wiViewTitle.visible).eql(true)
+	    .expect(workitem.wiViewTitle.visible).eql(true)
 	    .expect(
-	      (await generinworkitem.wiViewTitle.innerText).toLowerCase(),
-	    ).eql(generinworkitem.title.toLowerCase());
+	      (await workitem.wiViewTitle.innerText).toLowerCase(),
+	    ).eql(workitem.title.toLowerCase());
 	}
 
 	// eslint-disable-next-line class-methods-use-this
@@ -396,38 +396,14 @@ export default class FeedPage {
 		 * @description from the search page click on an item matching the text param.
 		 * @param text the text used to validate
 		 * @param tab the tab to search in
-		 * @param verify
 		 * @returns
 		 */
-	// eslint-disable-next-line consistent-return
-	async findSearchResult(text, tab: tabs, verify = true) {
-	  const util = new Util();
+	// eslint-disable-next-line class-methods-use-this
+	async findSearchResult(text) {
 	  const searchpage = new SearchPage();
-	  const count = await searchpage.results.childElementCount;
-	  if (util.Verbose) console.log(`--findSearchResult: child element count: ${count} --`);
-	  let i = 0;
-	  const results = [];
-	  for (i; i < count; i += 1) {
-	    if (util.Verbose) console.log(`--findSearchResult: find search results -  entered for loop with: ${count} --`);
-	    const name = await searchpage.results.child(i).innerText;
-	    results[i] = await name;
-	    const lowerCaseResult = await results[i].toLowerCase();
-	    const expectedText = await text.toLocaleLowerCase();
-	    if (util.Verbose) console.log(` --findSearchResult: script expected : "${expectedText}" but it recived: "${lowerCaseResult}" --`);
-	    await this.switchTabs(tab);
-	    await t
-	      .expect(await lowerCaseResult.includes(expectedText)).eql(verify);
-
-	    if (lowerCaseResult.includes(expectedText)) {
-	      if (util.Verbose) console.log('findSearchResult: expected text exists');
-	      if (util.Verbose) console.log(' -- findSearchResult: findSearchResult has functioned properly and returns Selector of search -- ');
-	      return Selector('#searchResults').child().sibling().child()
-	        .child(i)
-	        .child('.searchItemInfo')
-	        .child();
-	    }
-	  }
-	  return null;
+	  const re = new RegExp(text, 'gi');
+	  const result = await searchpage.searchResults.find('span.searchItemName').withText(re);
+	  return (result);
 	}
 
 	/**
@@ -546,7 +522,7 @@ export default class FeedPage {
 	  await this.SearchFor(title, tabs.WORKITEMS);
 	  if (util.Verbose) console.log('-- navigateToWi: finished "Search for" script --');
 	  if (util.Verbose) console.log('-- navigateToWi: started "find search result" -script --');
-	  const searchResult = await this.findSearchResult(title, tabs.WORKITEMS);
+	  const searchResult = await this.findSearchResult(title);
 	  if (util.Verbose) console.log('-- navigateToWi: finished "Search for result" script --');
 	  if (util.Verbose) console.log('-- navigateToWi: return - Search Result --');
 	  return searchResult;
