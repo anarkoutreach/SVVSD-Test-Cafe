@@ -280,15 +280,15 @@ export default class FeedPage {
 	 * @param workitem the workitem that should be created
 	 */
 	async CreateWIthenReturnHome(workitem: WI) {
-	  const alerts = new Alerts();
 	  const util = new Util();
 	  const generinworkitem = workitem;
+	  const sharedElements = new SharedElements();
 	  await this.openAWICreateMenu();
 	  await this.FillallWIFields(workitem);
 	  await t
 
 	    .setNativeDialogHandler(() => true)
-	    .click(alerts.getAWICreateBtn)
+	    .click(sharedElements.genericCreateBtn)
 	    .wait(200)
 	    .expect(generinworkitem.getDWItab.visible)
 	    .eql(true);

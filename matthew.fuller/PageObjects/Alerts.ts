@@ -49,7 +49,7 @@ export default class Alerts {
     editreleasestatus: Selector;
 
     /** @description relese status input for wi create menu */
-    realeasestatusdropdown: Selector;
+    relesceStatusInput: Selector;
 
     /** @description the annark login the upper right */
     getAnarkLogo: Selector;
@@ -59,6 +59,9 @@ export default class Alerts {
 
     /** @description unknown */
     getAWIIsLatestVersionInput: Selector;
+
+    /** @description the location input of the WBEweb create wi from */
+    locationInput: Selector;
 
     /** @description the consturctor class used to represent alerts accross MBE web */
     constructor() {
@@ -72,16 +75,18 @@ export default class Alerts {
 
       this.getAWICreateBtn = Selector('button#dwiOK');
       this.getAWICancelBtn = Selector('button.btn-default').withText('Cancel');
-
+      /** @deprecated */
       this.getAWIWorkItemTitleInput = Selector('input#title');
+      /** @deprecated */
       this.getAWIDescriptionInput = Selector('textarea#description');
+
       this.getAWIPartNumberInput = Selector('span[data-property=partnumber]').child('input');
       this.getAWIRevisionInput = Selector('span[data-property=revision]').child('input');
       this.getAWIVersionInput = Selector('span[data-property=version]').child('input');
       this.getAWIIsLatestVersionInput = Selector('span[data-property=islatestrevision]').child('input');
       this.getModalForm = Selector('form#modalForm');
       this.editlocation = Selector('span[data-property=location]').child('input');
-      this.realeasestatusdropdown = Selector('span[data-property=release_status]').child('input');
+      this.relesceStatusInput = Selector('span[data-property=release_status]').child('input');
       this.editreleasestatus = Selector('span[data-property=release_status]').child('input');
 
       this.editslider = Selector('span.checkbox-switch-slider');
@@ -125,27 +130,26 @@ export default class Alerts {
             .expect(sharedElements.genericDescInput.value).eql(text);
           break;
         case 3:
-          console.log('test');
           await t
-            .expect(sharedElements.genericPartNumberInput.exists).eql(true)
-            .click(sharedElements.genericPartNumberInput)
-            .typeText(sharedElements.genericPartNumberInput, text)
-            .expect(sharedElements.genericPartNumberInput.value)
+            .expect(this.getAWIVersionInput.exists).eql(true)
+            .click(this.getAWIVersionInput)
+            .typeText(this.getAWIVersionInput, text)
+            .expect(this.getAWIVersionInput.value)
             .eql(text);
           break;
 
         case 4:
           await t
-            .click(sharedElements.genericRevisionInput)
-            .typeText(sharedElements.genericRevisionInput, text)
-            .expect(sharedElements.genericRevisionInput.value).eql(text);
+            .click(this.getAWIRevisionInput)
+            .typeText(this.getAWIRevisionInput, text)
+            .expect(this.getAWIRevisionInput.value).eql(text);
           break;
         case 5:
 
           await t
-            .click(sharedElements.genericVersionInput)
-            .typeText(sharedElements.genericVersionInput, text)
-            .expect(sharedElements.genericVersionInput.value).eql(text);
+            .click(this.getAWIVersionInput)
+            .typeText(this.getAWIVersionInput, text)
+            .expect(this.getAWIVersionInput.value).eql(text);
           break;
         case 6:
           await t
@@ -156,17 +160,17 @@ export default class Alerts {
           // eslint-disable-next-line no-case-declarations
           const util2 = new Util();
           await t
-            .expect(sharedElements.genericLocationInput.exists).eql(true)
-            .click(sharedElements.genericLocationInput)
-            .typeText(sharedElements.genericLocationInput, workItem.Location);
+            .expect(this.locationInput.exists).eql(true)
+            .click(this.locationInput)
+            .typeText(this.locationInput, workItem.Location);
 
           if (util2.Verbose)console.log('--fillform-alerts "7" was passed, ignoring location dropdown currently');
           return;
         case 8:
           await t
-            .expect(sharedElements.genericReleaseStatus.exists).eql(true)
-            .click(sharedElements.genericReleaseStatus)
-            .typeText(sharedElements.genericReleaseStatus, workItem.releasestatus);
+            .expect(this.relesceStatusInput.exists).eql(true)
+            .click(this.relesceStatusInput)
+            .typeText(this.relesceStatusInput, workItem.releasestatus);
 
           break;
 
