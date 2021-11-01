@@ -200,7 +200,7 @@ export default class WI {
       this.title = 'this is a generic title';
 
       this.settingsGearBtn = sharedElements.genericCog;
-      this.settingsGearBtnEdit = Selector('button#dwiSettings');
+      this.settingsGearBtnEdit = sharedElements.genericCog;
       this.partnum = '123456789';
       this.revision = '123456789';
       this.version = '123456789';
