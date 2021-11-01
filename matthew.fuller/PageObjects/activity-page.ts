@@ -105,7 +105,7 @@ export default class ActivityPage {
 	    .eql(true)
 	    .click(sharedElement.genericCreateBtn);
 	  await activityPage.navigateToActivity(obj.title);
-	  const result = await feedPage.findSearchResult(obj.title, tabs.ACTIVITIES, true);
+	  const result = await feedPage.findSearchResult(obj.title);
 	  await t.expect(result).eql(null);
 	  }
 
@@ -388,7 +388,7 @@ export default class ActivityPage {
 	async navigateToActivity(name:string, shouldOpen = false) {
 	  await feedPage.SearchFor(name, tabs.ACTIVITIES);
 	  if (shouldOpen) {
-	    const result = await feedPage.findSearchResult(name, tabs.ACTIVITIES, true);
+	    const result = await feedPage.findSearchResult(name);
 	    await t
 	      .expect(result.visible).eql(true)
 	      .click(result);

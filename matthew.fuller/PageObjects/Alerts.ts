@@ -70,11 +70,6 @@ export default class Alerts {
       this.getGenericConfirmBtn = Selector('button.btn').filter('.createButtons-submit');
       this.getGenericCancelBtn = Selector('button.btn').filter('.createButtons-cancel');
       this.getAnarkLogo = Selector('span.navbar-brand');
-
-      // AWI/DWI
-
-      this.getAWICreateBtn = Selector('button#dwiOK');
-      this.getAWICancelBtn = Selector('button.btn-default').withText('Cancel');
       /** @deprecated */
       this.getAWIWorkItemTitleInput = Selector('input#title');
       /** @deprecated */

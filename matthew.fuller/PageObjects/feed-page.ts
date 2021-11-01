@@ -317,17 +317,19 @@ export default class FeedPage {
 	  if (util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
 	  await this.SearchFor(workitem.title, tabs.WORKITEMS);
 	  const searchResult = await this.findSearchResult(workitem.title);
+	  console.log(await searchResult.nth(0).innerText);
 	  if (await searchResult.exists === false) {
 	    await t.expect(searchResult.exists).eql(true);
 	    console.log('TEST failed as search result does not exist');
 	  }
+	  const sharedElements = new SharedElements();
 	  await t
 	    .click(searchResult)
-	    .click(generinworkitem.settingsGearBtn)
+	    .click(sharedElements.genericCog)
 	  // due to work items no longer having titles displayed on the view page
 	  // you must change to the edit page first
-	    .click(generinworkitem.settingsGearPanelEdit)
-	    .expect(generinworkitem.wiTitle.visible)
+	    .click(await sharedElements.findGenericDropdownSelector('edit'))
+	    .expect(sharedElements.appTitle.visible)
 	    .eql(true);
 
 	  this.eventEmitter.on('close', async () => {
@@ -400,6 +402,8 @@ export default class FeedPage {
 		 */
 	// eslint-disable-next-line class-methods-use-this
 	async findSearchResult(text) {
+	  text = text.replace(/\(/g, '\\(');
+	  text = text.replace(/\)/g, '\\)');
 	  const searchpage = new SearchPage();
 	  const re = new RegExp(text, 'gi');
 	  const result = await searchpage.searchResults.find('span.searchItemName').withText(re);
@@ -626,11 +630,11 @@ export default class FeedPage {
 	}
 
 	async closeAWIMenu() {
-	  const alerts = new Alerts();
+	  const sharedElements = new SharedElements();
 	  await t
-	    .expect(alerts.getAWICreateBtn.visible).eql(true)
-	    .expect(alerts.getAWICancelBtn.visible).eql(true)
-	    .click(alerts.getAWICancelBtn)
+	    .expect(sharedElements.genericCreateBtn.visible).eql(true)
+	    .expect(sharedElements.genericCreateBtn.visible).eql(true)
+	    .click(sharedElements.CreateCancelButton)
 	    .expect(this.firstConversation.visible)
 	    .eql(true);
 	}

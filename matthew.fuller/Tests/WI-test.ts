@@ -11,6 +11,7 @@ import Util from '../Utilities/util';
 import WISteps from '../PageObjects/PageComponents/WISteps';
 import UPLOAD from '../PageObjects/PageComponents/Upload';
 import { WORKITEMTAB } from '../PageObjects/PageComponents/WITAB';
+import SharedElements from '../PageObjects/sharedElements';
 /** @description  An enum representing all possible types for a verification step */
 const types = VerificationTypes;
 /** @description the class used to represent alerts accross MBE web */
@@ -21,6 +22,7 @@ const configManager = new ConfigurationManager();
 const feedPage = new FeedPage();
 /** @description A generic workitem object that will be used for all generic tests */
 const DefaultWorkItem = new WI();
+
 /*
  * @description A fixture that will login to MBE web, and nothing more,
 any WI's created under this fixture need to be removed at the end of their test.
@@ -41,7 +43,6 @@ test('check if there is a title in the "view" mode of a workitem', async () => {
 // tests that only use log in fixture
 test('add a lot of steps and child steps', async () => {
   const util = new Util();
-
   DefaultWorkItem.title = `this is a generic stress test id: ${util.randChar(50)}`;
   await feedPage.createWI(DefaultWorkItem);
   await feedPage.returnToHome();
@@ -71,6 +72,7 @@ test('add a lot of steps and child steps', async () => {
   await feedPage.returnToHome();
   await feedPage.deleteWI(tabs.WORKITEMS, DefaultWorkItem);
 }).skip;
+
 test('can open WI menu fill in all feilds then cancel', async () => {
   // eslint-disable-next-line no-shadow
   const DefaultWorkItem = new WI();
@@ -84,18 +86,21 @@ test('can open WI menu and close', async () => {
   await feedPage.openAWICreateMenu();
   await feedPage.closeAWIMenu();
 });
-test('can open WI menu and close', async () => {
+test('can open WI menu and crtl a delete and close', async () => {
   // eslint-disable-next-line no-shadow
   const DefaultWorkItem = new WI();
   // eslint-disable-next-line no-shadow
   const util = new Util();
   await feedPage.openAWICreateMenu();
   await feedPage.FillallWIFields(DefaultWorkItem);
-  util.CtlADelete(alerts.getAWIWorkItemTitleInput);
+  const sharedElements = new SharedElements();
+  await sharedElements.getCurrentInputs();
+  await util.CtlADelete(sharedElements.genericTitleInput);
+  await feedPage.closeAWIMenu();
 });
 test('test if a work item can have a parenthisis in it', async () => {
   const customWorkItem = new WI();
-  customWorkItem.title = 'TEST1234(testing)';
+  customWorkItem.title = 'TEST12345(testing)';
   await feedPage.createWI(customWorkItem);
   await feedPage.returnToHome();
   await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
