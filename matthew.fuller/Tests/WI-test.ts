@@ -14,8 +14,6 @@ import { WORKITEMTAB } from '../PageObjects/PageComponents/WITAB';
 import SharedElements from '../PageObjects/sharedElements';
 /** @description  An enum representing all possible types for a verification step */
 const types = VerificationTypes;
-/** @description the class used to represent alerts accross MBE web */
-const alerts = new Alerts();
 /** @description A class represnting the controller that handles configs */
 const configManager = new ConfigurationManager();
 /** @description A class represnting the "feedpage" on MBE-web */

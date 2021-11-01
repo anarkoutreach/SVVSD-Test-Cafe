@@ -540,13 +540,17 @@ export default class FeedPage {
 	async NavigateToEditWI(tab: tabs, workitem: WI) {
 	  const util = new Util();
 	  const searchResult = await this.navigateToWi(tab, workitem);
+	  const sharedElements = new SharedElements();
 	  await t
 	    .click(searchResult)
-	    .click(workitem.settingsGearBtn)
+	    .click(workitem.settingsGearBtn);
+	  const editBtn = await sharedElements.findGenericDropdownSelector('edit');
 	  // due to work items no longer having titles displayed on the view page
 	  // you must change to the edit page first
-	    .click(workitem.settingsGearPanelEdit)
-	    .expect(workitem.wiTitle.visible)
+	  await t
+	    .expect(editBtn.visible).eql(true)
+	    .click(editBtn)
+	    .expect(sharedElements.appTitle.visible)
 	    .eql(true);
 	  if (util.Verbose) console.log('Navigated to Edit workitem');
 	}
@@ -574,8 +578,6 @@ export default class FeedPage {
 	    .eql(true)
 	    .click(workitem.settingsGearBtnEdit)
 	    .expect(workitem.settingsGearPanelEdit.exists)
-	    .eql(true)
-	    .expect(workitem.settingsGearPanelDeleteEdit.exists)
 	    .eql(true)
 	    .click(workitem.settingsGearPanelDeleteEdit)
 	    .expect(searchResult.exists)

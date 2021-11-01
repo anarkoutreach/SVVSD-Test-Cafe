@@ -176,6 +176,7 @@ export default class WI {
      * @description the constructor for the WI object, representing a Workitem on MBEWeb
      */
     constructor() {
+      const sharedElements = new SharedElements();
       this.allButtons = Selector('button.addButton.btn.btn-primary');
       this.wiViewTitle = Selector('div.WIPlayerTopToolbarFirstRow');
       this.smallAnarkLogo = Selector('#WIPlayerMetadataDrawerButton');
@@ -192,24 +193,24 @@ export default class WI {
       this.steps = [];
       this.editWITitle = Selector('#dwiTitleInput');
       this.editWIDescription = Selector('#dwiDescription');
-      this.wiTitle = Selector('div#dwiTitle');
+      this.wiTitle = sharedElements.appTitle;
       this.getDWItab = Selector('#DWIProcessStepListScrollParent');
       this.getSelectedStepInput = Selector('#DWIProcessStepListScrollParent .stepItem.selectedStep').child().filter('input');
       this.description = 'i am a generic description';
       this.title = 'this is a generic title';
-      this.settingsGearBtn = Selector('#dwiSettings');
+
+      this.settingsGearBtn = sharedElements.genericCog;
       this.settingsGearBtnEdit = Selector('button#dwiSettings');
       this.partnum = '123456789';
       this.revision = '123456789';
       this.version = '123456789';
       this.settingsGearPanel = Selector('.dropdown-menu.dropdown-menu-right');
-      this.settingsGearPanelEdit = Selector('.dropdown-menu.dropdown-menu-right');
-      this.settingsGearPanelEdit = this.settingsGearPanel.child('li').withText('Edit Work Item').child();
-      this.settingsGearPanelRevise = this.settingsGearPanel.child().withText('Delete Work Item').child();
+      this.settingsGearPanelEdit = sharedElements.dropDownEdit;
+      this.settingsGearPanelRevise = sharedElements.dropdownRevise;
       this.settingsGearPanelDelete = this.settingsGearPanel.child().withText('Delete Work Item').child();
       this.settingsGearPanelView = this.settingsGearPanel.child().withText('View Work Item').child();
       this.settingsGearPanelReviseEdit = this.settingsGearPanelEdit.child().withText('Delete Work Item').child();
-      this.settingsGearPanelDeleteEdit = this.settingsGearPanelEdit.child().withText('Delete Work Item').child();
+      this.settingsGearPanelDeleteEdit = sharedElements.dropDownDelete;
       this.settingsGearPanelViewEdit = this.settingsGearPanelEdit.child().withText('View Work Item').child();
       this.processStepsPanel = Selector('#DWIProcessStepListScrollParent');
       this.appendProccessStep = this.processStepsPanel.child('.appendProcessStep');

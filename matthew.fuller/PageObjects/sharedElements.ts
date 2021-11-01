@@ -89,6 +89,9 @@ export default class SharedElements {
     /** @description generic release status input */
     genericReleaseStatus: Selector;
 
+    /** @description the revise dropdown shared accross the website */
+    dropdownRevise: Selector;
+
     constructor() {
       /** @type {any} */
       this.alerts = new Alerts();
@@ -110,7 +113,7 @@ export default class SharedElements {
       this.dropDownFavorite = Selector('a').withText(/favorite/gi);
       this.dropDownAccount = Selector('a').withText(/account/gi);
       this.dropDownWorkItem = Selector('a').withText(/work item/gi);
-
+      this.dropdownRevise = Selector('a').withText(/revise/gi);
       this.ellipsis = Selector('span.fa-ellipsis-h');
       this.userIcon = Selector('#navbarUserInfo').find('.initials');
       this.feedPageBtn = Selector('span.MenuList-icon.fas.fa-plus-circle');
