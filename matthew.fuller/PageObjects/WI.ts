@@ -177,7 +177,7 @@ export default class WI {
      */
     constructor() {
       const sharedElements = new SharedElements();
-      this.allButtons = Selector('button.addButton.btn.btn-primary');
+      this.allButtons = Selector('.fas.fa-plus');
       this.wiViewTitle = Selector('div.WIPlayerTopToolbarFirstRow');
       this.smallAnarkLogo = Selector('#WIPlayerMetadataDrawerButton');
       this.Uploads = [];
@@ -191,11 +191,11 @@ export default class WI {
       this.releasestatus = status.DRAFT;
       this.Location = location.BOULDER;
       this.steps = [];
-      this.editWITitle = Selector('#dwiTitleInput');
-      this.editWIDescription = Selector('#dwiDescription');
+      this.editWITitle = Selector('#wiTitleInput');
+      this.editWIDescription = Selector('#wiDescription');
       this.wiTitle = sharedElements.appTitle;
-      this.getDWItab = Selector('#DWIProcessStepListScrollParent');
-      this.getSelectedStepInput = Selector('#DWIProcessStepListScrollParent .stepItem.selectedStep').child().filter('input');
+      this.getDWItab = Selector('#WIProcessStepListScrollParent');
+      this.getSelectedStepInput = Selector('input.processStepTitleInline');
       this.description = 'i am a generic description';
       this.title = 'this is a generic title';
 
@@ -207,20 +207,20 @@ export default class WI {
       this.settingsGearPanel = Selector('.dropdown-menu.dropdown-menu-right');
       this.settingsGearPanelEdit = sharedElements.dropDownEdit;
       this.settingsGearPanelRevise = sharedElements.dropdownRevise;
-      this.settingsGearPanelDelete = this.settingsGearPanel.child().withText('Delete Work Item').child();
+      this.settingsGearPanelDelete = sharedElements.dropDownDelete;
       this.settingsGearPanelView = this.settingsGearPanel.child().withText('View Work Item').child();
       this.settingsGearPanelReviseEdit = this.settingsGearPanelEdit.child().withText('Delete Work Item').child();
-      this.settingsGearPanelDeleteEdit = sharedElements.dropDownDelete;
+      this.settingsGearPanelDeleteEdit = sharedElements.dropDownEdit;
       this.settingsGearPanelViewEdit = this.settingsGearPanelEdit.child().withText('View Work Item').child();
-      this.processStepsPanel = Selector('#DWIProcessStepListScrollParent');
-      this.appendProccessStep = this.processStepsPanel.child('.appendProcessStep');
+      this.processStepsPanel = Selector('#WIProcessStepListScrollParent');
+      this.appendProccessStep = Selector('.appendRootStep');
       this.activeStep = this.processStepsPanel.child('.stepItem.selectedStep');
       this.allsteps = Selector('li.stepItem');
       this.title += util.randChar(40);
-      this.WorkitemTab = Selector('#dwiTabs-tab-WorkItem');
-      this.UserTab = Selector('#dwiTabs-tab-User');
-      this.ContentTab = Selector('#dwiTabs-tab-Content');
-      this.UploadTab = Selector('#dwiTabs-tab-Upload');
+      this.WorkitemTab = Selector('#wiTabs-tab-WorkItem');
+      this.UserTab = Selector('#wiTabs-tab-User');
+      this.ContentTab = Selector('#wiTabs-tab-Content');
+      this.UploadTab = Selector('#wiTabs-tab-Upload');
       this.UserPageNextBtn = Selector('button#next');
       this.UserPagePrevBtn = Selector('button#prev');
     }
@@ -282,9 +282,8 @@ export default class WI {
         .click(this.allButtons.nth(num))
         .expect(this.allButtons.nth(num).exists)
         .eql(true)
-        .click(this.allButtons.nth(num))
-        .expect(Selector('span.error.active').exists)
-        .eql(true);
+        .click(this.allButtons.nth(num));
+      // todo add verification that the content has been added
     }
 
     /** @description Clicks the "Next" Btn at the bottom of the User tab of a WI.
@@ -793,6 +792,7 @@ export default class WI {
      */
     // eslint-disable-next-line max-len
     async AddStep(BugWorkaround: boolean, step: WISteps, letDuplicate: boolean, StepIsAlreadyCreated: boolean) {
+      const sharedElements = new SharedElements();
       const workaroundbug = BugWorkaround;
       let StepExists: boolean;
       let NumOfSteps;

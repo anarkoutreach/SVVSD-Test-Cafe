@@ -288,7 +288,7 @@ export default class FeedPage {
 
 	    .setNativeDialogHandler(() => true)
 	    .click(sharedElements.genericCreateBtn)
-	    .wait(200)
+	    .wait(500)
 	  // check if app title is visible
 	    .expect(sharedElements.appTitle.visible)
 	    .eql(true);
@@ -568,22 +568,17 @@ export default class FeedPage {
 	  await t
 	    .expect(searchResult.exists).eql(true)
 	    .click(searchResult)
+	    .expect(workitem.settingsGearBtn.visible)
+	    .eql(true)
 	    .click(workitem.settingsGearBtn)
-	  // due to work items no longer having titles displayed on
-	  // the view page you must change to the edit page first
-	    .click(workitem.settingsGearPanelEdit)
-	    .expect(workitem.wiTitle.visible)
+	    .expect(workitem.settingsGearPanelDelete.visible)
 	    .eql(true)
-	    .expect(workitem.settingsGearBtnEdit.exists)
-	    .eql(true)
-	    .click(workitem.settingsGearBtnEdit)
-	    .expect(workitem.settingsGearPanelEdit.exists)
-	    .eql(true)
-	    .click(workitem.settingsGearPanelDeleteEdit)
-	    .expect(searchResult.exists)
-	    .eql(false);
+	    .click(workitem.settingsGearPanelDelete);
 	  if (util.Verbose) console.log('-- deleteWI: finished deleating WI --');
-	  await t.click(alerts.getGenericConfirmBtn);
+	  await t
+	  .expect(alerts.getGenericConfirmBtn.visible).eql(true)
+
+	  .click(alerts.getGenericConfirmBtn);
 	  this.eventEmitter.emit('close');
 	}
 
