@@ -792,7 +792,6 @@ export default class WI {
      */
     // eslint-disable-next-line max-len
     async AddStep(BugWorkaround: boolean, step: WISteps, letDuplicate: boolean, StepIsAlreadyCreated: boolean) {
-      const sharedElements = new SharedElements();
       const workaroundbug = BugWorkaround;
       let StepExists: boolean;
       let NumOfSteps;
