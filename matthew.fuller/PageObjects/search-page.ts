@@ -22,8 +22,12 @@ export default class SearchPage {
 
     activitiesTab: Selector;
 
+    /** @description span.searchItemName.canOpen the selector used for search item names */
+    searchItem: Selector;
+
     /** @description the search page class,  */
     constructor() {
+      this.searchItem = Selector('span.searchItemName.canOpen');
       this.activitiesTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Activity');
       this.contentTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Content');
       this.groupsTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Groups');

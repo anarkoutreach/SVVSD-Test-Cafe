@@ -116,7 +116,7 @@ test('can edit group title', async (t) => {
   // search for the group title in the search bar from the home page
   await feedPage.SearchFor(obj.title, tabs.GROUPS);
   // Then find the result
-  const result = await feedPage.findSearchResult(obj.title, tabs.GROUPS);
+  const result = await feedPage.findSearchResult(obj.title);
   await t.expect(result.exists).eql(true)
     .click(result);
   await groupPage.clickEditBtnOnGroupPage();
@@ -135,7 +135,7 @@ test('can edit group description', async (t) => {
   // search for the group title in the search bar from the home page
   await feedPage.SearchFor(obj.title, tabs.GROUPS);
   // Then find the result
-  const result = await feedPage.findSearchResult(obj.title, tabs.GROUPS);
+  const result = await feedPage.findSearchResult(obj.title);
   await t.expect(result.exists).eql(true)
     .click(result);
   await groupPage.clickEditBtnOnGroupPage();
@@ -147,7 +147,7 @@ test('can edit group description', async (t) => {
   await feedPage.returnToHome();
   await feedPage.SearchFor(obj.title, tabs.GROUPS);
   // Then find the result
-  const result2 = await feedPage.findSearchResult(obj.title, tabs.GROUPS);
+  const result2 = await feedPage.findSearchResult(obj.title);
   await t.expect(result2.exists).eql(true)
     .click(result2);
   await groupPage.clickEditBtnOnGroupPage();
@@ -164,7 +164,7 @@ test('can delete group', async (t) => {
   // search for the group title in the search bar from the home page
   await feedPage.SearchFor(obj.title, tabs.GROUPS);
   // Then find the result
-  const result = await feedPage.findSearchResult(obj.title, tabs.GROUPS);
+  const result = await feedPage.findSearchResult(obj.title);
   await t.expect(result.exists).eql(true)
     .click(result);
   await t.expect(groupPage.settingsCogBtn.exists).eql(true)
@@ -176,7 +176,7 @@ test('can delete group', async (t) => {
     .eql(true)
     .click(alert.getGenericConfirmBtn);
   await feedPage.SearchFor(obj.title, tabs.GROUPS);
-  const result2 = await feedPage.findSearchResult(obj.title, tabs.GROUPS);
+  const result2 = await feedPage.findSearchResult(obj.title);
   let exists = false;
   try {
     await t.expect(result2.exists).eql(false);

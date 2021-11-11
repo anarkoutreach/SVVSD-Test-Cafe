@@ -2,7 +2,6 @@ import { Selector } from 'testcafe';
 import FeedPage from '../PageObjects/feed-page';
 import { mattUser } from '../Utilities/roles';
 import ConfigurationManager from '../Configuration/configuration';
-import Alerts from '../PageObjects/Alerts';
 import { tabs } from '../PageObjects/PageComponents/tabs';
 import { VerificationTypes } from '../PageObjects/PageComponents/VerificationTypes';
 import WIStepVerificationInfo from '../PageObjects/PageComponents/WIStepVerificationInfo';
@@ -12,6 +11,7 @@ import WISteps from '../PageObjects/PageComponents/WISteps';
 import UPLOAD from '../PageObjects/PageComponents/Upload';
 import { WORKITEMTAB } from '../PageObjects/PageComponents/WITAB';
 import SharedElements from '../PageObjects/sharedElements';
+
 /** @description  An enum representing all possible types for a verification step */
 const types = VerificationTypes;
 /** @description A class represnting the controller that handles configs */

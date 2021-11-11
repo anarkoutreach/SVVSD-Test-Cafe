@@ -8,6 +8,7 @@ import { location } from './PageComponents/location';
 import { status } from './PageComponents/releasestatus';
 import { WORKITEMTAB } from './PageComponents/WITAB';
 import SharedElements from './sharedElements';
+import SearchPage from './search-page';
 
 const util = new Util();
 // everything (in this file) is documented in JSDOCs YAY!!!!
@@ -436,18 +437,29 @@ export default class WI {
     /**
      * @description Removes a content item from a WI based on a zero based index
      *
-     * !MUST BE USED FROM CONTENT TAB
      * @param {number} num the possition in a zero based index to remove
      * @returns null
      */
     async RemoveContentByIndex(num: number) {
+      await this.SwitchWITAB(WORKITEMTAB.WORKITEM);
+      const sharedElements = new SharedElements();
+      const removeContentSelector = await sharedElements.findGenericDropdownSelector('remove');
+      const searchPage = new SearchPage();
+      async function getContentNumText(x: number) {
+        const searchItem = await sharedElements.withSibling(searchPage.searchItem.nth(x), '.assetThumbnail');
+        return searchItem;
+      }
+      const contentItemText = await getContentNumText(num);
       await t
-        .expect(this.allButtons.nth(num).exists).eql(true)
-        .click(this.allButtons.nth(num))
-        .expect(Selector('button#okayConfirm').exists)
+        .expect(sharedElements.ellipsis.exists).eql(true)
+        .click(sharedElements.ellipsis.nth(num))
+        .expect(removeContentSelector.exists)
         .eql(true)
-        .click(Selector('button#okayConfirm'))
-        .expect(this.allButtons.nth(num).exists)
+        .click(removeContentSelector)
+        .expect(Selector(sharedElements.genericCreateBtn).exists)
+        .eql(true)
+        .click(Selector(sharedElements.genericCreateBtn))
+        .expect(contentItemText === await getContentNumText(num))
         .eql(false);
     }
 

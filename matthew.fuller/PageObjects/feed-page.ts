@@ -285,7 +285,6 @@ export default class FeedPage {
 	  await this.openAWICreateMenu();
 	  await this.FillallWIFields(workitem);
 	  await t
-
 	    .setNativeDialogHandler(() => true)
 	    .click(sharedElements.genericCreateBtn)
 	    .wait(500)

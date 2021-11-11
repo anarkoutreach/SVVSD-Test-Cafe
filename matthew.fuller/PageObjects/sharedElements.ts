@@ -92,8 +92,12 @@ export default class SharedElements {
     /** @description the revise dropdown shared accross the website */
     dropdownRevise: Selector;
 
+    /** @description the side pane containing info on pages */
+    infoSidePane: Selector;
+
     constructor() {
       /** @type {any} */
+      this.infoSidePane = Selector('.infoSide-pane');
       this.alerts = new Alerts();
       this.anarkLogo = Selector('span.navbar-brand');
       this.genericBtn = Selector('button.btn');
@@ -152,6 +156,12 @@ export default class SharedElements {
       return Selector('*');
     }
 
+    /**
+     *
+     * @param selector the selectors to check if it has sibling
+     * @param sibling the sibling to check if selector has as sibling
+     * @returns selector
+     */
     // eslint-disable-next-line class-methods-use-this
     async withSibling(selector:Selector, sibling:string) {
       const count = await selector.count;
