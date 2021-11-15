@@ -26,6 +26,14 @@ test('check improper email error msg displays', async () => {
   await accountPage.navigateFromHomeToAccountPage();
   await util.CtlADelete(Selector('#formHorizontalEmail'));
   const errorSelector = Selector('span.error.formHorizontalEmail.active');
-  await t.expect(errorSelector.exists).eql(true)
-    .expect(await (await errorSelector.innerText).includes('email')).eql(true);
+  await accountPage.checkErrorMsg(errorSelector, 'email');
+});
+
+test('check no name error msg displays', async () => {
+  const util = new Util();
+  const accountPage = new AccountPage();
+  await accountPage.navigateFromHomeToAccountPage();
+  await util.CtlADelete(Selector('#formHorizontalName'));
+  const errorSelector = Selector('span.error.formHorizontalName.active');
+  await accountPage.checkErrorMsg(errorSelector, 'email');
 });

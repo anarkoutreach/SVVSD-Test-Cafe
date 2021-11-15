@@ -37,4 +37,14 @@ export default class AccountPage {
         .click(sharedElements.userIcon)
         .click(await sharedElements.findGenericDropdownSelector('account'));
     }
+
+    /**
+     * @description from a selector find if it contains a string
+     * @param selector the selector to check
+     * @param s the string to check for
+     */
+    async checkErrorMsg(selector: Selector, s: string) {
+      await t.expect(selector.exists).eql(true)
+        .expect(await (await selector.innerText).includes(s)).eql(true);
+    }
 }

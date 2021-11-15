@@ -17,6 +17,7 @@ module.exports = {
     'testcafe',
   ],
   rules: {
+    'no-underscore-dangle': 0,
     'class-methods-use-this': 0,
     'max-classes-per-file': ['error', 2],
     'no-mixed-spaces-and-tabs': 0,

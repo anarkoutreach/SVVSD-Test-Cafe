@@ -20,6 +20,9 @@ export default class WI {
     /** @description total added Context? */
     AddedContextsHoverText: Selector;
 
+    /** @description all remove buttons (times btns) */
+    allRemoveButtons: Selector;
+
     /** @description the workitem tab of the WI */
     WorkitemTab: Selector;
 
@@ -173,10 +176,15 @@ export default class WI {
 
     allButtons: Selector;
 
+    /** @description as selector for the div cotaining buttons */
+    buttonAera: Selector;
+
     /**
      * @description the constructor for the WI object, representing a Workitem on MBEWeb
      */
     constructor() {
+      this.buttonAera = Selector('.searchItemButtons');
+      this.allRemoveButtons = Selector('.fas.fa-times');
       const sharedElements = new SharedElements();
       this.allButtons = Selector('.fas.fa-plus');
       this.wiViewTitle = Selector('div.WIPlayerTopToolbarFirstRow');
@@ -397,15 +405,18 @@ export default class WI {
      * @returns null
      */
     async RemoveUserByIndex(num: number) {
-      const userdata = this.allButtons.nth(num).sibling('.searchItemInfo');
-      const username = await userdata.child('span').innerText;
+      const sharedElements = new SharedElements();
+      const userdata = this.buttonAera.nth(num).sibling('.searchItemInfo');
+      const username = await userdata.child('span.searchItemName').innerText;
 
       await t
-        .expect(this.allButtons.nth(num).exists).eql(true)
-        .click(this.allButtons.nth(num))
-        .expect(Selector('button#okayConfirm').exists)
+        .expect(await this.allRemoveButtons.nth(num).exists).eql(true)
+        .click(this.allRemoveButtons.nth(num));
+      const confirmBtn = sharedElements.genericCreateBtn;
+      await t
+        .expect(confirmBtn.exists)
         .eql(true)
-        .click(Selector('button#okayConfirm'))
+        .click(confirmBtn)
         .expect(username === await this.allButtons.nth(num).sibling('.searchItemInfo').child('span').innerText)
         .eql(true);
     }
@@ -419,19 +430,23 @@ export default class WI {
      */
     async AddAllAvalibleContent() {
       // only the first page
-      const count = await this.allButtons.count;
+      const count = 10;
       for (let i = 0; i < count; i += 1) {
+        const savedSibling = this.allButtons.parent().parent().sibling('searchItemInfo');
         await t
-          .expect(this.allButtons.nth(i).exists).eql(true)
-          .click(this.allButtons.nth(i))
-          .expect(this.allButtons.nth(i).exists)
-          .eql(true)
-          .click(this.allButtons.nth(i));
-        const alertAppears = Selector('span.error.active').exists;
-        const contentAdded = (await alertAppears === true);
+          .expect(this.allButtons.nth(0).exists).eql(true)
+          .click(this.allButtons.nth(0));
+        const contentAdded = (await savedSibling !== this.allButtons.parent().parent().sibling('searchItemInfo'));
         await t
           .expect(contentAdded).eql(true);
       }
+    }
+
+    private async _getContentNumWithSibling(x: number, sibling: string) {
+      const sharedElements = new SharedElements();
+      const searchPage = new SearchPage();
+      const searchItem = await sharedElements.withSibling(searchPage.searchItem.nth(x), sibling);
+      return searchItem;
     }
 
     /**
@@ -444,12 +459,7 @@ export default class WI {
       await this.SwitchWITAB(WORKITEMTAB.WORKITEM);
       const sharedElements = new SharedElements();
       const removeContentSelector = await sharedElements.findGenericDropdownSelector('remove');
-      const searchPage = new SearchPage();
-      async function getContentNumText(x: number) {
-        const searchItem = await sharedElements.withSibling(searchPage.searchItem.nth(x), '.assetThumbnail');
-        return searchItem;
-      }
-      const contentItemText = await getContentNumText(num);
+      const contentItemText = await this._getContentNumWithSibling(num, '.assetThumbnail');
       await t
         .expect(sharedElements.ellipsis.exists).eql(true)
         .click(sharedElements.ellipsis.nth(num))
@@ -459,7 +469,7 @@ export default class WI {
         .expect(Selector(sharedElements.genericCreateBtn).exists)
         .eql(true)
         .click(Selector(sharedElements.genericCreateBtn))
-        .expect(contentItemText === await getContentNumText(num))
+        .expect(contentItemText === await this._getContentNumWithSibling(num, '.assetThumbnail'))
         .eql(false);
     }
 
