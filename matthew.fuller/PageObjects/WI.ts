@@ -17,6 +17,9 @@ const util = new Util();
  */
 export default class WI {
     // selectors
+    /** @description a selector to select the "added" element  */
+    addedElementSelector: Selector;
+
     /** @description total added Context? */
     AddedContextsHoverText: Selector;
 
@@ -191,7 +194,7 @@ export default class WI {
       this.smallAnarkLogo = Selector('#WIPlayerMetadataDrawerButton');
       this.Uploads = [];
       this.AddedContextsHoverText = Selector('div.contextItemHoverInfo');
-      this.ContextFiles = Selector('img.img-responsive');
+      this.ContextFiles = Selector('img.contextItemThumbnailImage');
       this.SubmitUploadFileBtn = Selector('button#uploadFileButton');
       this.UploadFileBtn = Selector('input#uploadFile');
       this.UploadTitle = Selector('input#uploadTitle');
@@ -200,6 +203,7 @@ export default class WI {
       this.releasestatus = status.DRAFT;
       this.Location = location.BOULDER;
       this.steps = [];
+      this.addedElementSelector = Selector('searchItemAdded').withText('Added');
       this.editWITitle = Selector('#wiTitleInput');
       this.editWIDescription = Selector('#wiDescription');
       this.wiTitle = sharedElements.appTitle;
@@ -286,13 +290,15 @@ export default class WI {
     * @return null
     */
     async AddContentByIndex(num: number) {
+      // the offset is calculated by getting how many elements
+      // are no longer selectable and subtracting that to the num
+      const offset = await this.addedElementSelector.count;
+      // console.log(offset);
+      num -= offset;
       await t
         .expect(this.allButtons.nth(num).exists).eql(true)
-        .click(this.allButtons.nth(num))
-        .expect(this.allButtons.nth(num).exists)
-        .eql(true)
         .click(this.allButtons.nth(num));
-      // todo add verification that the content has been added
+      // todo add verification that the content has been added }
     }
 
     /** @description Clicks the "Next" Btn at the bottom of the User tab of a WI.

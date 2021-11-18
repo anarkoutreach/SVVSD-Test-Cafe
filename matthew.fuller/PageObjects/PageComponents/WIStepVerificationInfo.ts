@@ -57,14 +57,13 @@ export default class WIStepVerificationInfo {
       this.VerificationStepGeneralTitle = Selector('input.characteristicEditorTitle');
       this.VerificationStepGeneralID = Selector('div.characteristicEditorQPID');
       this.VerificationMenuClose = Selector('button.close');
-      this.VerificationButtons = Selector('button.list-group-item');
-      this.VerificationBtnText = this.VerificationButtons.filter('button').nth(0);
-      this.VerificationBtnDecimal = this.VerificationButtons.filter('button').nth(1);
-      this.VerificationBtnInteger = this.VerificationButtons.filter('button').nth(1);
-      this.VerificationBtnDate = this.VerificationButtons.filter('button').nth(2);
-      this.VerificationBtnCheckbox = this.VerificationButtons.filter('button').nth(3);
-      this.VerificationBtnDropdown = this.VerificationButtons.filter('button').nth(4);
-      this.VerificationBtnMultiSelect = this.VerificationButtons.filter('button').nth(5);
-      this.VerificationBtnUpload = this.VerificationButtons.filter('button').nth(6);
+      this.VerificationButtons = Selector('div.addCharacteristicsButtons.list-group');
+      this.VerificationBtnText = Selector('div').withAttribute('data-controltype', 'input').withAttribute('data-inputtype', 'string');
+      this.VerificationBtnInteger = Selector('div').withAttribute('data-controltype', 'input').withAttribute('data-inputtype', 'number');
+      this.VerificationBtnDate = Selector('div').withAttribute('data-controltype', 'date');
+      this.VerificationBtnCheckbox = Selector('div').withAttribute('data-controltype', 'checkbox');
+      this.VerificationBtnDropdown = Selector('div').withAttribute('data-controltype', 'dropdown');
+      this.VerificationBtnMultiSelect = Selector('div').withAttribute('data-controltype', 'multiselect');
+      this.VerificationBtnUpload = Selector('div').withAttribute('data-controltype', 'upload');
     }
 }

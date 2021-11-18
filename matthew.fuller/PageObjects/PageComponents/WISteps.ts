@@ -2,6 +2,7 @@ import { Selector, t } from 'testcafe';
 import { VerificationTypes } from './VerificationTypes';
 import WIStepVerificationInfo from './WIStepVerificationInfo';
 import Util from '../../Utilities/util';
+import SharedElements from '../sharedElements';
 
 const util = new Util();
 const types = VerificationTypes;
@@ -51,8 +52,9 @@ export default class WISteps {
     genericStep: WIStepVerificationInfo;
 
     constructor() {
+      const sharedElements = new SharedElements();
       this.StepNum = null;
-      this.verificationsubmitBtn = Selector('button.create.btn.btn-sm.btn-success');
+      this.verificationsubmitBtn = sharedElements.genericCreateBtn;
       if (!this.StepShouldNotHaveInformationFilled) {
         this.StepSafteyAndComplience = `this is generic saftey${util.randChar(25)}`;
         this.StepDescription = `this is a generic step description${util.randChar(25)}`;
@@ -68,7 +70,7 @@ export default class WISteps {
       this.editStepSafetyAndComplience = Selector('div.ql-editor').nth(1);
       this.verificationPanel = Selector('#DWIPlayerSideBar .DWIPlayerSectionContents');
       this.verificationNewVerificationStep = this.verificationPanel.child('.WIStepVerificationInfo');
-      this.verificationstepsWIselector = Selector('.well.characteristicEditor').filter('div');
+      this.verificationstepsWIselector = Selector('div.characteristicEditor').filter('div');
       this.verificationapendBtn = Selector('a.editProcessStepCharacteristics');
       this.verificationsteps = [];
       this.fileExtention = Selector('label').withText('Accepted File Extensions:').sibling();

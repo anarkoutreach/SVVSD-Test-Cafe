@@ -316,7 +316,7 @@ export default class FeedPage {
 	  if (util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
 	  await this.SearchFor(workitem.title, tabs.WORKITEMS);
 	  const searchResult = await this.findSearchResult(workitem.title);
-	  console.log(await searchResult.nth(0).innerText);
+	  if (util.Verbose) console.log(await searchResult.nth(0).innerText);
 	  if (await searchResult.exists === false) {
 	    await t.expect(searchResult.exists).eql(true);
 	    console.log('TEST failed as search result does not exist');
