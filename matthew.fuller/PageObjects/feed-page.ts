@@ -10,6 +10,7 @@ import Util from '../Utilities/util';
 import UserPage from './user-page';
 import userObj from './PageComponents/userObj';
 import SharedElements from './sharedElements';
+import SystemPrefPage from './systemPref-page';
 
 // using this event system, creating massive stress tests on WI items is speed up by a ton,
 // as this ensures data for the WI persists even through new WI objects being created if
@@ -101,10 +102,14 @@ export default class FeedPage {
 	/** @description the generic cog btn */
 	cogBtn: Selector;
 
+	/** @description the more btn always present in the upper right */
+	moreBtn: Selector;
+
 	eventEmitter = new MyClass();
 
 	constructor() {
 	  const sharedElements = new SharedElements();
+	  this.moreBtn = sharedElements.moreBtn;
 	  this.createOptionsActivity = Selector('a.dropdown-item').withAttribute('data-title', 'Activity');
 	  this.userInfoBox = Selector('div.userRoles');
 	  this.userNameField = Selector('p.MBEWebNavbar-usermenuname');
@@ -125,6 +130,21 @@ export default class FeedPage {
 	  this.addCommentCamera = Selector('[data-name="ahsmzdfhn"] .newCommentCameraContainer');
 	  this.addCommentCapture = Selector('[data-name="ahsmzdfhn"] .fade.in #captureOption');
 	  this.commentsTextArea = Selector('#comments');
+	}
+
+	/** @description navigate to the system preferences page */
+	async navigateToSystemPrefPage() {
+	  const systemPrefPage = new SystemPrefPage();
+	  const sharedElements = new SharedElements();
+	  await t
+	    .expect(this.moreBtn.visible).eql(true)
+	    .click(this.moreBtn);
+	  const sysPrefDropdown = await sharedElements.findGenericDropdownSelector('system');
+	  await t
+	  .expect(sysPrefDropdown.visible).eql(true)
+	  .click(sysPrefDropdown)
+	  .expect(systemPrefPage.systemBtn.visible)
+	    .eql(true);
 	}
 
 	/**

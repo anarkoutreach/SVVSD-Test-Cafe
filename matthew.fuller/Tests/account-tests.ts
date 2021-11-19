@@ -1,6 +1,7 @@
 import { Selector, t } from 'testcafe';
 import ConfigurationManager from '../Configuration/configuration';
 import AccountPage from '../PageObjects/acount-page';
+import SharedElements from '../PageObjects/sharedElements';
 import { mattUser } from '../Utilities/roles';
 import Util from '../Utilities/util';
 
@@ -14,10 +15,13 @@ fixture`acounts`.page(configManager.homePage).beforeEach(async () => {
 });
 test('check slider value', async () => {
   const accountPage = new AccountPage();
+  const sharedElements = new SharedElements();
   await accountPage.navigateFromHomeToAccountPage();
-  console.log(await accountPage.getSwitchBool());
-  await t.click(accountPage.emailNotificationSwitch);
-  console.log(await accountPage.getSwitchBool());
+  await sharedElements.testCheckboxes(
+    accountPage.emailNotificationSwitch,
+    accountPage.emailNotificationSwitchInput,
+    true,
+  );
 });
 
 test('check improper email error msg displays', async () => {
