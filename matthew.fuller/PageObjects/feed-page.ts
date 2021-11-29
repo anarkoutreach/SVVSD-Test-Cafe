@@ -132,6 +132,18 @@ export default class FeedPage {
 	  this.commentsTextArea = Selector('#comments');
 	}
 
+	/** @description navigate to the ac list creation page from the feed page */
+	async navigateToCreateAcList() {
+	  const sharedElements = new SharedElements();
+	  await t
+	    .expect(this.createButton.visible).eql(true)
+	    .click(this.createButton);
+	  const acListcreationBtn = await sharedElements.findGenericDropdownSelector('aclist');
+	  await t
+	  .expect(acListcreationBtn.visible).eql(true)
+	  .click(acListcreationBtn);
+	}
+
 	/** @description navigate to the system preferences page */
 	async navigateToSystemPrefPage() {
 	  const systemPrefPage = new SystemPrefPage();

@@ -1,6 +1,8 @@
+import { t } from 'testcafe';
 import FeedPage from '../PageObjects/feed-page';
 import { mattUser } from '../Utilities/roles';
 import ConfigurationManager from '../Configuration/configuration';
+import { SysPrefTabs } from '../PageObjects/PageComponents/sytemPrefTABS';
 import SystemPrefPage from '../PageObjects/systemPref-page';
 /** @description the system preferences page */
 const systemPrefPage = new SystemPrefPage();
@@ -14,8 +16,21 @@ fixture`system pref tests`.page(configManager.homePage).beforeEach(async (t) => 
   await t
     .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
+  await feedPage.navigateToSystemPrefPage();
 });
 
 test('can navigate to system preference page from feed page', async () => {
-  await feedPage.navigateToSystemPrefPage();
+  // emtpy as to test fixture before each
+});
+
+test('can switch between all tabs', async () => {
+  const keyArr = Object.keys(SysPrefTabs);
+  console.log(keyArr);
+  async function _loopThroughTabs() {
+    keyArr.forEach(async (key) => {
+      await systemPrefPage.switchTab(SysPrefTabs[key]);
+    });
+  }
+  await _loopThroughTabs();
+  await _loopThroughTabs();
 });

@@ -142,7 +142,7 @@ export default class SharedElements {
   	}
 
   	// eslint-disable-next-line class-methods-use-this
-  	async findGenericDropdownSelector(text) {
+  	findGenericDropdownSelector(text) {
   	  const re = new RegExp(text, 'gi');
   	  return Selector('a').withText(re);
   	}
