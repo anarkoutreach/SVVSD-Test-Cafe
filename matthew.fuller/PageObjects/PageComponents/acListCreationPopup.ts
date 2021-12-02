@@ -27,13 +27,13 @@ export default class ACListCreationPopup {
       this.nameInput = Selector('#name');
       this.descriptionInput = Selector('#description');
       this.dropdownOpenBtn = Selector('.multiSelectDropdown.groupRolesDropdown');
-      this.adminDropDownBtn = Selector('div').withText(/admin/gi);
-      this.viewerDropDownBtn = Selector('div').withText(/viewer/gi);
-      this.wiAuthorDropDownBtn = Selector('div').withText(/author/gi);
-      this.wiExecutorDropDownBtn = Selector('div').withText(/executor/gi);
-      this.wiManagerDropDownBtn = Selector('div').withText(/manager/gi);
-      this.contentAuthorDropDownBtn = Selector('div').withText(/content/gi);
-      this.activityAuthorDropDownBtn = Selector('div').withText(/act/gi);
+      this.adminDropDownBtn = Selector('div#react-select-2-option-0');
+      this.viewerDropDownBtn = Selector('div#react-select-2-option-3');
+      this.wiAuthorDropDownBtn = Selector('div#react-select-2-option-4');
+      this.wiExecutorDropDownBtn = Selector('div#react-select-2-option-5');
+      this.wiManagerDropDownBtn = Selector('div#react-select-2-option-6');
+      this.contentAuthorDropDownBtn = Selector('div#react-select-2-option-2');
+      this.activityAuthorDropDownBtn = Selector('div#react-select-2-option-1');
     }
 
     async selectRole(role: string) {
