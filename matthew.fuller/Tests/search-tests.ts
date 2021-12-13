@@ -21,7 +21,6 @@ test('content tab loads as default active tab on search page', async (t) => {
   const activeTab = await searchPage.getActiveTab();
   await t.expect(activeTab.toLocaleLowerCase().includes('content'.toLocaleLowerCase())).eql(true);
 });
-
 /** @description navigate to search tab from feed page by searching an empty string */
 test('can navigate to serach tab', async () => {
   await feedPage.naviagteToSearchTab();
@@ -102,3 +101,8 @@ test('can navigate to the ACLs tab of the search page by searching a non-empty s
   // no farther verification is needed as the above function already
   // verifies if the switch to a specific tab was successfully completed
 });
+
+test('ensure mbe web displays the same number of results as it claims', async () => {
+  await feedPage.SearchFor(' ', tabs.GROUPS);
+  await searchPage.validateMBEWebsProposedNumberOfSearchResults();
+}).only;

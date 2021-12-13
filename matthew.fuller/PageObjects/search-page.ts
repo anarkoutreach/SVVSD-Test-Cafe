@@ -16,21 +16,30 @@ export default class SearchPage {
 
 	results: Selector;
 
+  searchResultsDisplayText: Selector;
+
 	searchResults: Selector;
 
     activeTab: Selector;
 
     activitiesTab: Selector;
 
+    nextBtn: Selector;
+
+    prevBtn: Selector;
+
     /** @description span.searchItemName.canOpen the selector used for search item names */
     searchItem: Selector;
 
     /** @description the search page class,  */
     constructor() {
+      this.prevBtn = Selector('button#prev');
+      this.nextBtn = Selector('button#next');
+      this.searchResultsDisplayText = Selector('div.searchResultsCount');
       this.searchItem = Selector('span.searchItemName.canOpen');
       this.activitiesTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Activity');
       this.contentTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Content');
-      this.groupsTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Groups');
+      this.groupsTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Group');
       this.usersTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Users');
       this.ACListTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'ACList');
       this.templatesTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Templates');
@@ -38,6 +47,24 @@ export default class SearchPage {
       this.results = Selector('div.searchItemInfo');
       this.searchResults = Selector('div.searchResults');
       this.activeTab = Selector('button.searchFilter-tab.selected.btn.btn-link');
+    }
+
+    /**
+     * @description after a search is run, ensure the number of results MBE web
+     * displays that is its showing is equal to the real number of results
+     * --must be used after a serach has already been run.
+     */
+    async validateMBEWebsProposedNumberOfSearchResults() {
+      const text = await this.searchResultsDisplayText.innerText;
+      const count = text.match(/(\b\d+\b)/i)[0];
+      let realCount = 0;
+      while (await this.nextBtn.exists === true) {
+        realCount += await Selector('span.searchItemName').count;
+        await t.click(this.nextBtn);
+      }
+      realCount += await Selector('span.searchItemName').count;
+      await t.expect(parseInt(count, 10)).eql(realCount);
+      // (\b\d+\b)
     }
 
     /** @description ensure a search exists in search results based on a search text bariable */

@@ -1,4 +1,4 @@
-import { t } from 'testcafe';
+import { } from 'testcafe';
 import FeedPage from '../PageObjects/feed-page';
 import { mattUser } from '../Utilities/roles';
 import ConfigurationManager from '../Configuration/configuration';

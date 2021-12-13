@@ -1,9 +1,11 @@
+/* eslint-disable no-restricted-syntax */
 import FeedPage from '../PageObjects/feed-page';
 import { mattUser } from '../Utilities/roles';
 import ConfigurationManager from '../Configuration/configuration';
 import UserObj from '../PageObjects/PageComponents/userObj';
 import UserPage from '../PageObjects/user-page';
 import Util from '../Utilities/util';
+import { roles } from '../PageObjects/PageComponents/roles';
 
 const util = new Util();
 const userPage = new UserPage();
@@ -11,7 +13,7 @@ const userPage = new UserPage();
 const configManager = new ConfigurationManager();
 /** @description A class represnting the "feedpage" on MBE-web */
 const feedPage = new FeedPage();
-fixture`Login -> Navigate to new user page`.page(configManager.homePage).beforeEach(async (t) => {
+fixture`user creation tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   await t
     .setNativeDialogHandler(() => true)
@@ -92,4 +94,49 @@ test('can a user with an email that has parenthesis be created @ symbol be creat
   await userPage.pressCreateBtn();
   const errors = await userPage.checkErrorsOnPage();
   await t.expect(errors.includes('invalidEmail')).eql(true);
+});
+
+fixture`user creation tests --that should be skiped usually`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+}).afterEach(async () => {
+
+});
+
+test('test used to create and save users for use by other tests (should be skipped unless the users need to be remade for some reason', async () => {
+  const powerset = (array) => { // O(2^n)
+    const results = [[]];
+    for (const value of array) {
+      const copy = [...results]; // See note below.
+      for (const prefix of copy) {
+        results.push(prefix.concat(value));
+      }
+    }
+    return results;
+  };
+
+  async function _createUser(userRoles, name = null) {
+    const user = new UserObj();
+    if (name === null) {
+      const tempName = await JSON.stringify(await userRoles.join(''));
+      user.loginId = `${tempName}user`;
+    } else {
+      user.loginId = name;
+    }
+    user.password = 'AutoPassword';
+    // await userPage.testRoleAssignment(userRoles, user);
+    return user;
+  }
+  const everyCombination = powerset([roles.ACTIVITYAUTHOR, roles.ADMIN, roles.CONTENTAUTHOR,
+    roles.VIEWER, roles.WIAUTHOR, roles.WIEXECUTOR, roles.WIMANAGER]);
+
+  // eslint-disable-next-line prefer-const
+  let allUsers: UserObj[] = [];
+  everyCombination.forEach(async (comb) => {
+    const thisUser = await _createUser(comb);
+    allUsers.push(thisUser);
+  });
+  console.log(allUsers);
 });

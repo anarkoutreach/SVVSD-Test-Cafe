@@ -10,6 +10,7 @@ import { WORKITEMTAB } from './PageComponents/WITAB';
 import SharedElements from './sharedElements';
 import SearchPage from './search-page';
 
+const searchPage = new SearchPage();
 const util = new Util();
 // everything (in this file) is documented in JSDOCs YAY!!!!
 /**
@@ -234,8 +235,8 @@ export default class WI {
       this.UserTab = Selector('#wiTabs-tab-User');
       this.ContentTab = Selector('#wiTabs-tab-Content');
       this.UploadTab = Selector('#wiTabs-tab-Upload');
-      this.UserPageNextBtn = Selector('button#next');
-      this.UserPagePrevBtn = Selector('button#prev');
+      this.UserPageNextBtn = searchPage.nextBtn;
+      this.UserPagePrevBtn = searchPage.prevBtn;
     }
 
     /** @description Clicks the "append child step" btn, on an existing step.
@@ -450,7 +451,6 @@ export default class WI {
 
     private async _getContentNumWithSibling(x: number, sibling: string) {
       const sharedElements = new SharedElements();
-      const searchPage = new SearchPage();
       const searchItem = await sharedElements.withSibling(searchPage.searchItem.nth(x), sibling);
       return searchItem;
     }

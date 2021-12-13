@@ -166,10 +166,10 @@ export default class UserPage {
 	 * @return user obj
 	*/
 	// eslint-disable-next-line class-methods-use-this
-	async testRoleAssignment(roles: string[]) {
+	async testRoleAssignment(roles: string[], user = new UserObj()) {
 	  const userPage = new UserPage();
 	  const feedPage = new FeedPage();
-	  const user = new UserObj(roles);
+	  user.roles = roles;
 	  await userPage.fillAllFields(user);
 	  await userPage.pressCreateBtn();
 	  await feedPage.returnToHome();
