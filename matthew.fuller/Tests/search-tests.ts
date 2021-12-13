@@ -102,7 +102,18 @@ test('can navigate to the ACLs tab of the search page by searching a non-empty s
   // verifies if the switch to a specific tab was successfully completed
 });
 
-test('ensure mbe web displays the same number of results as it claims', async () => {
-  await feedPage.SearchFor(' ', tabs.GROUPS);
+// one test for content as it should have less than 100 on the test server
+// if these two tests are used on a different server ensure, that the tab that this
+// search is used in has less than the display limit of items
+test('ensure mbe web displays the same number of results as it claims --content', async () => {
+  await feedPage.SearchFor(' ', tabs.CONTENT);
+  await searchPage.validateMBEWebsProposedNumberOfSearchResults();
+}).only;
+
+// and one test for groups as it should have more than 100 on the test server
+// if these two tests are used on a different server ensure, that the tab that this
+// search is used in has more than the display limit of items
+test('ensure mbe web displays the same number of results as it claims --groups', async () => {
+  await feedPage.SearchFor(' ', tabs.CONTENT);
   await searchPage.validateMBEWebsProposedNumberOfSearchResults();
 }).only;
