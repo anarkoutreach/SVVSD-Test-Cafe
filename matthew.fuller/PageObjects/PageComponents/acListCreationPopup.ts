@@ -116,7 +116,6 @@ export default class ACListCreationPopup {
             .click(this.rolesTextField)
             .typeText(this.rolesTextField, role)
             .pressKey('enter');
-          await t.wait(1000);
         });
       }
       if (clickCreate) { await t.click(this.acListCreateBtn); }

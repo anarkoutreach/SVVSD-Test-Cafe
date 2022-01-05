@@ -74,6 +74,81 @@ test('check duplicate aclist creation err text', async () => {
   await t.expect(sharedElements.genericErr.withText('This list name is already in use. Please choose a different name.').visible).eql(true);
 });
 
+test('check no description err exists', async () => {
+  const acListPage = new ACListCreationPopup();
+  const acList = new ACListObj();
+  const role = acList.roles[0];
+  await t
+    .expect(acListPage.nameInput.visible).eql(true)
+    .typeText(acListPage.nameInput, acList.name);
+  await t
+    .click(acListPage.rolesTextField)
+    .typeText(acListPage.rolesTextField, role)
+    .pressKey('enter');
+  await t
+    .expect(acListPage.acListCreateBtn.visible).eql(true)
+    .click(acListPage.acListCreateBtn)
+    .expect(sharedElements.genericErr.visible);
+});
+
+test('check no description err text', async () => {
+  const acListPage = new ACListCreationPopup();
+  const acList = new ACListObj();
+  const role = acList.roles[0];
+  await t
+    .expect(acListPage.nameInput.visible).eql(true)
+    .typeText(acListPage.nameInput, acList.name);
+  await t
+    .click(acListPage.rolesTextField)
+    .typeText(acListPage.rolesTextField, role)
+    .pressKey('enter');
+  await t
+    .expect(acListPage.acListCreateBtn.visible).eql(true)
+    .click(acListPage.acListCreateBtn);
+  console.log(await sharedElements.genericErr.innerText);
+  await t
+    .expect(await sharedElements.genericErr.innerText === 'Description field is empty')
+    .eql(true);
+});
+
+test('check no title err exists', async () => {
+  const acListPage = new ACListCreationPopup();
+  const acList = new ACListObj();
+  const role = acList.roles[0];
+  await t
+    .expect(acListPage.descriptionInput.visible).eql(true)
+    .typeText(acListPage.descriptionInput, acList.description);
+  await t
+    .click(acListPage.rolesTextField)
+    .typeText(acListPage.rolesTextField, role)
+    .pressKey('enter');
+  await t
+    .expect(acListPage.acListCreateBtn.visible).eql(true)
+    .click(acListPage.acListCreateBtn)
+    .expect(await sharedElements.genericErr.exists)
+    .eql(true);
+});
+
+test('check no title err text', async () => {
+  const acListPage = new ACListCreationPopup();
+  const acList = new ACListObj();
+  const role = acList.roles[0];
+  await t
+    .expect(acListPage.descriptionInput.visible).eql(true)
+    .typeText(acListPage.descriptionInput, acList.description);
+  await t
+    .click(acListPage.rolesTextField)
+    .typeText(acListPage.rolesTextField, role)
+    .pressKey('enter');
+  await t
+    .expect(acListPage.acListCreateBtn.visible).eql(true)
+    .click(acListPage.acListCreateBtn);
+  console.log(await sharedElements.genericErr.innerText);
+  await t
+    .expect(await sharedElements.genericErr.innerText === 'Name field is empty')
+    .eql(true);
+});
+
 test('can create AC list and navigate to edit it', async () => {
   const acListPage = new ACListCreationPopup();
   const acList = new ACListObj();
@@ -115,10 +190,8 @@ test('can create AC list and edit description', async () => {
   acList.description = `${acList.description}edited`;
   await acListPage.navigateToEditAcList(acList);
   const description = await acListPage.descriptionInput.value;
-  console.log(description);
-  console.log(description);
   await t.expect(description === acList.description).eql(true);
-}).only;
+});
 
 test('can create AC list and navigate to delete it from search', async () => {
   const acListPage = new ACListCreationPopup();
