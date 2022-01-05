@@ -54,4 +54,10 @@ export default class Util {
       .click(field)
       .pressKey('ctrl+a delete');
   }
+
+  /** @description presses "enter" through testcafe */
+  async pressEnter() {
+    await t
+      .pressKey('enter');
+  }
 }

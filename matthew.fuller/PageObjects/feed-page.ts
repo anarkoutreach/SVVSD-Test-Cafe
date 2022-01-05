@@ -12,6 +12,7 @@ import userObj from './PageComponents/userObj';
 import SharedElements from './sharedElements';
 import SystemPrefPage from './systemPref-page';
 import HelpPopup from './PageComponents/helpPopup';
+import ACListObj from './PageComponents/acListObj';
 
 // using this event system, creating massive stress tests on WI items is speed up by a ton,
 // as this ensures data for the WI persists even through new WI objects being created if
@@ -451,6 +452,7 @@ export default class FeedPage {
 	async findSearchResult(text) {
 	  text = text.replace(/\(/g, '\\(');
 	  text = text.replace(/\)/g, '\\)');
+	  text = text.replace(/[-]/g, '[^-]');
 	  const searchpage = new SearchPage();
 	  const re = new RegExp(text, 'gi');
 	  const result = await searchpage.searchResults.find('span.searchItemName').withText(re);
@@ -525,7 +527,7 @@ export default class FeedPage {
 	 * @param text the string to search for
 	 * @param tab the tab to search in: an enum of tab
 	 */
-	async SearchFor(text: string, tab: tabs) {
+	async SearchFor(text: string, tab: tabs, validate = true) {
 	  const util = new Util();
 	  const searchpage = new SearchPage();
 	  await this.naviagteToSearchTab(text);
@@ -550,13 +552,11 @@ export default class FeedPage {
 	  // expect that the banner text and the active tab concur that
 	  // the program has navigated and searched in the proper search tab.
 	  // if the banner text has 1 in it this will still pass as the next expect statement will catch
-	    .expect(bannerText.toLocaleLowerCase().includes('access control list') || bannerText.includes('1')).eql(true)
+	    .expect(bannerText.toLocaleLowerCase().includes('access control list') || bannerText.includes('1') || bannerText.toLocaleLowerCase().includes('acls')).eql(true)
 	    .expect(activetab2.toLocaleLowerCase().includes(tab.toLocaleLowerCase())).eql(true);
 	  }
 	  if (util.Verbose) console.log('-- searchFor: all "search for" tests have passed --');
-	  // search validation should occur outside of this function as this
-	  // is just intended to search for a result.
-	  // await searchpage.validateSerch(text);
+	  if (validate) { await searchpage.validateSerch(text); }
 	}
 
 	/**
@@ -578,6 +578,26 @@ export default class FeedPage {
 	  if (util.Verbose) console.log('-- navigateToWi: return - Search Result --');
 	  return searchResult;
 	}
+
+	/**
+	 * @description from feed page search for acl and return selector for it
+	 * @param ACList the acl object
+	 * @returns a selector of the search result
+	 */
+	 async getACListSelector(ACList: ACListObj, validate = true) {
+	  const util = new Util();
+	  const title = ACList.name;
+	  await util.CtlADelete(this.getSearchBar);
+	  if (util.Verbose) console.log('-- navigateToWi: started Navigate To WI script ()--');
+	  if (util.Verbose) console.log('-- navigateToWi:started " Search for script "--');
+	  await this.SearchFor(title, tabs.ACLIST, validate);
+	  if (util.Verbose) console.log('-- navigateToWi: finished "Search for" script --');
+	  if (util.Verbose) console.log('-- navigateToWi: started "find search result" -script --');
+	  const searchResult = await this.findSearchResult(title);
+	  if (util.Verbose) console.log('-- navigateToWi: finished "Search for result" script --');
+	  if (util.Verbose) console.log('-- navigateToWi: return - Search Result --');
+	  return searchResult;
+	  }
 
 	/**
 	 * @description navigate to a work item in edit mode

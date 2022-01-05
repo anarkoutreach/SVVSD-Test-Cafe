@@ -45,7 +45,7 @@ export default class SearchPage {
       this.templatesTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Templates');
       this.workItemsTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'WorkItem');
       this.results = Selector('div.searchItemInfo');
-      this.searchResults = Selector('div.searchResults');
+      this.searchResults = Selector('div.searchResultsResults');
       this.activeTab = Selector('button.searchFilter-tab.selected.btn.btn-link');
     }
 

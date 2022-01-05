@@ -4,7 +4,7 @@ import { mattUser } from '../Utilities/roles';
 
 const configManager = new ConfigurationManager();
 
-fixture`My first fixture`.page(configManager.homePage).beforeEach(async (t) => {
+fixture`login tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
 
   // await t

@@ -99,9 +99,20 @@ export default class SharedElements {
     /** @description the more btn always present in the upper right */
   	moreBtn: Selector;
 
+	/** @description the generic selector for errors on MBE web */
+	genericErr: Selector;
+
+	/** @description the pencil icon used for edit icon in search object options */
+	pencilIcon: Selector;
+
+	/** @description the trash icon used for delete icon in search options */
+	trashIcon: Selector;
+
   	constructor() {
   	  /** @type {any} */
   	  this.moreBtn = Selector('.MenuList-icon.fas.fa-bars');
+	  this.trashIcon = Selector('.fa-trash-alt');
+	  this.pencilIcon = Selector('span.fa-pencil-alt');
   	  this.infoSidePane = Selector('.infoSide-pane');
   	  this.alerts = new Alerts();
   	  this.anarkLogo = Selector('span.navbar-brand');
@@ -115,6 +126,7 @@ export default class SharedElements {
   	  this.appTitle = Selector('div.appTitle');
   	  this.searchbar = Selector('input.searchBar');
   	  this.genericCog = Selector('span.fas.fa-cog');
+	  this.genericErr = this.alerts.errorPopUp;
 
   	  // case insensitive .withtext
   	  this.dropDownDelete = Selector('a').withText(/delete/gi);

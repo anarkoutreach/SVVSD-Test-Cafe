@@ -7,7 +7,7 @@ import Util from '../Utilities/util';
 
 const configManager = new ConfigurationManager();
 
-fixture`acounts`.page(configManager.homePage).beforeEach(async () => {
+fixture`accounts`.page(configManager.homePage).beforeEach(async () => {
   t.ctx.user = mattUser;
   await t
     .setNativeDialogHandler(() => true)

@@ -1,4 +1,6 @@
 import { Selector, t } from 'testcafe';
+import FeedPage from '../feed-page';
+import SharedElements from '../sharedElements';
 import acListObj from './acListObj';
 import { roles } from './roles';
 
@@ -23,7 +25,15 @@ export default class ACListCreationPopup {
 
     wiManagerDropDownBtn: Selector;
 
+    rolesTextField: Selector;
+
+    acListCreateBtn: Selector;
+
+    acListCancelBtn: Selector;
+
     constructor() {
+      const sharedElements = new SharedElements();
+      this.rolesTextField = Selector('div.multiSelectDropdown');
       this.nameInput = Selector('#name');
       this.descriptionInput = Selector('#description');
       this.dropdownOpenBtn = Selector('.multiSelectDropdown.groupRolesDropdown');
@@ -34,6 +44,8 @@ export default class ACListCreationPopup {
       this.wiManagerDropDownBtn = Selector('div#react-select-2-option-6');
       this.contentAuthorDropDownBtn = Selector('div#react-select-2-option-2');
       this.activityAuthorDropDownBtn = Selector('div#react-select-2-option-1');
+      this.acListCreateBtn = sharedElements.genericCreateBtn;
+      this.acListCancelBtn = sharedElements.CreateCancelButton;
     }
 
     async selectRole(role: string) {
@@ -81,15 +93,49 @@ export default class ACListCreationPopup {
       }
     }
 
-    async createAcList(acList: acListObj) {
+    /**
+     * @description create ac list from aclist object on aclist creation popup
+     * @param acList aclist object
+     * @param type if true the roles will be entered by typing rather than clicking through the list
+     * @param clickCreate if true click the create button for the aclist creation menu
+     */
+    async createAcList(acList: acListObj, clickCreate = true, type = true) {
       await t
         .expect(this.nameInput.visible).eql(true)
         .typeText(this.nameInput, acList.name)
         .expect(this.descriptionInput.visible)
         .eql(true)
         .typeText(this.descriptionInput, acList.description);
-      acList.roles.forEach(async (role) => {
-        await this.selectRole(role);
-      });
+      if (type === false) {
+        acList.roles.forEach(async (role) => {
+          await this.selectRole(role);
+        });
+      } else {
+        acList.roles.forEach(async (role) => {
+          await t
+            .click(this.rolesTextField)
+            .typeText(this.rolesTextField, role)
+            .pressKey('enter');
+          await t.wait(1000);
+        });
+      }
+      if (clickCreate) { await t.click(this.acListCreateBtn); }
+    }
+
+    async navigateToEditAcList(acList) {
+      const feedPage = new FeedPage();
+      const sharedElements = new SharedElements();
+      const result = await feedPage.getACListSelector(acList);
+      await t.expect(await result.visible).eql(true);
+
+      await t
+        .expect(sharedElements.ellipsis.visible).eql(true)
+        .click(sharedElements.ellipsis);
+      const editBtn = sharedElements.pencilIcon;
+      await t
+        .expect(editBtn.exists).eql(true)
+        .click(editBtn)
+        .expect(this.nameInput.visible)
+        .eql(true);
     }
 }

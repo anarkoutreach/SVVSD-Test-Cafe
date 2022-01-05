@@ -1,4 +1,4 @@
-import { Selector } from 'testcafe';
+import { Selector, t } from 'testcafe';
 
 export default class HelpPopup {
     /**
@@ -7,7 +7,19 @@ export default class HelpPopup {
      * */
     identifier: Selector;
 
+    userReferenceLink: Selector;
+
     constructor() {
+      this.userReferenceLink = Selector('a.pdfLink');
       this.identifier = Selector('#mbewebHelpLinksHeading');
+    }
+
+    async clickUserReferenceBtn() {
+      await t.click(this.userReferenceLink);
+    }
+
+    async closeHelpTab() {
+      const helpWindow = await t.getCurrentWindow();
+      await t.closeWindow(helpWindow);
     }
 }

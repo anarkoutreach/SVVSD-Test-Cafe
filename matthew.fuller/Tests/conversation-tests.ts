@@ -6,7 +6,7 @@ import Util from '../Utilities/util';
 
 const configManager = new ConfigurationManager();
 
-fixture`Log in to MBEweb`.page(configManager.homePage).beforeEach(async (t) => {
+fixture`conversation tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
 
   await t
