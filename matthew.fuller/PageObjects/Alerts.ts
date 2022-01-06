@@ -1,5 +1,6 @@
 import { Selector, t } from 'testcafe';
 import Util from '../Utilities/util';
+import FeedPage from './feed-page';
 import SharedElements from './sharedElements';
 import WI from './WI';
 
@@ -66,7 +67,7 @@ export default class Alerts {
     /** @description the consturctor class used to represent alerts accross MBE web */
     constructor() {
       this.WIDuplicateError = Selector('span.error.processStepTitleInlineError.active');
-      this.errorPopUp = Selector('span.error');
+      this.errorPopUp = Selector('span.error.active');
       this.getGenericConfirmBtn = Selector('button.btn').filter('.createButtons-submit');
       this.getGenericCancelBtn = Selector('button.btn').filter('.createButtons-cancel');
       this.getAnarkLogo = Selector('span.navbar-brand');
@@ -100,6 +101,32 @@ export default class Alerts {
       if (util.Errors && num2 > 4) { console.log('-getlocationbutton() alerts.ts was given a number greater than 4'); return null; }
       return Selector('span[data-property=location]').child('.singleSelectDropdown').child('.css-26l3qy-menu').child()
         .child(num2);
+    }
+
+    /**
+     * @description try to create a work item without a required field and then test
+     * if error appears
+     * @param field the field to leave empty
+     * @param shouldClick weather or not to click the create button before
+     * checking if the error is present
+     */
+    async testErrorDisplaysForEmptyRequiredFieldOnWI(field, shouldClick = true) {
+      const wi = new WI();
+      const feedPage = new FeedPage();
+      const util = new Util();
+      const sharedElements = new SharedElements();
+      await feedPage.openAWICreateMenu();
+      await feedPage.FillallWIFields(wi);
+      await sharedElements.getCurrentInputs();
+      await util.CtlADelete(field);
+      if (shouldClick) {
+        await t
+          .expect(sharedElements.genericCreateBtn.visible).eql(true)
+          .click(sharedElements.genericCreateBtn);
+      }
+      await t
+        .expect(sharedElements.genericErr.exists)
+        .eql(true);
     }
 
     /**

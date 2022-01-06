@@ -11,6 +11,7 @@ import WISteps from '../PageObjects/PageComponents/WISteps';
 import UPLOAD from '../PageObjects/PageComponents/Upload';
 import { WORKITEMTAB } from '../PageObjects/PageComponents/WITAB';
 import SharedElements from '../PageObjects/sharedElements';
+import Alerts from '../PageObjects/Alerts';
 
 /** @description  An enum representing all possible types for a verification step */
 const types = VerificationTypes;
@@ -640,4 +641,41 @@ test('add a multiselect verification steps', async () => {
   await WIstep.addVerificationStep(VerificationStep);
 
   await feedPage.returnToHome();
+});
+
+fixture`WorkItems error tests`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+});
+
+test('check if any error appears when attempting to create work item without title', async () => {
+  const sharedElements = new SharedElements();
+  const alerts = new Alerts();
+  await sharedElements.getCurrentInputs();
+  await alerts.testErrorDisplaysForEmptyRequiredFieldOnWI(alerts.getAWIVersionInput);
+});
+
+test('check if any error appears when attempting to create work item without description', async () => {
+  const sharedElements = new SharedElements();
+  const alerts = new Alerts();
+  await sharedElements.getCurrentInputs();
+  await alerts.testErrorDisplaysForEmptyRequiredFieldOnWI(sharedElements.genericDescInput);
+});
+
+test('check if any error appears when attempting to create work item without version', async () => {
+  const alerts = new Alerts();
+  alerts.testErrorDisplaysForEmptyRequiredFieldOnWI(alerts.getAWIIsLatestVersionInput);
+});
+
+test('check if any error appears when attempting to create work item without revision', async () => {
+  const alerts = new Alerts();
+  await alerts.testErrorDisplaysForEmptyRequiredFieldOnWI(alerts.getAWIRevisionInput);
+});
+
+test('check if any error appears when attempting to create work item without part Number', async () => {
+  const alerts = new Alerts();
+  await alerts.testErrorDisplaysForEmptyRequiredFieldOnWI(alerts.getAWIPartNumberInput);
 });

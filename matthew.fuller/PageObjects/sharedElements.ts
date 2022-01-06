@@ -69,10 +69,13 @@ export default class SharedElements {
     /** @description the selector for generic dropdowns containing the text work item non case  */
     dropDownWorkItem: Selector;
 
-    /** @description a default title input selector */
+    /** @description a default title input selector sharedElements.getCurrentInputs()
+	 * must be used before */
     genericTitleInput: Selector;
 
-    /** @description generic description input selector */
+    /**
+	 * @description generic description input selector sharedElements.getCurrentInputs()
+	 * must be used before */
     genericDescInput: Selector;
 
     /** @description generic version input */
@@ -99,7 +102,12 @@ export default class SharedElements {
     /** @description the more btn always present in the upper right */
   	moreBtn: Selector;
 
-	/** @description the generic selector for errors on MBE web */
+	/**
+	 * @description the generic selector for errors on MBE web
+	 * note errors do not register as visable on MBEweb, as such .active class is added
+	 * to the selector to check if the error is "active" and .exists should be used to check
+	 * visibility of the selector
+	*/
 	genericErr: Selector;
 
 	/** @description the pencil icon used for edit icon in search object options */
