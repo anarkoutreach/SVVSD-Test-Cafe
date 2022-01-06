@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+import { t } from 'testcafe';
 import FeedPage from '../PageObjects/feed-page';
 import { mattUser } from '../Utilities/roles';
 import ConfigurationManager from '../Configuration/configuration';
@@ -185,4 +187,62 @@ test('can delete group', async (t) => {
     exists = false;
   }
   await t.expect(exists).eql(false);
+});
+
+fixture`group error msg verification tests`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+});
+
+test('verify error displays when title is missing', async (t) => {
+  const obj = new GroupObj();
+  await groupPage.navigateToGroupCreationPage();
+  await t
+	    .expect(groupPage.description.exists)
+    .eql(true)
+	    .typeText(groupPage.description, obj.description);
+  await groupPage.addNthUserToGroup(0);
+  await groupPage.clickCreateBtn(false);
+  await util.checkAnyErrExists();
+});
+
+test('verify error displays when description is missing', async (t) => {
+  const obj = new GroupObj();
+  await groupPage.navigateToGroupCreationPage();
+  await t
+	  .expect(groupPage.description.exists)
+    .eql(true)
+	  .typeText(groupPage.description, obj.description);
+  await groupPage.addNthUserToGroup(0);
+  await groupPage.clickCreateBtn(false);
+  await util.checkAnyErrExists();
+});
+
+test('verify error displays when user is missing', async () => {
+  const obj = new GroupObj();
+  await groupPage.navigateToGroupCreationPage();
+  await t
+    .expect(groupPage.title.exists).eql(true)
+    .typeText(groupPage.title, obj.title)
+	  .expect(groupPage.description.exists)
+    .eql(true)
+	  .typeText(groupPage.description, obj.description);
+  await groupPage.clickCreateBtn(false);
+  await util.checkAnyErrExists();
+});
+
+test('verify error displays when description and title are missing', async () => {
+  await groupPage.navigateToGroupCreationPage();
+  await groupPage.addNthUserToGroup(0);
+  await groupPage.clickCreateBtn(false);
+  await util.checkAnyErrExists();
+});
+
+test('verify error displays when description, title and user are missing', async () => {
+  await groupPage.navigateToGroupCreationPage();
+  await groupPage.addNthUserToGroup(0);
+  await groupPage.clickCreateBtn(false);
+  await util.checkAnyErrExists();
 });

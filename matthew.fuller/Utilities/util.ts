@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { Selector, t } from 'testcafe';
+import SharedElements from '../PageObjects/sharedElements';
 /** @description a Utility class, used for various random functions, and logging variables */
 export default class Util {
   // logging vars
@@ -59,5 +60,12 @@ export default class Util {
   async pressEnter() {
     await t
       .pressKey('enter');
+  }
+
+  async checkAnyErrExists() {
+    const sharedElements = new SharedElements();
+    await t
+      .expect(sharedElements.genericErr.exists)
+      .eql(true);
   }
 }

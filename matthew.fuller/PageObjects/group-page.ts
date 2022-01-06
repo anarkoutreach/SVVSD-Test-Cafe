@@ -176,12 +176,15 @@ export default class GroupPage {
 	 * @description click the create button of a group creation menu
 	 * and verify its results
 	 */
-	async clickCreateBtn() {
+	async clickCreateBtn(verify = true) {
 	  await t
 	    .expect(this.createBtn.exists).eql(true)
-	    .click(this.createBtn)
+	    .click(this.createBtn);
+	  if (verify) {
+	    await t
 	    .expect(this.titleOnEndScreen.exists)
 	    .eql(true);
+	  }
 	}
 
 	/**
