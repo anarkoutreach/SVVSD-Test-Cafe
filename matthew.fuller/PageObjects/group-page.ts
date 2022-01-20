@@ -1,5 +1,6 @@
 /* eslint-disable no-empty */
 import { Selector, t } from 'testcafe';
+import Alerts from './Alerts';
 import FeedPage from './feed-page';
 import GroupObj from './PageComponents/groupObj';
 import SharedElements from './sharedElements';
@@ -162,8 +163,8 @@ export default class GroupPage {
 	    await this.addNthUserToGroup(user);
 	  });
 	  }
-
-	  const error = sharedElements.alerts.errorPopUp;
+	  const alerts = new Alerts();
+	  const error = alerts.errorPopUp;
 	  if (click) {
 	    await t.expect(this.createBtn.exists).eql(true).click(this.createBtn);
 	    if (obj.title == null || obj.description || obj.users.length === 0) {

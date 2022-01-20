@@ -69,7 +69,7 @@ export default class SearchPage {
 
     /** @description ensure a search exists in search results based on a search text bariable */
     async validateSerch(SearchText: String) {
-      const count = await this.results.childElementCount;
+      const count = await this.searchResults.childElementCount;
       let i;
       const results = [];
       const util = new Util();

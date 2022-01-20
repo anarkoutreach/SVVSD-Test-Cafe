@@ -11,6 +11,7 @@ import GroupPage from '../PageObjects/group-page';
 // eslint-disable-next-line import/no-unresolved
 import GroupObj from '../PageObjects/PageComponents/GroupObj';
 import { tabs } from '../PageObjects/PageComponents/tabs';
+import SharedElements from '../PageObjects/sharedElements';
 
 const userPage = new UserPage();
 const util = new Util();
@@ -197,6 +198,7 @@ fixture`group error msg verification tests`.page(configManager.homePage).beforeE
 });
 
 test('verify error displays when title is missing', async (t) => {
+  const sharedElements = new SharedElements();
   const obj = new GroupObj();
   await groupPage.navigateToGroupCreationPage();
   await t
@@ -205,10 +207,11 @@ test('verify error displays when title is missing', async (t) => {
 	    .typeText(groupPage.description, obj.description);
   await groupPage.addNthUserToGroup(0);
   await groupPage.clickCreateBtn(false);
-  await util.checkAnyErrExists();
+  await util.checkAnyErrExists(sharedElements);
 });
 
 test('verify error displays when description is missing', async (t) => {
+  const sharedElements = new SharedElements();
   const obj = new GroupObj();
   await groupPage.navigateToGroupCreationPage();
   await t
@@ -217,10 +220,11 @@ test('verify error displays when description is missing', async (t) => {
 	  .typeText(groupPage.description, obj.description);
   await groupPage.addNthUserToGroup(0);
   await groupPage.clickCreateBtn(false);
-  await util.checkAnyErrExists();
+  await util.checkAnyErrExists(sharedElements);
 });
 
 test('verify error displays when user is missing', async () => {
+  const sharedElements = new SharedElements();
   const obj = new GroupObj();
   await groupPage.navigateToGroupCreationPage();
   await t
@@ -230,19 +234,21 @@ test('verify error displays when user is missing', async () => {
     .eql(true)
 	  .typeText(groupPage.description, obj.description);
   await groupPage.clickCreateBtn(false);
-  await util.checkAnyErrExists();
+  await util.checkAnyErrExists(sharedElements);
 });
 
 test('verify error displays when description and title are missing', async () => {
+  const sharedElements = new SharedElements();
   await groupPage.navigateToGroupCreationPage();
   await groupPage.addNthUserToGroup(0);
   await groupPage.clickCreateBtn(false);
-  await util.checkAnyErrExists();
+  await util.checkAnyErrExists(sharedElements);
 });
 
 test('verify error displays when description, title and user are missing', async () => {
+  const sharedElements = new SharedElements();
   await groupPage.navigateToGroupCreationPage();
   await groupPage.addNthUserToGroup(0);
   await groupPage.clickCreateBtn(false);
-  await util.checkAnyErrExists();
+  await util.checkAnyErrExists(sharedElements);
 });

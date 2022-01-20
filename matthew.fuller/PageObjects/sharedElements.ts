@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { Selector, t } from 'testcafe';
 import Util from '../Utilities/util';
-import Alerts from './Alerts';
+// import Alerts from './Alerts';
 /** @description the class used to contain functions and elements that are shared across the website
  * IE: things like accept and cancel buttons. This will make it much easier to update these scripts
  * when the website changes.
@@ -32,7 +32,7 @@ export default class SharedElements {
     CreateCancelButton: Selector;
 
     /** @description a class for alerts accross MBEweb */
-    alerts: Alerts;
+    // alerts: Alerts;
 
     /** @description the title of objects on the website that are refered to as apps */
     appTitle: Selector;
@@ -122,7 +122,7 @@ export default class SharedElements {
 	  this.trashIcon = Selector('.fa-trash-alt');
 	  this.pencilIcon = Selector('span.fa-pencil-alt');
   	  this.infoSidePane = Selector('.infoSide-pane');
-  	  this.alerts = new Alerts();
+  	  // this.alerts = new Alerts();
   	  this.anarkLogo = Selector('span.navbar-brand');
   	  this.genericBtn = Selector('button.btn');
   	  this.genericItemPrimaryBtn = Selector('div.searchItemPrimary');
@@ -134,7 +134,7 @@ export default class SharedElements {
   	  this.appTitle = Selector('div.appTitle');
   	  this.searchbar = Selector('input.searchBar');
   	  this.genericCog = Selector('span.fas.fa-cog');
-	  this.genericErr = this.alerts.errorPopUp;
+	  // this.genericErr = this.alerts.errorPopUp;
 
   	  // case insensitive .withtext
   	  this.dropDownDelete = Selector('a').withText(/delete/gi);

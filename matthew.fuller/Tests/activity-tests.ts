@@ -26,7 +26,7 @@ test('can delete activity from activity page', async () => {
   activities.deleteActivity(activityToDelete, true);
 });
 
-fixture`activity tests`.page(configManager.homePage).beforeEach(async (t) => {
+fixture`activity creation tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   // the below is a scuffed method of allowing multiple users to run the same tests
   // try {
@@ -115,12 +115,12 @@ test('[DEPRECATED] can edit activity title ', async (t) => {
 test('can create an activity with multiple groups', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('30');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
-  await activities.addGenericTitleAndDescription();
+  const info = await activities.addGenericTitleAndDescription();
   await activities.pressCreateBtn();
+  activityToDelete = new ActivityObj(info.title, info.desc);
 });
 // test('cannot create an activity without groups', async t => {
 //     await feedPage.openCreateMenu();
@@ -136,51 +136,72 @@ test('can create an activity with multiple groups', async () => {
 //     .expect(Selector("span.error.createButtons.top.active").exists).eql(true);
 // }).only;
 /**
- * @description attempt to create an activity without a title or description,
- * it should not succsead, as such valifdaton is set up as such
- */
-test('cannot create an activity without a title or desc', async (t) => {
-  await feedPage.openCreateMenu();
-  await activities.clickCreateActivity();
-  await activities.addNthGroup(0);
-  await activities.addEndData();
-  await t
-    .expect(activities.createBtn.exists).eql(true)
-    .click(activities.createBtn)
-    .expect(Selector('span.error.manageactivitypage.title.active').exists)
-    .eql(true);
-});
-/** @description attempt to create an activity without fillign any fields in */
-test('cannot create an activity without any info', async (t) => {
-  await feedPage.openCreateMenu();
-  await activities.clickCreateActivity();
-  await t
-    .expect(activities.createBtn.exists).eql(true)
-    .click(activities.createBtn)
-    .expect(Selector('span.error.manageactivitypage.title.active').visible)
-    .eql(true);
-});
+
 /** @description attempt to edit the title of an actiity by creating an
  *  activty then navigating back to it in edit mode */
 test('edit title of activity', async () => {
-  await activities.createActivityAndEditField(activities.title, `title${util.randChar(20)}`, 'title');
+  activityToDelete = await activities.createActivityAndEditField(activities.title, `title${util.randChar(20)}`, 'title');
 });
 /** @description attempt to edit the description of an actiity by creating
  * an activty then navigating back to it in edit mode */
 test('edit description of activity', async () => {
-  await activities.createActivityAndEditField(activities.description, `description${util.randChar(20)}`, 'description');
+  activityToDelete = await activities.createActivityAndEditField(activities.description, `description${util.randChar(20)}`, 'description');
 });
+
+/** @description use the calendar wigit's month arrows */
+test('test calendar wigit month forward arrow', async () => {
+  await feedPage.openCreateMenu();
+  await activities.clickCreateActivity();
+  await activities.clickOnDayInCurrentMonth('1', 'start');
+  await activities.clickToNextMonth();
+  await activities.clickOnDayInCurrentMonth('1', 'start');
+  await activities.addNthGroup(0);
+  await activities.addNthGroup(1);
+  await activities.addNthGroup(2);
+  await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
+});
+
+fixture`activity  tests`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+});
+
+/** @description use the calendar wigit's forward and backwards month arrows */
+test('test calendar wigit month all arrows', async () => {
+  await feedPage.openCreateMenu();
+  await activities.clickCreateActivity();
+  await activities.clickOnDayInCurrentMonth('28', 'end');
+  for (let index = 0; index < 10; index += 1) {
+    await activities.clickToNextMonth();
+  }
+  await activities.clickToPreviousMonth();
+  await activities.clickOnDayInCurrentMonth('28', 'end');
+  await activities.clickOnDayInCurrentMonth('1', 'start');
+  for (let index = 0; index < 10; index += 1) {
+    await activities.clickToPreviousMonth();
+  }
+  await activities.clickOnDayInCurrentMonth('1', 'start');
+  await activities.addNthGroup(0);
+  await activities.addNthGroup(1);
+  await activities.addNthGroup(2);
+  await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
+});
+
 /** @description attempt to edit the endDate of an actiity by creating an
  * activty then navigating back to it in edit mode  and typing in the
  * calender input field */
 test('edit endDate of activity by typing', async () => {
-  await activities.createActivityAndEditField(activities.endDate, configManager.defaultEditedEndDate, 'endDate');
+  activityToDelete = await activities.createActivityAndEditField(activities.endDate, configManager.defaultEditedEndDate, 'endDate');
 });
-/** @description attempt to edit the startDate of an actiity by creating
- * an activty then navigating back to it in edit mode and
+/** @description attempt to edit the startDate of an activity by creating
+ * an activity then navigating back to it in edit mode and
  *  typing in the calendar input field */
 test('edit startDate of activity by typing', async () => {
-  await activities.createActivityAndEditField(activities.startDate, configManager.defaultEditedStartDate, 'startDate');
+  activityToDelete = await activities.createActivityAndEditField(activities.startDate, configManager.defaultEditedStartDate, 'startDate');
 });
 /** @description attempt to edit the endDate of an actiity by creating an
  * activty then navigating back to it in edit mode  and clicking in the
@@ -188,7 +209,7 @@ test('edit startDate of activity by typing', async () => {
 test('edit endDate of activity by clicking', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('30', 'start');
+  await activities.clickOnDayInCurrentMonth('28', 'end');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
@@ -201,7 +222,7 @@ test('edit endDate of activity by clicking', async () => {
 test('edit startDate of activity by clicking', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('30', 'start');
+  await activities.clickOnDayInCurrentMonth('1', 'start');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
@@ -209,38 +230,28 @@ test('edit startDate of activity by clicking', async () => {
   await activities.pressCreateBtn();
 });
 
-/** @description use the calendar wigit's month arrows */
-test('test calendar wigit month forward arrow', async () => {
+/** @description attempt to create an activity without fillign any fields in */
+test('cannot create an activity without any info', async (t) => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('30', 'start');
-  await activities.clickToNextMonth();
-  await activities.clickOnDayInCurrentMonth('30', 'start');
-  await activities.addNthGroup(0);
-  await activities.addNthGroup(1);
-  await activities.addNthGroup(2);
-  await activities.addGenericTitleAndDescription();
-  await activities.pressCreateBtn();
+  await t
+    .expect(activities.createBtn.exists).eql(true)
+    .click(activities.createBtn)
+    .expect(Selector('span.error.manageactivitypage.title.active').visible)
+    .eql(true);
 });
 
-/** @description use the calendar wigit's forward and backwards month arrows */
-test('test calendar wigit month all arrows', async () => {
+/** @description attempt to create an activity without a title or description,
+* it should not succsead, as such valifdaton is set up as such
+*/
+test('cannot create an activity without a title or desc', async (t) => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('30', 'end');
-  for (let index = 0; index < 10; index += 1) {
-    await activities.clickToNextMonth();
-  }
-  await activities.clickToPreviousMonth();
-  await activities.clickOnDayInCurrentMonth('30', 'end');
-  await activities.clickOnDayInCurrentMonth('30', 'start');
-  for (let index = 0; index < 10; index += 1) {
-    await activities.clickToPreviousMonth();
-  }
-  await activities.clickOnDayInCurrentMonth('30', 'start');
   await activities.addNthGroup(0);
-  await activities.addNthGroup(1);
-  await activities.addNthGroup(2);
-  await activities.addGenericTitleAndDescription();
-  await activities.pressCreateBtn();
+  await activities.addEndData();
+  await t
+    .expect(activities.createBtn.exists).eql(true)
+    .click(activities.createBtn)
+    .expect(Selector('span.error.manageactivitypage.title.active').exists)
+    .eql(true);
 });

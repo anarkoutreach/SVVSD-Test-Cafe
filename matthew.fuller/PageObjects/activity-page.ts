@@ -63,7 +63,7 @@ export default class ActivityPage {
 	  this.editActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(0);
 	  this.deleteActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(1);
 	  this.generateReportActivityMenuItem = Selector('#activitySettings').sibling('ul').child('li').nth(2);
-	  this.calendarSelectionMenuDays = Selector('td.rdtDay');
+	  this.calendarSelectionMenuDays = Selector('td.rdtDay:not(.rdtOld)');
 	  this.editBtn = Selector('a.dropdown-item').withText('Edit');
 	  this.createBtn = sharedElements.genericCreateBtn;
 	  this.endDate = Selector('input.createEndDate');
@@ -106,7 +106,7 @@ export default class ActivityPage {
 	    .click(sharedElement.genericCreateBtn);
 	  await activityPage.navigateToActivity(obj.title);
 	  const result = await feedPage.findSearchResult(obj.title);
-	  await t.expect(result).eql(null);
+	  await t.expect(await result.exists).eql(false);
 	  }
 
 	/**
@@ -202,14 +202,15 @@ export default class ActivityPage {
 	async clickOnDayInCurrentMonth(day:string, endOrStart = 'end') {
 	  if (endOrStart === 'end') {
 	    await t
-	    .click(this.endDate);
+	    .click(this.endDate)
+	      .wait(5000);
 	  } else {
 	    await t
 	    .click(this.startDate);
 	  }
 	  const date = await this.getSpecificDayInCalenderMenu(day);
 	  await t
-	  .expect(date.visible).ok('this should pass')
+	  .hover(date)
 	  .click(date);
 	}
 
@@ -242,8 +243,8 @@ export default class ActivityPage {
 	    .setNativeDialogHandler(() => true)
 	    .click(feedPage.createOptionsActivity)
 	    .expect(Selector('input.searchBar.form-control').exists).eql(true);
-
-	  await this.clickOnDayInCurrentMonth('30');
+	  // by default end date should always generate after start date thus this is an uncceccary step
+	  // await this.clickOnDayInCurrentMonth('30', 'end');
 
 	  await this.addNthGroup(0);
 	  await this.addNthGroup(1);
