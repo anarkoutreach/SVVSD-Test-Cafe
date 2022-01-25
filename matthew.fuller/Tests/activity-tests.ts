@@ -5,7 +5,9 @@ import ConfigurationManager from '../Configuration/configuration';
 import ActivityPage from '../PageObjects/activity-page';
 import Util from '../Utilities/util';
 import ActivityObj from '../PageObjects/PageComponents/activityObj';
+import CalendarWidget from '../PageObjects/PageComponents/calendarWidget';
 
+const calendarWidget = new CalendarWidget();
 const util = new Util();
 const feedPage = new FeedPage();
 const activities = new ActivityPage();
@@ -67,7 +69,7 @@ test('[DEPRECATED] can navigate to test from feed page', async (t) => {
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
     .expect(Selector('#search-tab-tab-Content').exists).eql(true);
-  await activities.addEndData();
+  await calendarWidget.addEndDate();
   await activities.addNthGroup(0);
   const titleAndDescription = await activities.addGenericTitleAndDescription();
   await activities.pressCreateBtn();
@@ -91,7 +93,7 @@ test('[DEPRECATED] can edit activity title ', async (t) => {
     .setNativeDialogHandler(() => true)
     .click(feedPage.createOptionsActivity)
     .expect(Selector('input.searchBar.form-control').exists).eql(true);
-  await activities.addEndData();
+  await calendarWidget.addEndDate();
   await activities.addNthGroup(0);
   const tandd = await activities.addGenericTitleAndDescription();
   await activities.pressCreateBtn();
@@ -128,7 +130,7 @@ test('can create an activity with multiple groups', async () => {
 //     .setNativeDialogHandler(() => true)
 //     .click(feedPage.createOptionsActivity)
 //     .expect(Selector("#search-tab-tab-Content").exists).eql(true);
-//     await activities.addEndData();
+//     await calendarWidget.addEndDate();
 //     await activities.addGenericTitleAndDescription();
 //     await t
 //     .expect(activities.createBtn.exists).eql(true)
@@ -152,9 +154,9 @@ test('edit description of activity', async () => {
 test('test calendar wigit month forward arrow', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('1', 'start');
-  await activities.clickToNextMonth();
-  await activities.clickOnDayInCurrentMonth('1', 'start');
+  await calendarWidget.clickOnDayInCurrentMonth('1', 'start');
+  await calendarWidget.clickToNextMonth();
+  await calendarWidget.clickOnDayInCurrentMonth('1', 'start');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
@@ -170,20 +172,20 @@ fixture`activity  tests`.page(configManager.homePage).beforeEach(async (t) => {
 });
 
 /** @description use the calendar wigit's forward and backwards month arrows */
-test('test calendar wigit month all arrows', async () => {
+test('test calendar widget month all arrows', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('28', 'end');
+  await calendarWidget.clickOnDayInCurrentMonth('28', 'end');
   for (let index = 0; index < 10; index += 1) {
-    await activities.clickToNextMonth();
+    await calendarWidget.clickToNextMonth();
   }
-  await activities.clickToPreviousMonth();
-  await activities.clickOnDayInCurrentMonth('28', 'end');
-  await activities.clickOnDayInCurrentMonth('1', 'start');
+  await calendarWidget.clickToPreviousMonth();
+  await calendarWidget.clickOnDayInCurrentMonth('28', 'end');
+  await calendarWidget.clickOnDayInCurrentMonth('1', 'start');
   for (let index = 0; index < 10; index += 1) {
-    await activities.clickToPreviousMonth();
+    await calendarWidget.clickToPreviousMonth();
   }
-  await activities.clickOnDayInCurrentMonth('1', 'start');
+  await calendarWidget.clickOnDayInCurrentMonth('1', 'start');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
@@ -192,24 +194,45 @@ test('test calendar wigit month all arrows', async () => {
 });
 
 /** @description attempt to edit the endDate of an actiity by creating an
- * activty then navigating back to it in edit mode  and typing in the
+ * activty then navigating back to it in edit mode and raw imputing in the
  * calender input field */
-test('edit endDate of activity by typing', async () => {
+test('edit endDate of activity by flat-typing', async () => {
   activityToDelete = await activities.createActivityAndEditField(activities.endDate, configManager.defaultEditedEndDate, 'endDate');
 });
 /** @description attempt to edit the startDate of an activity by creating
  * an activity then navigating back to it in edit mode and
- *  typing in the calendar input field */
-test('edit startDate of activity by typing', async () => {
+ *  raw imputing in the calendar input field */
+test('edit startDate of activity by flat-typing', async () => {
   activityToDelete = await activities.createActivityAndEditField(activities.startDate, configManager.defaultEditedStartDate, 'startDate');
 });
+
+/** @description attempt to edit the startDate of an activity by creating
+ * an activity then navigated back to it in edit mode and typing (in accordance
+ * with the rules mbeweb uses for calendar field inputs) into the date field
+ */
+test('edit startDate of activity by "properly" typing', async () => {
+  await feedPage.openCreateMenu();
+  await activities.clickCreateActivity();
+  await calendarWidget.changeDateByTyping(calendarWidget.calendarStartDate);
+}).only;
+
+/** @description attempt to edit the end date of an activity by creating
+ * an activity then navigated back to it in edit mode and typing (in accordance
+ * with the rules mbeweb uses for calendar field inputs) into the end date field
+ */
+test('edit endDate of activity by "properly" typing', async () => {
+  await feedPage.openCreateMenu();
+  await activities.clickCreateActivity();
+  await calendarWidget.changeDateByTyping(calendarWidget.calendarEndDate);
+}).only;
+
 /** @description attempt to edit the endDate of an actiity by creating an
  * activty then navigating back to it in edit mode  and clicking in the
  * calender menu */
 test('edit endDate of activity by clicking', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('28', 'end');
+  await calendarWidget.clickOnDayInCurrentMonth('28', 'end');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
@@ -222,7 +245,7 @@ test('edit endDate of activity by clicking', async () => {
 test('edit startDate of activity by clicking', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
-  await activities.clickOnDayInCurrentMonth('1', 'start');
+  await calendarWidget.clickOnDayInCurrentMonth('1', 'start');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
@@ -248,7 +271,7 @@ test('cannot create an activity without a title or desc', async (t) => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
   await activities.addNthGroup(0);
-  await activities.addEndData();
+  await calendarWidget.addEndDate();
   await t
     .expect(activities.createBtn.exists).eql(true)
     .click(activities.createBtn)

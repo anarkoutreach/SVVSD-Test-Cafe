@@ -2,15 +2,14 @@ import { Selector, t } from 'testcafe';
 import Util from '../Utilities/util';
 import FeedPage from './feed-page';
 import ActivityObj from './PageComponents/activityObj';
-import ConfigurationManager from '../Configuration/configuration';
 import { tabs } from './PageComponents/tabs';
-import months from './PageComponents/months';
+
 import SharedElements from './sharedElements';
 
 const sharedElements = new SharedElements();
 const feedPage = new FeedPage();
 const util = new Util();
-const configManager = new ConfigurationManager();
+
 export default class ActivityPage {
 	calendarSelectionMenuDays: Selector;
 
@@ -130,107 +129,11 @@ export default class ActivityPage {
 	  return null;
 	}
 
-	/**
-	 * @description in calendar menu click next month
-	 */
-	async clickToNextMonth(endOrStart = 'end', lOrR = 'r') {
-	  const month = await this.getCurrentMonth();
-	  await this.clickArrowInCalendarMenu(endOrStart, lOrR);
-	  const month2 = await this.getCurrentMonth();
-	  await t.expect(months[month + 1]).eql(months[month2]);
-	}
-
-	/**
-	 * @description in calendar menu click previous month
-	 */
-	 async clickToPreviousMonth(endOrStart = 'end', lOrR = 'l') {
-	  const month = await this.getCurrentMonth();
-	  await this.clickArrowInCalendarMenu(endOrStart, lOrR);
-	  const month2 = await this.getCurrentMonth();
-	  await t.expect(months[month - 1]).eql(months[month2]);
-	  }
-
 	async clickCreateActivity() {
 	  await t
 	    .setNativeDialogHandler(() => true)
 	    .click(feedPage.createOptionsActivity)
 	    .expect(this.activitiesSearchBat.exists).eql(true);
-	}
-
-	/**
-	 * @description filters through currently visible items to find the top layer
-	 * @returns a selector for the back button
-	 */
-	async getCalendarNextBtn() {
-	  return (this.calendarNextBtn.filterVisible());
-	}
-
-	/**
-	 * @description checks the open calendar window for index of month
-	 * @returns the index of the current month in the menu
-	 */
-	async getCurrentMonth() {
-	  const currentMonth = (await (await this.getCalendarMonthSelector()).innerText).toLowerCase();
-	 let month2;
-	  if (months.includes(currentMonth)) {
-	    months.forEach((month) => {
-	      if (month === currentMonth) {
-			  month2 = months.indexOf(month);
-	      }
-	    });
-	  }
-	  return month2;
-	}
-
-	/**
-	 * @description filters through currently visible items to find the top layer
-	 * @returns a selector for the back btn
-	 */
-	async getCalendarBackBtn() {
-	  return (this.calendarBackBtn.filterVisible());
-	  }
-
-	  /**
-	   * @description get a selector for the mont hfeild at the top of the calend menu
-	   * @returns a selector for the month object at the top of the calender menu
-	   */
-	async getCalendarMonthSelector() {
-	  return (this.calendarMonthBtn.filterVisible());
-	}
-
-	/** @description in the activities creation menu click on to the calender and then select a day */
-	async clickOnDayInCurrentMonth(day:string, endOrStart = 'end') {
-	  if (endOrStart === 'end') {
-	    await t
-	    .click(this.endDate)
-	      .wait(5000);
-	  } else {
-	    await t
-	    .click(this.startDate);
-	  }
-	  const date = await this.getSpecificDayInCalenderMenu(day);
-	  await t
-	  .hover(date)
-	  .click(date);
-	}
-
-	/** @description in the activities creation menu click on to the calender
-	 *  and then click the left or right arrow
-	 * @param  endOrStart weahtor to click the end date or the start date ("end" or "start")
-	 * @param arrow weathor to click the right of left arror "l or r" */
-	async clickArrowInCalendarMenu(endOrStart = 'end', arrow = 'r') {
-	  if (endOrStart === 'end') {
-	  await t
-	  .click(this.endDate);
-	  } else {
-	  await t
-	  .click(this.startDate);
-	  }
-	  if (arrow === 'r') {
-	    await t.click(await this.getCalendarNextBtn());
-	  } else {
-	    await t.click(await this.getCalendarBackBtn());
-	  }
 	}
 
 	/**
@@ -252,27 +155,6 @@ export default class ActivityPage {
 	  await this.addGenericTitleAndDescription(true, actObj);
 	  await this.pressCreateBtn();
 	  return actObj;
-	}
-
-	/**
-	 * @description add a end date to a activity
-	 * @param date the date to be added with a default value of "10/22/3000 12:00:00 AM"
-	 * @returns null
-	 */
-	async addEndData(date = configManager.defaultEndDate) {
-	  await t
-	    .expect(this.endDate.exists).eql(true)
-	    .click(this.endDate);
-	  await util.CtlADelete(this.endDate);
-	  await t
-	    .typeText(this.endDate, date);
-	  return null;
-	}
-
-	/** @description get a day in the calendar menu */
-	async getSpecificDayInCalenderMenu(day) {
-	  // Selector('td.rdtDay').withAttribute('data-value', '30');
-	  return this.calendarSelectionMenuDays.withAttribute('data-value', day).filterVisible();
 	}
 
 	/**
