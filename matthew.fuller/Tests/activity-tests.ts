@@ -214,7 +214,7 @@ test('edit startDate of activity by "properly" typing', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
   await calendarWidget.changeDateByTyping(calendarWidget.calendarStartDate);
-}).only;
+});
 
 /** @description attempt to edit the end date of an activity by creating
  * an activity then navigated back to it in edit mode and typing (in accordance
@@ -224,7 +224,7 @@ test('edit endDate of activity by "properly" typing', async () => {
   await feedPage.openCreateMenu();
   await activities.clickCreateActivity();
   await calendarWidget.changeDateByTyping(calendarWidget.calendarEndDate);
-}).only;
+});
 
 /** @description attempt to edit the endDate of an actiity by creating an
  * activty then navigating back to it in edit mode  and clicking in the

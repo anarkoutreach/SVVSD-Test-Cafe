@@ -48,8 +48,8 @@ def spreadFromFiles():
     workbook.close()
 def spreadFromLog():
     workbook = xlsxwriter.Workbook('tests.xlsx')
-    passed = workbook.add_worksheet()
-    fail = workbook.add_worksheet()
+    passed = workbook.add_worksheet('passed')
+    fail = workbook.add_worksheet('failed')
     fails = []
     success = []
     with open("./tests.log", "r") as file:
