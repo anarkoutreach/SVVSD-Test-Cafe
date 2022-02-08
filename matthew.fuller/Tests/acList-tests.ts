@@ -47,6 +47,7 @@ test('check can cancel out of aclist creation window without any info filled', a
     .expect(acListPage.nameInput.visible).eql(false);
 });
 
+// this fails for some reason even though it does succeed in reality
 test('check duplicate aclist creation err visible', async () => {
   const acListPage = new ACListCreationPopup();
   const acList = new ACListObj();
@@ -88,7 +89,8 @@ test('check no description err exists', async () => {
   await t
     .expect(acListPage.acListCreateBtn.visible).eql(true)
     .click(acListPage.acListCreateBtn)
-    .expect(sharedElements.genericErr.visible);
+    .expect(sharedElements.genericErr.visible)
+    .eql(true);
 });
 
 test('check no description err text', async () => {
@@ -121,12 +123,14 @@ test('check no title err exists', async () => {
   await t
     .click(acListPage.rolesTextField)
     .typeText(acListPage.rolesTextField, role)
-    .pressKey('enter');
-  await t
-    .expect(acListPage.acListCreateBtn.visible).eql(true)
+    .pressKey('enter')
+    .expect(acListPage.acListCreateBtn.visible)
+    .eql(true)
     .click(acListPage.acListCreateBtn)
-    .expect(await sharedElements.genericErr.exists)
+    .expect(await sharedElements.genericErr.filterVisible().exists)
     .eql(true);
+  const arr = await t.getNativeDialogHistory();
+  console.log(arr);
 });
 
 test('check no title err text', async () => {

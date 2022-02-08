@@ -39,5 +39,5 @@ test('check no name error msg displays', async () => {
   await accountPage.navigateFromHomeToAccountPage();
   await util.CtlADelete(Selector('#formHorizontalName'));
   const errorSelector = Selector('span.error.formHorizontalName.active');
-  await accountPage.checkErrorMsg(errorSelector, 'email');
+  await accountPage.checkErrorMsg(errorSelector, 'name');
 });

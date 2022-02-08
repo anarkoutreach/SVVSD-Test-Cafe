@@ -134,7 +134,7 @@ export default class SharedElements {
   	  this.appTitle = Selector('div.appTitle');
   	  this.searchbar = Selector('input.searchBar');
   	  this.genericCog = Selector('span.fas.fa-cog');
-	  // this.genericErr = this.alerts.errorPopUp;
+	  this.genericErr = Selector('span.error.active');
 
   	  // case insensitive .withtext
   	  this.dropDownDelete = Selector('a').withText(/delete/gi);
@@ -189,12 +189,12 @@ export default class SharedElements {
   	async testCheckboxes(checkbox:Selector, checkboxInput: Selector, state = false) {
   	  const util = new Util();
   	  let isChecked = await checkboxInput.checked;
-  	  await t.expect(isChecked === state).eql(true);
+  	  await t.expect(isChecked === state).eql(false);
   	  if (util.Verbose) console.log(isChecked);
   	  await t.click(checkbox);
   	  isChecked = await checkboxInput.checked;
   	  if (util.Verbose) console.log(isChecked);
-  	  await t.expect(isChecked === state).eql(false);
+  	  await t.expect(isChecked === state).eql(true);
   	}
 
   	/**

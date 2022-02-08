@@ -45,6 +45,7 @@ export default class AccountPage {
      */
     async checkErrorMsg(selector: Selector, s: string) {
       await t.expect(selector.exists).eql(true)
-        .expect(await (await selector.innerText).includes(s)).eql(true);
+        .expect((await selector.innerText).includes(s))
+        .eql(true);
     }
 }
