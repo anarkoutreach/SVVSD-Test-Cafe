@@ -1,10 +1,12 @@
 /* eslint-disable no-empty */
-import { Selector, t } from 'testcafe';
+import { ClientFunction, Selector, t } from 'testcafe';
+import ConfigurationManager from '../Configuration/configuration';
 import Alerts from './Alerts';
 import FeedPage from './feed-page';
 import GroupObj from './PageComponents/groupObj';
 import SharedElements from './sharedElements';
 
+const configManager = new ConfigurationManager();
 const sharedElements = new SharedElements();
 const feedpage = new FeedPage();
 
@@ -147,12 +149,17 @@ export default class GroupPage {
 	}
 
 	/**
+	 * MUST BE RUN FROM GROUP CREATION PAGE
 	 * @description a function that takes a group obj and creates a group on mbe web from it
 	 * @param obj the group object to use for creation
 	 * @param click weathor to click create at the end of execution
 	 */
 	async createGroupFromGroupObj(obj, click = true) {
-	  await this.navigateToGroupCreationPage();
+	  const getURL = await ClientFunction(() => window.location.href)();
+	  console.log(getURL);
+	  if (getURL !== configManager.groupCreationPage) {
+		  feedpage.switchToCreateNewGroup();
+	  }
 	  if (obj.title != null) {
 	    await t
 	      .expect(this.title.exists).eql(true)

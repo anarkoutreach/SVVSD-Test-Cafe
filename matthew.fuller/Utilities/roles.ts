@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { Role } from 'testcafe';
 import LoginPage from '../PageObjects/login-page';
 import ConfigurationManager from '../Configuration/configuration';
@@ -12,7 +13,7 @@ export const mattUser = {
   initials: 'MF',
   role: Role(
     configManager.serverUrl,
-    async (t) => {
+    async () => {
       await loginPage.login('matthew', genericPassword);
     },
     { preserveUrl: true },

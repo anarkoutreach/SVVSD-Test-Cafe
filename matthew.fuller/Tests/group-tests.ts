@@ -18,7 +18,7 @@ const util = new Util();
 const feedPage = new FeedPage();
 const groupPage = new GroupPage();
 const configManager = new ConfigurationManager();
-fixture`group tests`.page(configManager.homePage).beforeEach(async (t) => {
+fixture`group navigation tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   await t
     .setNativeDialogHandler(() => true)
@@ -28,6 +28,14 @@ fixture`group tests`.page(configManager.homePage).beforeEach(async (t) => {
  *  then verifying if it is open */
 test('can open group creation tab', async () => {
   await feedPage.openGroupMenu();
+});
+
+fixture`group tests`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+  await feedPage.switchToCreateNewGroup();
 });
 /** A group requires a user to create,
  * this will test if the website will throw an error message

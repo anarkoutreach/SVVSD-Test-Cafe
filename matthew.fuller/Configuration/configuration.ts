@@ -4,6 +4,12 @@ export default class ConfigurationManager {
 
 	homePage: string;
 
+	createUserPage: string;
+
+	groupCreationPage: string;
+
+	activityCreationPage: string;
+
 	// eslint-disable-next-line global-require
 	config = require('./config.json')
 
@@ -18,5 +24,8 @@ export default class ConfigurationManager {
 	constructor() {
 	  this.serverUrl = 'https://svvsd.cloud-staging.anark.com';
 	  this.homePage = `${this.serverUrl}/feed`;
+	  this.createUserPage = `${this.serverUrl}/manage/user`;
+	  this.groupCreationPage = `${this.serverUrl}/manage/group?tab=User`;
+	  this.activityCreationPage = `${this.serverUrl}/activity?tab=Content`;
 	}
 }

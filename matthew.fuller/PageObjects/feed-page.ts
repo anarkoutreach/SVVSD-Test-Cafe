@@ -13,6 +13,9 @@ import SharedElements from './sharedElements';
 import SystemPrefPage from './systemPref-page';
 import HelpPopup from './PageComponents/helpPopup';
 import ACListObj from './PageComponents/acListObj';
+import ConfigurationManager from '../Configuration/configuration';
+
+const configManager = new ConfigurationManager();
 
 // using this event system, creating massive stress tests on WI items is speed up by a ton,
 // as this ensures data for the WI persists even through new WI objects being created if
@@ -268,6 +271,21 @@ export default class FeedPage {
 	    .expect(userPage.checkInUserPage())
 	    .eql(true);
 	}
+
+	/** @description switches web addres to new user page */
+	async switchToCreateNewUser() {
+	  await t.navigateTo(configManager.createUserPage);
+	  }
+
+	/** @description switches web addres to group creation page */
+	async switchToCreateNewGroup() {
+	  await t.navigateTo(configManager.groupCreationPage);
+	}
+
+	/** @description switches web addres to activity creation page */
+	async switchToCreateNewActivity() {
+	  await t.navigateTo(configManager.activityCreationPage);
+	  }
 
 	async addCommentToFirstConversation(text) {
 	  const util = new Util();

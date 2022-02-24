@@ -8,14 +8,25 @@ const userPage = new UserPage();
 const configManager = new ConfigurationManager();
 /** @description A class represnting the "feedpage" on MBE-web */
 const feedPage = new FeedPage();
-fixture`user tests`.page(configManager.homePage).beforeEach(async (t) => {
+fixture`new user page navigation tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   await t
     .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
+});
+// test if the new user page can be navigated to by the user
+// (clicking buttons rather than url switching)
+test('test if the create button displays for a user that only has the viewer role', async () => {
   await feedPage.navigateToCreateNewUser();
 });
 
+fixture`user tests with url hop`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+  await feedPage.switchToCreateNewUser();
+});
 // test if a the create button displays for a user that only has the viewer role (it should not)
 test('test if the create button displays for a user that only has the viewer role', async () => {
   await userPage.testRoleAssignment(['Viewer']);
