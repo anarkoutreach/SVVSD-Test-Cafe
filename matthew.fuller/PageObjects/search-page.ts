@@ -37,16 +37,16 @@ export default class SearchPage {
       this.nextBtn = Selector('button#next');
       this.searchResultsDisplayText = Selector('div.searchResultsCount');
       this.searchItem = Selector('span.searchItemName.canOpen');
-      this.activitiesTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Activity');
-      this.contentTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Content');
-      this.groupsTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Group');
-      this.usersTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Users');
-      this.ACListTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'ACList');
-      this.templatesTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'Templates');
-      this.workItemsTab = Selector('button.searchFilter-tab.btn.btn-link').withAttribute('data-type', 'WorkItem');
+      this.activitiesTab = Selector('button.searchFilter-tab').withAttribute('data-type', 'Activity');
+      this.contentTab = Selector('button.searchFilter-tab').withAttribute('data-type', 'Content');
+      this.groupsTab = Selector('button.searchFilter-tab').withAttribute('data-type', 'Group');
+      this.usersTab = Selector('button.searchFilter-tab').withAttribute('data-type', 'User');
+      this.ACListTab = Selector('button.searchFilter-tab').withAttribute('data-type', 'ACList');
+      this.templatesTab = Selector('button.searchFilter-tab').withAttribute('data-type', 'Template');
+      this.workItemsTab = Selector('button.searchFilter-tab').withAttribute('data-type', 'WorkItem');
       this.results = Selector('div.searchItemInfo');
       this.searchResults = Selector('div.searchResultsResults');
-      this.activeTab = Selector('button.searchFilter-tab.selected.btn.btn-link');
+      this.activeTab = Selector('button.searchFilter-tab.selected');
     }
 
     /**
@@ -91,7 +91,7 @@ export default class SearchPage {
 	 */
     // eslint-disable-next-line class-methods-use-this
     async getActiveTab() {
-      const activeTab = await Selector('#search-tab').child().child('.active').child().innerText;
+      const activeTab = await Selector('.searchFilter-tab.selected').innerText;
       return activeTab;
     }
 

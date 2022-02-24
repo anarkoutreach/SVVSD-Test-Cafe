@@ -413,19 +413,15 @@ export default class WI {
      */
     async RemoveUserByIndex(num: number) {
       const sharedElements = new SharedElements();
-      const userdata = this.buttonAera.nth(num).sibling('.searchItemInfo');
-      const username = await userdata.child('span.searchItemName').innerText;
+      // const userdata = this.buttonAera.nth(num).sibling('.searchItemInfo');
+      // const username = await userdata.child('span.searchItemName').innerText;
 
       await t
         .expect(await this.allRemoveButtons.nth(num).exists).eql(true)
         .click(this.allRemoveButtons.nth(num));
-      const confirmBtn = sharedElements.genericCreateBtn;
       await t
-        .expect(confirmBtn.exists)
-        .eql(true)
-        .click(confirmBtn)
-        .expect(username === await this.allButtons.nth(num).sibling('.searchItemInfo').child('span').innerText)
-        .eql(true);
+        .expect(sharedElements.genericCreateBtn.visible).eql(true)
+        .click(sharedElements.genericCreateBtn);
     }
 
     /**

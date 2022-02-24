@@ -655,14 +655,14 @@ test('check if any error appears when attempting to create work item without tit
   const sharedElements = new SharedElements();
   const alerts = new Alerts();
   await sharedElements.getCurrentInputs();
-  await alerts.testErrorDisplaysForEmptyRequiredFieldOnWI(alerts.getAWIVersionInput);
+  await alerts.testErrorDisplaysForEmptyRequiredFieldOnWI(alerts.getAWIWorkItemTitleInput);
 });
 
 test('check if any error appears when attempting to create work item without description', async () => {
   const sharedElements = new SharedElements();
   const alerts = new Alerts();
   await sharedElements.getCurrentInputs();
-  await alerts.testErrorDisplaysForEmptyRequiredFieldOnWI(sharedElements.genericDescInput);
+  await alerts.testErrorDisplaysForEmptyRequiredFieldOnWI(alerts.getAWIDescriptionInput);
 });
 
 test('check if any error appears when attempting to create work item without version', async () => {

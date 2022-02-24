@@ -161,6 +161,7 @@ export default class SharedElements {
   	  this.genericReleaseStatus = await this.findGenericInputOrTextarea('release status');
   	}
 
+	  /** @description retuens selecter based on non-casesensitive text */
   	// eslint-disable-next-line class-methods-use-this
   	findGenericDropdownSelector(text) {
   	  const re = new RegExp(text, 'gi');

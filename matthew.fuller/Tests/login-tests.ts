@@ -1,7 +1,9 @@
 import LoginPage from '../PageObjects/login-page';
 import ConfigurationManager from '../Configuration/configuration';
 import { mattUser } from '../Utilities/roles';
+import SharedElements from '../PageObjects/sharedElements';
 
+const sharedElements = new SharedElements();
 const configManager = new ConfigurationManager();
 
 fixture`login tests`.page(configManager.homePage).beforeEach(async (t) => {
@@ -44,7 +46,7 @@ test('cannot login with a non-existent user', async (t) => {
   await loginPage.clickSubmit();
   await t.expect(loginPage.checkUsernameValidity()).eql(true);
   await t.expect(loginPage.checkPasswordValidity()).eql(true);
-  await t.expect(loginPage.checkSubmitValidity()).eql(false);
+  await t.expect(sharedElements.genericErr.visible).eql(true);
 });
 
 test('cannot login with an incorrect password', async (t) => {
@@ -54,5 +56,5 @@ test('cannot login with an incorrect password', async (t) => {
   await loginPage.clickSubmit();
   await t.expect(loginPage.checkUsernameValidity()).eql(true);
   await t.expect(loginPage.checkPasswordValidity()).eql(true);
-  await t.expect(loginPage.checkSubmitValidity()).eql(false);
+  await t.expect(sharedElements.genericErr.visible).eql(true);
 });

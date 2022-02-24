@@ -161,6 +161,7 @@ test('can edit group description', async (t) => {
 });
 /** Create a group, the navigate to it and delete it */
 test('can delete group', async (t) => {
+  const sharedElements = new SharedElements();
   const alert = new Alerts();
   const obj = await groupPage.createGenericGroup();
   await feedPage.returnToHome();
@@ -171,23 +172,24 @@ test('can delete group', async (t) => {
   await t.expect(result.exists).eql(true)
     .click(result);
   await t.expect(groupPage.settingsCogBtn.exists).eql(true)
-    .click(groupPage.settingsCogBtn)
-    .expect(groupPage.settingsList.nth(1).exists)
-    .eql(true)
-    .click(groupPage.settingsList.nth(1))
+    .click(groupPage.settingsCogBtn);
+  const editBtn = await sharedElements.findGenericDropdownSelector('delete');
+  await t
+    .expect(editBtn.exists).eql(true)
+    .click(editBtn)
     .expect(alert.getGenericConfirmBtn.exists)
     .eql(true)
     .click(alert.getGenericConfirmBtn);
   await feedPage.SearchFor(obj.title, tabs.GROUPS);
   const result2 = await feedPage.findSearchResult(obj.title);
-  let exists = false;
-  try {
-    await t.expect(result2.exists).eql(false);
-    exists = true;
-  } catch (error) {
-    exists = false;
-  }
-  await t.expect(exists).eql(false);
+  // const exists = false;
+  // try {
+  //   await t.expect(result2.exists).eql(true);
+  //   exists = true;
+  // } catch (error) {
+  //   exists = false;
+  // }
+  await t.expect(result2.exists).eql(false);
 });
 
 fixture`group error msg verification tests`.page(configManager.homePage).beforeEach(async (t) => {

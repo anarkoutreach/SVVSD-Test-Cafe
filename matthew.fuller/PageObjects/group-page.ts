@@ -50,7 +50,7 @@ export default class GroupPage {
 	  this.description = Selector('textarea#paneHeaderDesc');
 	  this.createBtn = sharedElements.genericCreateBtn;
 	  this.cancelBtn = sharedElements.CreateCancelButton;
-	  this.settingsCogBtn = Selector('div.glyphicon.glyphicon-cog');
+	  this.settingsCogBtn = sharedElements.genericCog;
 	  this.settingsList = Selector('#groupSettings').sibling('ul').child('li');
 	}
 
@@ -59,10 +59,11 @@ export default class GroupPage {
 	async clickEditBtnOnGroupPage() {
 	  await t
 	    .expect(this.settingsCogBtn.exists).eql(true)
-	    .click(this.settingsCogBtn)
-	    .expect(this.settingsList.nth(0).exists)
-	    .eql(true)
-	    .click(this.settingsList.nth(0))
+	    .click(this.settingsCogBtn);
+	  const editBtn = await sharedElements.findGenericDropdownSelector('edit');
+	   await t
+	   .expect(editBtn.exists).eql(true)
+	   .click(editBtn)
 	  // verify switch to edit mode
 	    .expect(this.title.exists)
 	    .eql(true);
@@ -96,7 +97,7 @@ export default class GroupPage {
 	  } else {
 	    query = name;
 	  }
-	  const count = await this.usersAddList.count;
+
 	  const search = sharedElements.searchbar;
 	  await t
 	    .expect(search.exists).eql(true)
@@ -105,12 +106,16 @@ export default class GroupPage {
 	    .expect(Selector('button.btn.btn-default').exists)
 	    .eql(true)
 	    .pressKey('enter');
+	  // count needs to come after the inital search as to acount for items that are filtered
+	  // out in the search
+	  const count = await this.usersAddList.count;
 	  for (let i = 0; i < count; i += 1) {
 	    const element = this.usersList.nth(i);
-	    const userName = await element.find('span.searchItemName').innerText;
-	    console.log(userName);
-	    console.log(name.toUpperCase());
-	    const isUser = (name === userName);
+	    let userName = await element.find('span.searchItemName').innerText;
+	    userName = userName.replace(/\s+/g, '');
+	    name = (name.toUpperCase()).replace(/\s+/g, '');
+	    console.log(`name: ${name}   displayName: ${userName}`);
+	    const isUser = (userName === name);
 	    console.log(isUser);
 	    if (isUser === true) {
 	      await t
