@@ -49,10 +49,12 @@ fixture`activity deletion tests`.page(configManager.homePage).beforeEach(async (
     .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
 });
+
 test('can delete activity from search', async () => {
   activityToDelete = await activities.createGenericAct();
   activities.deleteActivity(activityToDelete);
 });
+
 test('can delete activity from activity page', async () => {
   activityToDelete = await activities.createGenericAct();
   activities.deleteActivity(activityToDelete, true);
@@ -87,10 +89,12 @@ test('can navigate to edit activity', async () => {
   await feedPage.returnToHome();
   await activities.openActivityInEditMode(obj.title);
 });
+
 /** @description can create an activity just that, thats it */
 test('can create an activity', async () => {
   activityToDelete = await activities.createGenericAct();
 });
+
 /** @deprecated replaced with cleaner test */
 test('[DEPRECATED] can edit activity title ', async (t) => {
   await feedPage.openCreateMenu();
@@ -148,6 +152,7 @@ test('can create an activity with multiple groups', async () => {
 test('edit title of activity', async () => {
   activityToDelete = await activities.createActivityAndEditField(activities.title, `title${util.randChar(20)}`, 'title');
 });
+
 /** @description attempt to edit the description of an actiity by creating
  * an activty then navigating back to it in edit mode */
 test('edit description of activity', async () => {
