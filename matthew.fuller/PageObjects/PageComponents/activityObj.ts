@@ -28,9 +28,14 @@ groups: Array<string>;
  *
  * @param num the number of random charectors to generate for pass and username
  */
-constructor(title = 'DefaultActivity', desc = 'defualtDesc', num = 5, endDate = '10/22/3000 12:00:00 AM') {
-  this.title = title + util.randChar(num);
-  this.description = desc + util.randChar(num);
+constructor(title = 'DefaultActivity', desc = 'defualtDesc', num = 5, endDate = '10/22/3000 12:00:00 AM', add = true) {
+  if (add === true) {
+    this.title = title + util.randChar(num);
+    this.description = desc + util.randChar(num);
+  } else {
+    this.title = title;
+    this.description = desc;
+  }
   // this.startDate = configManager.config.defaultData.user.organization;
   this.endDate = endDate;
 }

@@ -138,14 +138,17 @@ export default class ActivityPage {
 
 	/**
 	 * @description navigate to activity creation and create a activity, returning the activity object
+	 * @param urlHop bool, weather the function will jump directly to the url of the activity page
 	 * @returns activity object
 	 */
-	async createGenericAct(actObj = new ActivityObj()) {
-	  await feedPage.openCreateMenu();
-	  await t
-	    .setNativeDialogHandler(() => true)
-	    .click(feedPage.createOptionsActivity)
-	    .expect(Selector('input.searchBar.form-control').exists).eql(true);
+	async createGenericAct(actObj = new ActivityObj(), urlHop = true) {
+	  if (urlHop === true) {
+		  // hop to url
+	    await feedPage.switchToCreateNewActivity();
+	  } else {
+		  // navigate to activity create page
+	    feedPage.navigateToActivityCreateMenu();
+	  }
 	  // by default end date should always generate after start date thus this is an uncceccary step
 	  // await this.clickOnDayInCurrentMonth('30', 'end');
 
@@ -240,8 +243,8 @@ export default class ActivityPage {
 	}
 
 	async addGenericTitleAndDescription(useObj = false, obj = new ActivityObj()) {
-	  let title;
-	  let desc;
+	  let title = '';
+	  let desc = '';
 	  if (useObj !== false) {
 	    title = obj.title;
 	    desc = obj.description;

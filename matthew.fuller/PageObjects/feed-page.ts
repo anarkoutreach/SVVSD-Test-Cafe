@@ -309,7 +309,13 @@ export default class FeedPage {
 	  if (util.Verbose) console.log('-- validateInitals: validated user initals --');
 	}
 
+	/** @description returns to the MBEweb feed page by url hopping */
 	async returnToHome() {
+	  await t.navigateTo(configManager.homePage);
+	}
+
+	/** @description navigates back to the home page of MBEweb by clicking the home btn */
+	async navigateToHome() {
 	  const alerts = new Alerts();
 	  const util = new Util();
 	  const workitem = new WI();
@@ -704,6 +710,16 @@ export default class FeedPage {
 	    .eql(true);
 	}
 
+	/** @description navigate to the activity create menu from the feed page */
+	async navigateToActivityCreateMenu() {
+	  await this.openCreateMenu();
+	  await t
+	    .setNativeDialogHandler(() => true)
+	    .click(this.createOptionsActivity)
+	    .expect(Selector('input.searchBar.form-control').exists).eql(true);
+	}
+
+	/** @description clicks the create btn in the upper right of the screen */
 	async openCreateMenu() {
 	  await t
 	    .setNativeDialogHandler(() => true)

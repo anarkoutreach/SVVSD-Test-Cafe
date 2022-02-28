@@ -26,6 +26,6 @@ export default class ConfigurationManager {
 	  this.homePage = `${this.serverUrl}/feed`;
 	  this.createUserPage = `${this.serverUrl}/manage/user`;
 	  this.groupCreationPage = `${this.serverUrl}/manage/group?tab=User`;
-	  this.activityCreationPage = `${this.serverUrl}/activity?tab=Content`;
+	  this.activityCreationPage = `${this.serverUrl}/manage/activity?tab=Content`;
 	}
 }

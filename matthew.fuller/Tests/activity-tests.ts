@@ -13,6 +13,36 @@ const feedPage = new FeedPage();
 const activities = new ActivityPage();
 const configManager = new ConfigurationManager();
 let activityToDelete: ActivityObj;
+fixture`activity navigation tests`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+});
+
+/** @description open the activity creation menu from the home page */
+test('can open activity creation menu', async () => {
+  await feedPage.navigateToActivityCreateMenu();
+});
+
+/**
+ * @depricated "my activites" no longer exists
+ *  open an activity from the my activites list from feed page
+ * */
+test('[DEPRECATED] can navigate to test from feed page', async (t) => {
+  await feedPage.openCreateMenu();
+  await t
+    .setNativeDialogHandler(() => true)
+    .click(feedPage.createOptionsActivity)
+    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
+  await calendarWidget.addEndDate();
+  await activities.addNthGroup(0);
+  const titleAndDescription = await activities.addGenericTitleAndDescription();
+  await activities.pressCreateBtn();
+  await feedPage.returnToHome();
+  await activities.navigateToActivity(titleAndDescription.title);
+}).skip;
+
 fixture`activity deletion tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   await t
@@ -51,31 +81,6 @@ fixture`activity creation tests`.page(configManager.homePage).beforeEach(async (
   }
 });
 
-/** @description open the activity creation menu from the home page */
-test('can open activity creation menu', async (t) => {
-  await feedPage.openCreateMenu();
-  await t
-    .setNativeDialogHandler(() => true)
-    .click(feedPage.createOptionsActivity)
-    .expect(activities.title.exists).eql(true);
-});
-/**
- * @depricated "my activites" no longer exists
- *  open an activity from the my activites list from feed page
- * */
-test('[DEPRECATED] can navigate to test from feed page', async (t) => {
-  await feedPage.openCreateMenu();
-  await t
-    .setNativeDialogHandler(() => true)
-    .click(feedPage.createOptionsActivity)
-    .expect(Selector('#search-tab-tab-Content').exists).eql(true);
-  await calendarWidget.addEndDate();
-  await activities.addNthGroup(0);
-  const titleAndDescription = await activities.addGenericTitleAndDescription();
-  await activities.pressCreateBtn();
-  await feedPage.returnToHome();
-  await activities.navigateToActivity(titleAndDescription.title);
-}).skip;
 /** @description navigate to the edit mode of an activity */
 test('can navigate to edit activity', async () => {
   const obj = await activities.createGenericAct();
@@ -115,14 +120,13 @@ test('[DEPRECATED] can edit activity title ', async (t) => {
 }).skip;
 /** @description try to create an activity with multiple groups attached to it. */
 test('can create an activity with multiple groups', async () => {
-  await feedPage.openCreateMenu();
-  await activities.clickCreateActivity();
+  await feedPage.switchToCreateNewActivity();
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
   await activities.addNthGroup(2);
   const info = await activities.addGenericTitleAndDescription();
   await activities.pressCreateBtn();
-  activityToDelete = new ActivityObj(info.title, info.desc);
+  activityToDelete = new ActivityObj(info.title, info.desc, 0);
 });
 // test('cannot create an activity without groups', async t => {
 //     await feedPage.openCreateMenu();
@@ -164,7 +168,7 @@ test('test calendar wigit month forward arrow', async () => {
   await activities.pressCreateBtn();
 });
 
-fixture`activity  tests`.page(configManager.homePage).beforeEach(async (t) => {
+fixture`activity tests`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   await t
     .setNativeDialogHandler(() => true)
@@ -199,11 +203,19 @@ test('test calendar widget month all arrows', async () => {
 test('edit endDate of activity by flat-typing', async () => {
   activityToDelete = await activities.createActivityAndEditField(activities.endDate, configManager.defaultEditedEndDate, 'endDate');
 });
+
 /** @description attempt to edit the startDate of an activity by creating
  * an activity then navigating back to it in edit mode and
  *  raw imputing in the calendar input field */
 test('edit startDate of activity by flat-typing', async () => {
   activityToDelete = await activities.createActivityAndEditField(activities.startDate, configManager.defaultEditedStartDate, 'startDate');
+});
+fixture`activity tests with url hop in fixture`.page(configManager.homePage).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+  await feedPage.switchToCreateNewActivity();
 });
 
 /** @description attempt to edit the startDate of an activity by creating
@@ -211,8 +223,6 @@ test('edit startDate of activity by flat-typing', async () => {
  * with the rules mbeweb uses for calendar field inputs) into the date field
  */
 test('edit startDate of activity by "properly" typing', async () => {
-  await feedPage.openCreateMenu();
-  await activities.clickCreateActivity();
   await calendarWidget.changeDateByTyping(calendarWidget.calendarStartDate);
 });
 
@@ -221,8 +231,6 @@ test('edit startDate of activity by "properly" typing', async () => {
  * with the rules mbeweb uses for calendar field inputs) into the end date field
  */
 test('edit endDate of activity by "properly" typing', async () => {
-  await feedPage.openCreateMenu();
-  await activities.clickCreateActivity();
   await calendarWidget.changeDateByTyping(calendarWidget.calendarEndDate);
 });
 
@@ -230,8 +238,6 @@ test('edit endDate of activity by "properly" typing', async () => {
  * activty then navigating back to it in edit mode  and clicking in the
  * calender menu */
 test('edit endDate of activity by clicking', async () => {
-  await feedPage.openCreateMenu();
-  await activities.clickCreateActivity();
   await calendarWidget.clickOnDayInCurrentMonth('28', 'end');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
@@ -243,8 +249,6 @@ test('edit endDate of activity by clicking', async () => {
  * an activty then navigating back to it in edit mode and
  *  clicking in the calendar menu */
 test('edit startDate of activity by clicking', async () => {
-  await feedPage.openCreateMenu();
-  await activities.clickCreateActivity();
   await calendarWidget.clickOnDayInCurrentMonth('1', 'start');
   await activities.addNthGroup(0);
   await activities.addNthGroup(1);
@@ -255,8 +259,6 @@ test('edit startDate of activity by clicking', async () => {
 
 /** @description attempt to create an activity without fillign any fields in */
 test('cannot create an activity without any info', async (t) => {
-  await feedPage.openCreateMenu();
-  await activities.clickCreateActivity();
   await t
     .expect(activities.createBtn.exists).eql(true)
     .click(activities.createBtn)
@@ -268,8 +270,6 @@ test('cannot create an activity without any info', async (t) => {
 * it should not succsead, as such valifdaton is set up as such
 */
 test('cannot create an activity without a title or desc', async (t) => {
-  await feedPage.openCreateMenu();
-  await activities.clickCreateActivity();
   await activities.addNthGroup(0);
   await calendarWidget.addEndDate();
   await t
