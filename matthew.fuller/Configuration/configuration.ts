@@ -14,6 +14,10 @@ export default class ConfigurationManager {
 
 	apiComment: string
 
+	userID:string
+
+	randomConversationID: string
+
 	// eslint-disable-next-line global-require
 	config = require('./config.json')
 
@@ -26,6 +30,8 @@ export default class ConfigurationManager {
 	defaultEditedStartDate = '10/22/2500 12:00:00 AM'
 
 	constructor() {
+	  this.userID = '5d8a5610e2dfa40022ef0a67';
+	  this.randomConversationID = '6046b44407d21caba9002b52';
 	  this.serverUrlShort = 'svvsd.cloud-staging.anark.com';
 	  this.serverUrl = 'https://svvsd.cloud-staging.anark.com';
 	  this.homePage = `${this.serverUrl}/feed`;
