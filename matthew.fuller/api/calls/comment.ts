@@ -1,4 +1,6 @@
-export default class APIComment {
+import genericCall from './genericCall';
+
+export default class APIComment extends genericCall {
     /** @description the id of the author */
     userID: string
 
@@ -13,6 +15,8 @@ export default class APIComment {
 
     /** @description create a json object formatted inline with MBEweb api */
     constructor(userID, conversationID, bodyText) {
+      super();
+      this.path = '/api/comments';
       this.userID = userID;
       this.conversationID = conversationID;
       this.bodyText = bodyText;

@@ -27,32 +27,39 @@ fixture`user tests with url hop`.page(configManager.homePage).beforeEach(async (
     .useRole(t.ctx.user.role);
   await feedPage.switchToCreateNewUser();
 });
+
 // test if a the create button displays for a user that only has the viewer role (it should not)
 test('test if the create button displays for a user that only has the viewer role', async () => {
   await userPage.testRoleAssignment(['Viewer']);
 });
+
 // test if a the create button displays for a user that only has the activity author role
 test('test if the create button displays for a user that only has the activity author role', async () => {
   await userPage.testRoleAssignment(['Activity Author']);
 });
+
 // test if a the create button displays for a user that only has the activity author role and viewer
 test('test if the create button displays for a user that only has the activity author role and viewer role', async () => {
   await userPage.testRoleAssignment(['Activity Author', 'Viewer']);
 });
+
 // test if a the create button displays for a user
 // that only has the activity author role and viewer and content author
 test('test if the create button displays for a user that only has the activity author role and viewer role and content author role', async () => {
   await userPage.testRoleAssignment(['Activity Author', 'Viewer', 'Content Author']);
 });
+
 // test if a the create button displays for a user that only has the Content Author role
 test('test if the create button displays for a user that only has the Content Author role', async () => {
   await userPage.testRoleAssignment(['Content Author']);
 });
+
 // test if a the create button displays for a user that
 // only has the Content Author role and viewer role
 test('test if the create button displays for a user that only has the Content Author role and viewer role', async () => {
   await userPage.testRoleAssignment(['Content Author', 'Viewer']);
 });
+
 // test if a the create button displays for a user that
 // only has the Content Author role and viewer role and work item author role
 test('test if the create button displays for a user that only has the Content Author role and viewer role and work item author role', async () => {

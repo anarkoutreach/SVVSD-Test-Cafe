@@ -38,6 +38,5 @@ export default class ConfigurationManager {
 	  this.createUserPage = `${this.serverUrl}/manage/user`;
 	  this.groupCreationPage = `${this.serverUrl}/manage/group?tab=User`;
 	  this.activityCreationPage = `${this.serverUrl}/manage/activity?tab=Content`;
-	  this.apiComment = '/api/comments';
 	}
 }
