@@ -8,6 +8,11 @@ const pass = 'p@ssw0rd';
 const configManager = new ConfigurationManager();
 const util = new Util();
 
+class Response {
+  statusCode: number
+
+  data: string
+}
 export default class AnarkAPIFrameWork {
   async post(path, headers, dataToSend, verify = true) {
     const data = {
@@ -50,49 +55,45 @@ export default class AnarkAPIFrameWork {
     return data;
   }
 
-  async get(APIPath, headers, verify = true) {
-    const data = {
-      statusCode: null,
-      data: null,
-    };
-    const headersDict = { Authorization: `Basic ${Buffer.from(`${user}:${pass}`).toString('base64')}` };
-    const finalHeaders = Object.assign(headersDict, headers);
-    const options = {
-      port: 443,
-      hostname: configManager.serverUrlShort,
-      path: APIPath,
-      method: 'GET',
-      headers: finalHeaders,
-    };
-    let rawData = '';
-    const req = https.request(options, (res) => {
-      data.statusCode = res.statusCode;
+  async get(APIPath, headers, verify = true): Promise<Response> {
+    return new Promise((resolve) => {
+      const headersDict = { Authorization: `Basic ${Buffer.from(`${user}:${pass}`).toString('base64')}` };
+      const data = new Response();
+      const finalHeaders = Object.assign(headersDict, headers);
+      const options = {
+        port: 443,
+        hostname: configManager.serverUrlShort,
+        path: APIPath,
+        method: 'GET',
+        headers: finalHeaders,
+      };
+      let rawData = '';
+      const req = https.request(options, (res) => {
+        data.statusCode = res.statusCode;
 
-      res.on('data', (chunk) => {
-        rawData += chunk;
-        if (util.Verbose === true) {
-          process.stdout.write(chunk);
-          console.log(`statusCode: ${res.statusCode}`);
+        res.on('data', (chunk) => {
+          rawData += chunk;
+          if (util.Verbose === true) {
+            process.stdout.write(chunk);
+            console.log(`statusCode: ${res.statusCode}`);
+          }
+        });
+        res.on('end', () => {
+          data.data = rawData;
+          if (verify) {
+            t.expect(data.statusCode === 200);
+          }
+          resolve(data);
+        });
+      });
+
+      req.on('error', (error) => {
+        if (util.Errors === true) {
+          console.error(error);
         }
       });
-      res.on('end', () => {
-        data.data = rawData;
-        console.log(`ended${data.data}`);
-      });
+
+      req.end();
     });
-
-    req.on('error', (error) => {
-      if (util.Errors === true) {
-        console.error(error);
-      }
-    });
-
-    req.end();
-
-    if (verify) {
-      t.expect(data.statusCode === 200);
-    }
-    data.data = rawData;
-    return data;
   }
 }

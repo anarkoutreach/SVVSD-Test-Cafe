@@ -1,11 +1,11 @@
 // import * as https from 'https';
 // import { t } from 'testcafe';
-import ConfigurationManager from '../Configuration/configuration';
 // import Util from '../Utilities/util';
 import APIComment from './calls/comment';
 import AnarkAPIFrameWork from './apiFrameWork';
 import APIConversation from './calls/conversation';
 import Config from './apiConfig';
+import APIReply from './calls/reply';
 
 const config = new Config();
 // const util = new Util();
@@ -16,12 +16,25 @@ export default class FeedPageAPI {
     return anarkApiFrameWork.get(conversation.path, {});
   }
 
+  async getFirstConversationID() {
+    const response = await this.getConversations(1);
+    const json = JSON.parse(response.data);
+    return json[0]._id;
+  }
+
   async postComment(comment: APIComment, verify = true) {
-    const configManager = new ConfigurationManager();
     const headers = {
       'Content-Type': 'application/json',
       'Content-Length': comment.data.length,
     };
-    anarkApiFrameWork.post(configManager.apiComment, headers, comment.data, verify);
+    anarkApiFrameWork.post(comment.path, headers, comment.data, verify);
+  }
+
+  async postReply(reply: APIReply, verify = true) {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Content-Length': reply.data.length,
+    };
+    anarkApiFrameWork.post(reply.path, headers, reply.data, verify);
   }
 }

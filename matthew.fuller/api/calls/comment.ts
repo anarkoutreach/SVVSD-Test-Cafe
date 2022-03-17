@@ -20,6 +20,10 @@ export default class APIComment extends genericCall {
       this.userID = userID;
       this.conversationID = conversationID;
       this.bodyText = bodyText;
+      this.buildPayload();
+    }
+
+    buildPayload() {
       this.data = JSON.stringify({
         text: this.bodyText,
         author: this.userID,
