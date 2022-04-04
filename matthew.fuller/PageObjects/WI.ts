@@ -398,6 +398,15 @@ export default class WI {
       await this.AddAllAvalibleContent();
     }
 
+    /** @description change the mode from anything to view through the cog */
+    async changeToView() {
+      const sharedElements = new SharedElements();
+      await t
+        .click(sharedElements.genericCog)
+        .click(sharedElements.findGenericDropdownSelector('view'))
+        .expect(this.editWITitle.visible).eql(false);
+    }
+
     /**
      * @description Removes a user from a WI by a specified index
      *

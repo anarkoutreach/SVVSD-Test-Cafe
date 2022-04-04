@@ -116,8 +116,12 @@ export default class SharedElements {
 	/** @description the trash icon used for delete icon in search options */
 	trashIcon: Selector;
 
+	/** @description the icon used for info on the website */
+	infoIcon: Selector;
+
   	constructor() {
   	  /** @type {any} */
+	  this.infoIcon = Selector('.fa-info-circle');
   	  this.moreBtn = Selector('.MenuList-icon.fas.fa-bars');
 	  this.trashIcon = Selector('.fa-trash-alt');
 	  this.pencilIcon = Selector('span.fa-pencil-alt');
