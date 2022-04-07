@@ -18,8 +18,6 @@ export default class WIStepVerificationInfo {
 
     VerificationBtnText: Selector;
 
-    VerificationBtnDecimal: Selector;
-
     VerificationBtnInteger: Selector;
 
     VerificationBtnDate: Selector;

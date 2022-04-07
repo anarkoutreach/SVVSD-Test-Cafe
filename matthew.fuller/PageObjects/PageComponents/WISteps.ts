@@ -125,10 +125,6 @@ export default class WISteps {
           await t
             .click(step.VerificationBtnText);
           break;
-        case types.DECIMAL:
-          await t
-            .click(step.VerificationBtnDecimal);
-          break;
         case types.INTEGER:
           await t
             .click(step.VerificationBtnInteger);

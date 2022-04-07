@@ -366,7 +366,7 @@ export default class FeedPage {
 	    .eql(true);
 	  if (util.Verbose) console.log('-- createWi: work instruction created --');
 	  workitem.url = await util.getURL();
-	  console.log(workitem.url);
+	  if (util.Verbose) console.log(workitem.url);
 	  await this.returnToHome();
 	}
 
