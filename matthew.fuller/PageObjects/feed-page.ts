@@ -365,6 +365,8 @@ export default class FeedPage {
 	    .expect(sharedElements.appTitle.visible)
 	    .eql(true);
 	  if (util.Verbose) console.log('-- createWi: work instruction created --');
+	  workitem.url = await util.getURL();
+	  console.log(workitem.url);
 	  await this.returnToHome();
 	}
 
@@ -380,27 +382,33 @@ export default class FeedPage {
 	    .click(specific);
 	}
 
-	async createWI(workitem: WI) {
+	async createWI(workitem: WI, validateBySearching = false) {
+	  const sharedElements = new SharedElements();
 	  const util = new Util();
 	  // ???????? why
 	  const generinworkitem = workitem;
 
 	  await this.CreateWIthenReturnHome(workitem);
 	  if (util.Verbose) console.log(' -- createWI: returned to home page from work instruction --');
-	  await this.SearchFor(workitem.title, tabs.WORKITEMS);
-	  const searchResult = await this.findSearchResult(workitem.title);
-	  if (util.Verbose) console.log(await searchResult.nth(0).innerText);
-	  if (await searchResult.exists === false) {
-	    await t.expect(searchResult.exists).eql(true);
-	    console.log('TEST failed as search result does not exist');
+	  if (validateBySearching === true) {
+	    await this.SearchFor(workitem.title, tabs.WORKITEMS);
+	    const searchResult = await this.findSearchResult(workitem.title);
+	    if (util.Verbose) console.log(await searchResult.nth(0).innerText);
+	    if (await searchResult.exists === false) {
+	      await t.expect(searchResult.exists).eql(true);
+	      console.log('TEST failed as search result does not exist');
 	  }
-	  const sharedElements = new SharedElements();
 	  await t
 	    .click(searchResult)
-	    .click(sharedElements.genericCog)
+	      .click(sharedElements.genericCog)
 	  // due to work items no longer having titles displayed on the view page
 	  // you must change to the edit page first
-	    .click(await sharedElements.findGenericDropdownSelector('edit'))
+	    .click(await sharedElements.findGenericDropdownSelector('edit'));
+	  } else {
+		  // url hop to the edit mode of the current work item
+	    await t.navigateTo(workitem.url);
+	  }
+	  await t
 	    .expect(sharedElements.appTitle.visible)
 	    .eql(true);
 
@@ -628,19 +636,25 @@ export default class FeedPage {
 	 * @param tab probably unused
 	 * @param workitem the work item object to find
 	 */
-	async NavigateToEditWI(tab: tabs, workitem: WI) {
+	async NavigateToEditWI(tab: tabs, workitem: WI, urlHop = true) {
 	  const util = new Util();
-	  const searchResult = await this.navigateToWi(tab, workitem);
 	  const sharedElements = new SharedElements();
+	  if (urlHop) {
+	    await t.navigateTo(workitem.url);
+	  } else {
+	  const searchResult = await this.navigateToWi(tab, workitem);
+
 	  await t
 	    .click(searchResult)
-	    .click(workitem.settingsGearBtn);
-	  const editBtn = await sharedElements.findGenericDropdownSelector('edit');
-	  // due to work items no longer having titles displayed on the view page
-	  // you must change to the edit page first
+	      .click(workitem.settingsGearBtn);
+	    const editBtn = await sharedElements.findGenericDropdownSelector('edit');
+	    // due to work items no longer having titles displayed on the view page
+	    // you must change to the edit page first
+	    await t
+		  .expect(editBtn.visible).eql(true)
+		  .click(editBtn);
+	  }
 	  await t
-	    .expect(editBtn.visible).eql(true)
-	    .click(editBtn)
 	    .expect(sharedElements.appTitle.visible)
 	    .eql(true);
 	  if (util.Verbose) console.log('Navigated to Edit workitem');
@@ -655,10 +669,15 @@ export default class FeedPage {
 	  this.returnToHome();
 	  const alerts = new Alerts();
 	  const util = new Util();
-	  const searchResult = await this.navigateToWi(tab, workitem);
+	  if (workitem.url === 'none') {
+		  const searchResult = await this.navigateToWi(tab, workitem);
+	    await t
+	      .expect(searchResult.exists).eql(true)
+	      .click(searchResult);
+	  } else {
+		  await t.navigateTo(workitem.url);
+	  }
 	  await t
-	    .expect(searchResult.exists).eql(true)
-	    .click(searchResult)
 	    .expect(workitem.settingsGearBtn.visible)
 	    .eql(true)
 	    .click(workitem.settingsGearBtn)

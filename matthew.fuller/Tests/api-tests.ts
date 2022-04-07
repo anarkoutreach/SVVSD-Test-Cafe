@@ -22,6 +22,12 @@ test('can post comment through api on fixed conversation id', async (t) => {
   await feedPageAPI.postComment(new APIComment(configManager.userID, configManager.defaultConversationID, 'I was posted by an API'), true);
 });
 
+// cannot use the api to post a comment with empty string
+test('cannot post comment through api with empty string', async (t) => {
+  const feedPageAPI = new FeedPageAPI();
+  await feedPageAPI.postComment(new APIComment(configManager.userID, configManager.defaultConversationID, ''), false);
+});
+
 // can use the api to get first conversation id
 test('can get first conversation through api', async (t) => {
   const feedPageAPI = new FeedPageAPI();

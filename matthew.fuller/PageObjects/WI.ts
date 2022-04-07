@@ -143,6 +143,9 @@ export default class WI {
     /** @description the title of a WI */
     title: string;
 
+    /** @description the url of the work item if it has been created */
+    url: string
+
     /** @description the description of a WI */
     description: string;
 
@@ -187,6 +190,7 @@ export default class WI {
      * @description the constructor for the WI object, representing a Workitem on MBEWeb
      */
     constructor() {
+      this.url = 'none';
       this.buttonAera = Selector('.searchItemButtons');
       this.allRemoveButtons = Selector('.fas.fa-times');
       const sharedElements = new SharedElements();

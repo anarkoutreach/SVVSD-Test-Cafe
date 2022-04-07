@@ -146,7 +146,6 @@ test('Can finish and submit workitem executon with 10 steps', async () => {
     const step = new WISteps();
     await DefaultWorkItem.AddStep(true, step, false, false);
   }
-
   await DefaultWorkItem.changeToView();
   await wiExecution.startExecutionFromWIPage(1);
   await wiExecution.markAllStepsAsCompleted();

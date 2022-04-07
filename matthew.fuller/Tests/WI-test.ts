@@ -113,6 +113,25 @@ test('test if a work item can have a a pair of parenthisis at the end of it', as
   await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
   await feedPage.findSearchResult(customWorkItem.title);
 });
+
+test('test if a work item can have a a pair of sqaure brackets at the end of it', async () => {
+  const customWorkItem = new WI();
+  customWorkItem.title = 'TEST1234[]';
+  await feedPage.createWI(customWorkItem);
+  await feedPage.returnToHome();
+  await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
+  await feedPage.findSearchResult(customWorkItem.title);
+});
+
+test('test if a work item can have a a pair of angle brackets at the end of it', async () => {
+  const customWorkItem = new WI();
+  customWorkItem.title = 'TEST1234<>';
+  await feedPage.createWI(customWorkItem);
+  await feedPage.returnToHome();
+  await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
+  await feedPage.findSearchResult(customWorkItem.title);
+});
+
 test('test if a work item can have a parenthisis at the end "name(hello)" and be found by searching "name("', async () => {
   const customWorkItem = new WI();
   customWorkItem.title = 'TEST1234(testing)';
@@ -130,11 +149,19 @@ test('test if a work item can have a parenthisis at the end of it', async () => 
   await feedPage.SearchFor(customWorkItem.title, tabs.WORKITEMS);
   await feedPage.findSearchResult(customWorkItem.title);
 });
+
+test('can navigate to create and delete a work item', async () => {
+  const customWorkItem = new WI();
+  await feedPage.createWI(customWorkItem);
+  await feedPage.returnToHome();
+  await feedPage.deleteWI(tabs.WORKITEMS, customWorkItem);
+});
 /*
 *@description this is a fixture that will login to MBE web,
 then create a WI based upon the "defaultWI" object
 *
 */
+
 fixture`WI test initalisation`.page(configManager.homePage).beforeEach(async (t) => {
   t.ctx.user = mattUser;
 

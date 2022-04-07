@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { Selector, t } from 'testcafe';
+import { ClientFunction, Selector, t } from 'testcafe';
 /** @description a Utility class, used for various random functions, and logging variables */
 export default class Util {
   // logging vars
@@ -31,6 +31,8 @@ export default class Util {
     }
     return result;
   }
+
+  getURL = ClientFunction(() => document.location.href);
 
   /**
    * @description creates a string of random numbers of a specifiyed length
