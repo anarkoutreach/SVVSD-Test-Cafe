@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-return */
 import { Selector, t } from 'testcafe';
 import * as fs from 'fs';
 import Util from '../Utilities/util';
@@ -62,6 +63,22 @@ export default class WI {
 
     /** @description  the editable field that contains to WIDescription */
     editWIDescription: Selector;
+
+    /** @description the selector for the expand/ collapse description box for a step */
+    descriptionExpander: Selector;
+
+    /** @description the selector for the expand/collapse saftey and complience box for a step */
+    safetyAndComplienceExpander: Selector;
+
+    /**
+     * @description the selector for the expand/ collapse description
+     *  box for a step in its open form */
+    descriptionExpanderCurrentlyOpen: Selector;
+
+    /**
+     * @description the selector for the expand/collapse saftey and complience box for a step
+     *  in its open form */
+    safetyAndComplienceExpanderCurrentlyOpen: Selector;
 
     /** @description The settings gear, that allows the edit,
      * revise, delete options to be seen on a WI */
@@ -208,6 +225,11 @@ export default class WI {
       this.releasestatus = status.DRAFT;
       this.Location = location.BOULDER;
       this.steps = [];
+      this.descriptionExpander = Selector('h5.sectionHeader').withAttribute('data-section', 'Description');
+      this.descriptionExpanderCurrentlyOpen = Selector('h5.sectionHeader.open').withAttribute('data-section', 'Description');
+      this.safetyAndComplienceExpander = Selector('h5.sectionHeader').withAttribute('data-section', 'Safety & Compliance');
+      this.safetyAndComplienceExpanderCurrentlyOpen = Selector('h5.sectionHeader.open').withAttribute('data-section', 'Safety & Compliance');
+
       this.addedElementSelector = Selector('searchItemAdded').withText('Added');
       this.editWITitle = Selector('#wiTitleInput');
       this.editWIDescription = Selector('#wiDescription');
@@ -830,6 +852,8 @@ export default class WI {
     // eslint-disable-next-line max-len
     async AddStep(BugWorkaround: boolean, step: WISteps, letDuplicate: boolean, StepIsAlreadyCreated: boolean) {
       const workaroundbug = BugWorkaround;
+      await this.openDescriptionBox();
+      await this.openSaftyAndComplienceBox();
       let StepExists: boolean;
       let NumOfSteps;
       if (this.steps) NumOfSteps = this.steps.length;
@@ -853,6 +877,7 @@ export default class WI {
             .typeText(this.getSelectedStepInput, step.StepName)
             .pressKey('enter');
           this.validateText(step);
+
           // WiStep.StepNum = catalog Steps
           if (this.steps) this.steps.push(step);
           if (!this.steps) this.steps.push(step);
@@ -903,11 +928,31 @@ export default class WI {
         await this.SwitchWITAB(WORKITEMTAB.WORKITEM);
         await this.CatalogSteps();
         const step2 = await this.GetStepByName(step);
-
         await t
           .expect(step2.exists).eql(true)
           .click(step2);
       }
+    }
+
+    /** @description open the description box for step if it is not already open */
+    async openDescriptionBox() {
+      console.log('test');
+      if (await this.descriptionExpanderCurrentlyOpen.visible === true) {
+        return;
+      }
+      await t
+        .expect(this.descriptionExpander.visible).ok()
+        .click(this.descriptionExpander);
+    }
+
+    /** @description open the saftey and complience box for step if it is not already open */
+    async openSaftyAndComplienceBox() {
+      if (await this.safetyAndComplienceExpanderCurrentlyOpen.visible === true) {
+        return;
+      }
+      await t
+        .expect(this.safetyAndComplienceExpander.visible).ok()
+        .click(this.safetyAndComplienceExpander);
     }
 
     /**
