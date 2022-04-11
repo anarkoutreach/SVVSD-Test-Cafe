@@ -124,12 +124,13 @@ test('can open switch workitem executon tab and click 1 of 3 executions', async 
 test('Can finish and submit workitem executon with 1 step', async () => {
   await feedPage.createWI(DefaultWorkItem);
   const step = new WISteps();
-  await DefaultWorkItem.AddStep(true, step, false, false);
+  await DefaultWorkItem.AddStep(false, step, false, false);
   await DefaultWorkItem.changeToView();
   await wiExecution.startExecutionFromWIPage(1);
   await wiExecution.markAllStepsAsCompleted();
   await wiExecution.saveAndSubmitExecution();
 });
+
 test('Can finish and submit workitem executon with 2 steps', async () => {
   await feedPage.createWI(DefaultWorkItem);
   const step = new WISteps();
@@ -139,6 +140,19 @@ test('Can finish and submit workitem executon with 2 steps', async () => {
   await DefaultWorkItem.changeToView();
   await wiExecution.startExecutionFromWIPage(1);
   await wiExecution.markAllStepsAsCompleted();
+  await wiExecution.saveAndSubmitExecution();
+});
+
+test('Can finish and submit workitem executon with text verification step', async () => {
+  await feedPage.createWI(DefaultWorkItem);
+  const step = new WISteps();
+  const textVerificationStep = new WIStepVerificationInfo(VerificationTypes.TEXT);
+  await DefaultWorkItem.AddStep(true, step, false, false);
+  await step.addVerificationStep(textVerificationStep);
+  await DefaultWorkItem.changeToView();
+  await wiExecution.startExecutionFromWIPage(1);
+  await wiExecution.fillNthVerificationStep(0, VerificationTypes.TEXT, 'text verification step');
+  await wiExecution.markCurrentStepAsCompleted();
   await wiExecution.saveAndSubmitExecution();
 });
 

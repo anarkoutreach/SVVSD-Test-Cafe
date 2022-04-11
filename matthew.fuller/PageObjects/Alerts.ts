@@ -136,9 +136,9 @@ export default class Alerts {
      * @param workItem the work item object
      * @returns nulls
      */
-    async FillForm(form, text, workItem: WI) {
+    async FillForm(form, text, workItem: WI, updateInputs = true) {
       const sharedElements = new SharedElements();
-      await sharedElements.getCurrentInputs();
+      if (updateInputs) { await sharedElements.getCurrentInputs(); }
       switch (form) {
         case 1:
           await t
@@ -188,7 +188,7 @@ export default class Alerts {
             .typeText(this.locationInput, workItem.Location);
 
           if (util2.Verbose)console.log('--fillform-alerts "7" was passed, ignoring location dropdown currently');
-          return;
+          break;
         case 8:
           await t
             .expect(this.relesceStatusInput.exists).eql(true)

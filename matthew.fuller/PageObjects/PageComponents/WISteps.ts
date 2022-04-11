@@ -125,7 +125,7 @@ export default class WISteps {
           await t
             .click(step.VerificationBtnText);
           break;
-        case types.INTEGER:
+        case types.NUMBER:
           await t
             .click(step.VerificationBtnInteger);
           break;

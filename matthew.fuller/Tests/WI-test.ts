@@ -632,15 +632,15 @@ test('add a file verification steps', async () => {
   await feedPage.returnToHome();
 });
 
-test('add a decimal verification steps', async () => {
+test('[deprecated] add a decimal verification steps', async () => {
   await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
   const WIstep = new WISteps();
   await DefaultWorkItem.AddStep(true, WIstep, false, false);
-  const VerificationStep = new WIStepVerificationInfo(types.DECIMAL);
-  await WIstep.addVerificationStep(VerificationStep);
+  // const VerificationStep = new WIStepVerificationInfo(types.DECIMAL);
+  // await WIstep.addVerificationStep(VerificationStep);
 
   await feedPage.returnToHome();
-});
+}).skip;
 
 test('add a dropdown verification steps', async () => {
   await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
@@ -655,7 +655,7 @@ test('add a intager verification steps', async () => {
   await feedPage.NavigateToEditWI(tabs.WORKITEMS, DefaultWorkItem);
   const WIstep = new WISteps();
   await DefaultWorkItem.AddStep(true, WIstep, false, false);
-  const VerificationStep = new WIStepVerificationInfo(types.INTEGER);
+  const VerificationStep = new WIStepVerificationInfo(types.NUMBER);
   await WIstep.addVerificationStep(VerificationStep);
 
   await feedPage.returnToHome();

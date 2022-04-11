@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
 import { Selector, t } from 'testcafe';
 import { VerificationTypes } from './VerificationTypes';
@@ -31,6 +32,29 @@ export default class WIExecution {
     /** @description a list of the execution selectors */
     allExecutions: Selector;
 
+    // selectors for the verification step inputs in exeuction mode
+
+    /** @description the selector for text verification steps in exeuction */
+    textVerificationInput: Selector;
+
+    /** @description the selector for number verification steps in exeuction */
+    numberVerificationInput: Selector;
+
+    /** @description the selector for date verification steps in exeuction */
+    dateVerificationInput: Selector;
+
+    /** @description the selector for dropdown verification steps in exeuction */
+    dropDownVerificationInput: Selector;
+
+    /** @description the selector for multiselect verification steps in exeuction */
+    multiselectVerificationInput: Selector;
+
+    /** @description the selector for file verification steps in exeuction */
+    fileVerificationInput: Selector;
+
+    /** @description the selector for checkbox verification steps in exeuction */
+    checkboxVerificationInput: Selector;
+
     constructor() {
       this.allExecutions = Selector('#continueWI').find('tr');
       this.currentExecution = Selector('tr.currentExecution');
@@ -39,12 +63,62 @@ export default class WIExecution {
       this.wiComfrimbtn = Selector(sharedElements.genericCreateBtn.withText('Execute'));
       this.markCompletedBtn = Selector('button.btn.btn-success').withText('MARK COMPLETED');
       this.executionIndexInput = Selector('input.form-control').withAttribute('placeholder', 'String');
+
+      this.numberVerificationInput = Selector('input').withAttribute('placeholder', /number/gi);
+      this.textVerificationInput = Selector('input').withAttribute('placeholder', /text/gi);
+      this.dateVerificationInput = Selector('input').withAttribute('placeholder', /date/gi);
+      this.checkboxVerificationInput = Selector('span.checkbox-switch-slider');
     }
 
     /** @description create new execution in execution */
     async createNewExecution(num) {
       await this.openSwitchExecutionMenu();
       await this.typeAndSubmitExecutionSerialNumber(num);
+    }
+
+    /**
+     * @description fills the nth verification type of the type specified
+     * @param num the nth from the top to fill (base 0)
+     * @param type the type of the verification step
+     * @param text the text to fill the verification step with
+     */
+    async fillNthVerificationStep(num: number, type:VerificationTypes, text:string) {
+      async function expectAndFill(selector:Selector, s:string) {
+        await t.expect(selector.visible).ok();
+        await t.typeText(selector, s);
+      }
+      switch (type) {
+        case VerificationTypes.TEXT:
+          await expectAndFill(this.textVerificationInput.nth(num), text);
+          break;
+
+        case VerificationTypes.NUMBER:
+          await expectAndFill(this.numberVerificationInput.nth(num), text);
+          break;
+
+        case VerificationTypes.DATE:
+          await expectAndFill(this.dateVerificationInput.nth(num), text);
+          break;
+
+        case VerificationTypes.DROPDOWN:
+          await expectAndFill(this.dropDownVerificationInput.nth(num), text);
+          break;
+
+        case VerificationTypes.MULTISELECT:
+
+          break;
+
+        case VerificationTypes.FILE:
+
+          break;
+
+        case VerificationTypes.CHECKBOX:
+
+          break;
+
+        default:
+          break;
+      }
     }
 
     /** @description click the current execution based on its selector in switch menu */
@@ -78,9 +152,14 @@ export default class WIExecution {
       }
     }
 
-    /** @description look clicking the mark completed button until it disapears */
+    /** @description clcik the markCompletedBtn once */
+    async markCurrentStepAsCompleted() {
+      await t.click(this.markCompletedBtn);
+    }
+
+    /** @description loop clicking the mark completed button until it disapears or is greyed out */
     async markAllStepsAsCompleted() {
-      while (await this.markCompletedBtn.visible === true) {
+      while (await this.markCompletedBtn.visible === true && await this.markCompletedBtn.withAttribute('disabled').exists === false) {
         await t.click(this.markCompletedBtn);
       }
     }

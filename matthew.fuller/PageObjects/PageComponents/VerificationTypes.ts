@@ -5,8 +5,7 @@
 // eslint-disable-next-line import/prefer-default-export
 export enum VerificationTypes {
     TEXT = 'text',
-    DECIMAL = 'decimal',
-    INTEGER = 'integer',
+    NUMBER = 'number',
     DATE = 'date',
     CHECKBOX = 'checkbox',
     DROPDOWN = 'dropdown',
