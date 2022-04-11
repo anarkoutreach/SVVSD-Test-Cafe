@@ -39,6 +39,7 @@ fixture`Work Item execution tests`.page(configManager.homePage).beforeEach(async
     .setNativeDialogHandler(() => true)
     .useRole(t.ctx.user.role);
 });
+
 test('can start workitem executon', async () => {
   await feedPage.createWI(DefaultWorkItem);
   const step = new WISteps();
@@ -46,6 +47,7 @@ test('can start workitem executon', async () => {
   await DefaultWorkItem.changeToView();
   await wiExecution.startExecutionFromWIPage(1);
 });
+
 test('can cancel and delete workitem executon', async () => {
   await feedPage.createWI(DefaultWorkItem);
   const step = new WISteps();
