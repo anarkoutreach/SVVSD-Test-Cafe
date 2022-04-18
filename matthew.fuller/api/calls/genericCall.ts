@@ -19,4 +19,7 @@ export default class genericCall {
 
   /** @description the path for the api to call the comment post request */
       path: string
+
+      /** @description the path for the api to call the comment post request */
+      headers = { 'Content-Type': 'application/json' };
 }

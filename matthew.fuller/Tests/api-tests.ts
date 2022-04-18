@@ -5,11 +5,16 @@ import { mattUser } from '../Utilities/roles';
 import ConfigurationManager from '../Configuration/configuration';
 import FeedPageAPI from '../api/feedPageAPI';
 import APIComment from '../api/calls/comment';
+import WorkItemAPI from '../api/workitemAPI';
 import APIReply from '../api/calls/reply';
+import APIWorkItemCall from '../api/calls/workItem';
+import WorkItemProperties from '../api/calls/sub/workitemProperties';
+import WorkItemOwners from '../api/calls/sub/workItemOwners';
+import WorkItemAssets from '../api/calls/sub/workITemAssets';
 
 const configManager = new ConfigurationManager();
 
-fixture`Base API tests`.page(configManager.serverUrl).beforeEach(async (t) => {
+fixture`Feedpage API tests`.page(configManager.serverUrl).beforeEach(async (t) => {
   t.ctx.user = mattUser;
   await t
     .setNativeDialogHandler(() => true)
@@ -51,4 +56,21 @@ test('can get 10 conversations through api', async (t) => {
   const feedPageAPI = new FeedPageAPI();
   const data = await feedPageAPI.getConversations();
   // console.log(data.data);
+});
+
+fixture`WorkItem API tests`.page(configManager.serverUrl).beforeEach(async (t) => {
+  t.ctx.user = mattUser;
+  await t
+    .setNativeDialogHandler(() => true)
+    .useRole(t.ctx.user.role);
+});
+
+// can use the api to create work items
+test('can create work item through api', async (t) => {
+  const workItemAPI = new WorkItemAPI();
+  const workitemProperties = new WorkItemProperties('1', '2', true, 3, '4', '5');
+  const workitemOweners = new WorkItemOwners([configManager.userID]);
+  const workitemAssests = new WorkItemAssets();
+  const call = new APIWorkItemCall('baseAPITitle', 'BaseAPIDescription', workitemProperties, workitemOweners, workitemAssests);
+  const data = await workItemAPI.createWorkItem(call);
 });

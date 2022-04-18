@@ -15,48 +15,55 @@ class Response {
 }
 export default class AnarkAPIFrameWork {
   async post(path, headers, dataToSend, verify = true) {
-    const data = {
-      statusCode: null,
-      data: null,
-    };
-    const headersDict = { Authorization: `Basic ${Buffer.from(`${user}:${pass}`).toString('base64')}` };
-    const finalHeaders = Object.assign(headersDict, headers);
-    const options = {
-      port: 443,
-      hostname: configManager.serverUrlShort,
-      path,
-      method: 'POST',
-      headers: finalHeaders,
-    };
-    const req = https.request(options, (res) => {
-      data.statusCode = res.statusCode;
+    const postRequest = new Promise<Response>(async (resolve) => {
+      let rawData;
+      const data = {
+        statusCode: null,
+        data: null,
+      };
+      const headersDict = { Authorization: `Basic ${Buffer.from(`${user}:${pass}`).toString('base64')}` };
+      const finalHeaders = Object.assign(headersDict, headers);
+      const options = {
+        port: 443,
+        hostname: configManager.serverUrlShort,
+        path,
+        method: 'POST',
+        headers: finalHeaders,
+      };
+      const req = https.request(options, (res) => {
+        res.on('data', (chunk) => {
+          rawData += chunk;
+          if (util.Verbose === true) {
+            process.stdout.write(chunk);
+          }
+        });
+        res.on('end', async () => {
+          data.statusCode = res.statusCode;
+          data.data = rawData;
+          resolve(data);
+        });
+      });
 
-      res.on('data', (d) => {
-        data.data = d;
-        if (util.Verbose === true) {
-          process.stdout.write(d);
-          console.log(`statusCode: ${res.statusCode}`);
+      req.on('error', (error) => {
+        if (util.Errors === true) {
+          console.error(error);
         }
       });
+      req.write(dataToSend);
+      req.end();
     });
 
-    req.on('error', (error) => {
-      if (util.Errors === true) {
-        console.error(error);
+    const promiseThen = await postRequest.then<Response>(async (data) => {
+      if (verify) {
+        await t.expect(data.statusCode === 200).eql(true);
       }
+      return data;
     });
-
-    req.write(dataToSend);
-    req.end();
-
-    if (verify) {
-      t.expect(data.statusCode === 200);
-    }
-    return data;
+    return promiseThen;
   }
 
-  async get(APIPath, headers, verify = true): Promise<Response> {
-    return new Promise((resolve) => {
+  async get(APIPath, headers, verify = true) {
+    const getRequest = new Promise<Response>((resolve) => {
       const headersDict = { Authorization: `Basic ${Buffer.from(`${user}:${pass}`).toString('base64')}` };
       const data = new Response();
       const finalHeaders = Object.assign(headersDict, headers);
@@ -78,11 +85,8 @@ export default class AnarkAPIFrameWork {
             console.log(`statusCode: ${res.statusCode}`);
           }
         });
-        res.on('end', () => {
+        res.on('end', async () => {
           data.data = rawData;
-          if (verify) {
-            t.expect(data.statusCode === 200);
-          }
           resolve(data);
         });
       });
@@ -95,5 +99,13 @@ export default class AnarkAPIFrameWork {
 
       req.end();
     });
+
+    const promiseThen = await getRequest.then<Response>(async (data) => {
+      if (verify) {
+        await t.expect(data.statusCode === 200).eql(true);
+      }
+      return data;
+    });
+    return promiseThen;
   }
 }
