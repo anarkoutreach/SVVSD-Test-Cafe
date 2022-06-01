@@ -2,10 +2,12 @@ import { } from 'testcafe';
 import FeedPage from '../PageObjects/feed-page';
 import { mattUser } from '../Utilities/roles';
 import ConfigurationManager from '../Configuration/configuration';
-import { SysPrefTabs } from '../PageObjects/PageComponents/sytemPrefTABS';
+import { SysPrefTabs } from '../PageObjects/PageComponents/systemPreferencesTabsPages/systemPrefTABS';
 import SystemPrefPage from '../PageObjects/systemPref-page';
+import SystemPrefPublishingTab from '../PageObjects/PageComponents/systemPreferencesTabsPages/sysPrefPublishingTab';
 /** @description the system preferences page */
 const systemPrefPage = new SystemPrefPage();
+const systemPrefPublishingTab = new SystemPrefPublishingTab();
 
 /** @description A class represnting the controller that handles configs */
 const configManager = new ConfigurationManager();
@@ -33,4 +35,8 @@ test('can switch between all tabs', async () => {
   }
   await _loopThroughTabs();
   await _loopThroughTabs();
+});
+
+test('click into multibox', async (t) => {
+  await systemPrefPage.switchTab(SysPrefTabs.PUBLISHING);
 });

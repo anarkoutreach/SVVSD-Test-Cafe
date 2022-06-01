@@ -1,5 +1,5 @@
 import { Selector, t } from 'testcafe';
-import { SysPrefTabs } from './PageComponents/sytemPrefTABS';
+import { SysPrefTabs } from './PageComponents/systemPreferencesTabsPages/systemPrefTABS';
 
 export default class SystemPrefPage {
   /** @description system btn, it does nothing it just is used to verify page switch */

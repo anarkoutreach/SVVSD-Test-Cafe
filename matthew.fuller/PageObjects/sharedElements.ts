@@ -194,12 +194,12 @@ export default class SharedElements {
   	async testCheckboxes(checkbox:Selector, checkboxInput: Selector, state = false) {
   	  const util = new Util();
   	  let isChecked = await checkboxInput.checked;
-  	  await t.expect(isChecked === state).eql(false);
+  	  await t.expect(isChecked === state).eql(true);
   	  if (util.Verbose) console.log(isChecked);
   	  await t.click(checkbox);
   	  isChecked = await checkboxInput.checked;
   	  if (util.Verbose) console.log(isChecked);
-  	  await t.expect(isChecked === state).eql(true);
+  	  await t.expect(isChecked === state).eql(false);
   	}
 
   	/**
@@ -220,6 +220,27 @@ export default class SharedElements {
   	  }
   	}
 
+	    /**
+     *
+     * @param selector the selectors to check if it has sibling
+     * @param sibling the sibling to check if selector has as sibling
+     * @returns selector
+     */
+  	// eslint-disable-next-line class-methods-use-this
+  	async withSiblingTestCafeSelectorVersion(selector:Selector, sibling:Selector) {
+  	  const count = await selector.count;
+  	  for (let i = 0; i < count; i += 1) {
+  	    const element = selector.nth(i);
+		const siblings = await element.sibling();
+		for(let x = 0; i < await siblings.count; i+=1){
+			if (siblings.nth(x) == (sibling)) {
+				return element;
+			  }
+		};
+  	    
+  	    return selector;
+  	  }
+  	}
   	/**
      * @description cycle through if statements checking if different btns are visible, return
      * one that is

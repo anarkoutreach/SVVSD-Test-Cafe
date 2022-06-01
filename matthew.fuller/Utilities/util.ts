@@ -79,4 +79,23 @@ export default class Util {
     const strTime = `${hours}:${minutes} ${ampm}`;
     return strTime;
   }
+
+  /** @description given a char, return the proper mapping to type that with t.presskey */
+  async mapCharToPressKey(char) {
+    switch (char) {
+      case ' ':
+        return 'space';
+
+      default:
+        return char;
+    }
+  }
+
+  async forceTypeText(text: string) {
+    for (let index = 0; index < text.length; index += 1) {
+      const char = text.charAt(index);
+      await t.pressKey(await this.mapCharToPressKey(char));
+      console.log(char);
+    }
+  }
 }
